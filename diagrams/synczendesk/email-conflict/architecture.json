@@ -214,7 +214,7 @@
       "tag": "--report",
       "pos": [
         720,
-        400
+        470
       ],
       "size": [
         180,
@@ -271,16 +271,6 @@
       "label": "updateUserLocalMapping",
       "fromSide": "bottom",
       "toSide": "top",
-      "via": [
-        [
-          805,
-          340
-        ],
-        [
-          520,
-          340
-        ]
-      ],
       "labelAt": [
         660,
         328
@@ -293,20 +283,6 @@
       "label": "payload + donos de e-mail",
       "fromSide": "top",
       "toSide": "bottom",
-      "via": [
-        [
-          420,
-          190
-        ],
-        [
-          690,
-          190
-        ],
-        [
-          690,
-          124
-        ]
-      ],
       "labelAt": [
         555,
         178
@@ -325,24 +301,6 @@
       "label": "resolveZendeskUserId()",
       "fromSide": "top",
       "toSide": "right",
-      "via": [
-        [
-          760,
-          160
-        ],
-        [
-          560,
-          160
-        ],
-        [
-          560,
-          92
-        ],
-        [
-          510,
-          92
-        ]
-      ],
       "labelAt": [
         635,
         148
@@ -357,25 +315,25 @@
       "toSide": "top",
       "via": [
         [
-          480,
+          460,
           284
         ],
         [
-          480,
-          365
+          460,
+          340
         ],
         [
           810,
-          365
+          340
         ],
         [
           810,
-          400
+          470
         ]
       ],
       "labelAt": [
         645,
-        378
+        356
       ]
     }
   ],
