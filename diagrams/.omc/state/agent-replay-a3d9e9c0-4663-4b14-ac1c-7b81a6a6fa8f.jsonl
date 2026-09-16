@@ -117,3 +117,5 @@
 {"t":0,"agent":"a2da06f","agent_type":"unknown","event":"agent_stop","success":true}
 {"t":0,"agent":"ac2a681","agent_type":"general-purpose","event":"agent_stop","success":true,"duration_ms":1354265}
 {"t":0,"agent":"a2da06f","agent_type":"unknown","event":"agent_stop","success":true}
+{"t":0,"agent":"a2da06f","agent_type":"unknown","event":"agent_stop","success":true}
+{"t":0,"agent":"a2da06f","agent_type":"unknown","event":"agent_stop","success":true}

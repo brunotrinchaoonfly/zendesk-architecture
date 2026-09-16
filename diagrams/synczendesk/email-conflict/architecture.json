@@ -255,7 +255,7 @@
       "from": "cmd",
       "to": "zsrv",
       "label": "casos A·B·C",
-      "labelDy": -16
+      "labelDy": -20
     },
     {
       "id": "api",
@@ -265,18 +265,6 @@
       "labelDy": -40
     },
     {
-      "id": "state",
-      "from": "zsrv",
-      "to": "synclog",
-      "label": "updateUserLocalMapping",
-      "fromSide": "bottom",
-      "toSide": "top",
-      "labelAt": [
-        660,
-        328
-      ]
-    },
-    {
       "id": "bqfetch",
       "from": "cmd",
       "to": "bqsrv",
@@ -284,8 +272,8 @@
       "fromSide": "top",
       "toSide": "bottom",
       "labelAt": [
-        555,
-        178
+        570,
+        182
       ]
     },
     {
@@ -298,12 +286,12 @@
       "id": "map",
       "from": "zsrv",
       "to": "mapper",
-      "label": "resolveZendeskUserId()",
+      "label": "resolveUser",
       "fromSide": "top",
       "toSide": "right",
       "labelAt": [
-        635,
-        148
+        620,
+        142
       ]
     },
     {
@@ -311,15 +299,15 @@
       "from": "cmd",
       "to": "report",
       "label": "agrupa por caso",
-      "fromSide": "bottom",
+      "fromSide": "right",
       "toSide": "top",
       "via": [
         [
-          460,
-          284
+          545,
+          252
         ],
         [
-          460,
+          545,
           340
         ],
         [
@@ -332,7 +320,7 @@
         ]
       ],
       "labelAt": [
-        645,
+        680,
         356
       ]
     }
