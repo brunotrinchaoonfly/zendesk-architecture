@@ -233,7 +233,8 @@
   /* ---------- tema ---------- */
   function applyTheme() {
     document.documentElement.setAttribute("data-theme", state.theme);
-    $("theme-label").textContent = state.theme === "dark" ? "Dark" : "Clean";
+    var themeLabel = $("theme-label");
+    if (themeLabel) themeLabel.textContent = state.theme === "dark" ? "Escuro" : "Claro";
     btnTheme.setAttribute("aria-pressed", String(state.theme === "dark"));
     try { localStorage.setItem("archify-shell-theme", state.theme); } catch (_) {}
     applySrc();
@@ -245,6 +246,11 @@
     document.body.classList.toggle("presenting", on);
     btnPresent.setAttribute("aria-pressed", String(on));
     presentExit.hidden = !on;
+    // fullscreen sincronizado com o modo apresentação
+    try {
+      if (on && !document.fullscreenElement) document.documentElement.requestFullscreen().catch(function () {});
+      if (!on && document.fullscreenElement) document.exitFullscreen().catch(function () {});
+    } catch (_) {}
   }
 
   /* ---------- eventos ---------- */
@@ -258,6 +264,11 @@
 
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && state.present) setPresent(false);
+  });
+
+  // fullscreen nativo encerrado (F11/Esc do browser) sai do modo apresentação
+  document.addEventListener("fullscreenchange", function () {
+    if (!document.fullscreenElement && state.present) setPresent(false);
   });
 
   /* ---------- boot ---------- */

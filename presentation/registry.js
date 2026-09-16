@@ -24,8 +24,8 @@ window.ARCHIFY_GROUPS = [
         title: "SunCo — Primeiro Contato sem Perfil",
         short: "Primeiro Contato",
         sequence: {
-          file: "../diagrams/sunco/primeiro-contato/sequence.html",
-          spec: "../diagrams/sunco/primeiro-contato/sequence.json",
+          file: "diagrams/sunco/primeiro-contato/sequence.html",
+          spec: "diagrams/sunco/primeiro-contato/sequence.json",
           description:
             "Sunshine Conversations + Zendesk. Enriquecimento de perfil do appUser na primeira mensagem: extrai phone, busca no Zendesk e grava profile/externalId no Sunco.",
           dot: "orange",
@@ -39,8 +39,8 @@ window.ARCHIFY_GROUPS = [
           lens: ["external", "cloud", "backend"],
         },
         architecture: {
-          file: "../diagrams/sunco/primeiro-contato/architecture.html",
-          spec: "../diagrams/sunco/primeiro-contato/architecture.json",
+          file: "diagrams/sunco/primeiro-contato/architecture.html",
+          spec: "diagrams/sunco/primeiro-contato/architecture.json",
           description:
             "Arquitetura do primeiro contato sem perfil: Usuário WhatsApp → Sunshine Conversations recebe inbound e dispara webhook → Middleware (Webhook Service) consulta a Zendesk Search API pelo telefone (Basic Auth/OAuth), recebe perfil + external_id e grava de volta no Sunco (PATCH profile · externalId). Executado 1× por novo usuário sem cadastro prévio.",
           dot: "rose",
@@ -66,8 +66,8 @@ window.ARCHIFY_GROUPS = [
         title: "sync-zendesk — Sync de Usuários",
         short: "Sync de Usuários",
         sequence: {
-          file: "../diagrams/synczendesk/users/sequence.html",
-          spec: "../diagrams/synczendesk/users/sequence.json",
+          file: "diagrams/synczendesk/users/sequence.html",
+          spec: "diagrams/synczendesk/users/sequence.json",
           description:
             "Sequência do sync-users: console dispara o comando, usuários alterados no BigQuery são carregados em lotes de 100 via Parallel, organization_id resolvido em tempo real (resolvedOrgsCache), createOrUpdateManyUsers enviado em bulk, job acompanhado via pollJobStatus e resultado gravado no ZendeskUserSyncLog. Sem dedup; sempre resume.",
           dot: "emerald",
@@ -82,8 +82,8 @@ window.ARCHIFY_GROUPS = [
           lens: ["backend", "database", "external"],
         },
         architecture: {
-          file: "../diagrams/synczendesk/users/architecture.html",
-          spec: "../diagrams/synczendesk/users/architecture.json",
+          file: "diagrams/synczendesk/users/architecture.html",
+          spec: "diagrams/synczendesk/users/architecture.json",
           description:
             "bigquery:sync-users — usuários alterados no BigQuery em lotes de 100 via Parallel; resolve organization_id em tempo real (resolvedOrgsCache) e envia createOrUpdateManyUsers; acompanha job via pollJobStatus e grava ZendeskUserSyncLog. Sem dedup; sempre resume.",
           dot: "emerald",
@@ -104,8 +104,8 @@ window.ARCHIFY_GROUPS = [
         title: "sync-zendesk — Sync de Organizações",
         short: "Sync de Organizações",
         sequence: {
-          file: "../diagrams/synczendesk/organizations/sequence.html",
-          spec: "../diagrams/synczendesk/organizations/sequence.json",
+          file: "diagrams/synczendesk/organizations/sequence.html",
+          spec: "diagrams/synczendesk/organizations/sequence.json",
           description:
             "Sequência do sync-organizations: pula organizations já sincronizadas no dia (loadAlreadySyncedIds), separa create × update por created_at/updated_at, dedup Redis (shouldPublish/markPublished), envia createManyOrganizations/updateManyOrganizations e persiste zendesk_organization_id no mapping.",
           dot: "violet",
@@ -121,8 +121,8 @@ window.ARCHIFY_GROUPS = [
           lens: ["backend", "database", "external"],
         },
         architecture: {
-          file: "../diagrams/synczendesk/organizations/architecture.html",
-          spec: "../diagrams/synczendesk/organizations/architecture.json",
+          file: "diagrams/synczendesk/organizations/architecture.html",
+          spec: "diagrams/synczendesk/organizations/architecture.json",
           description:
             "bigquery:sync-organizations — pula organizations já sincronizadas no dia (loadAlreadySyncedIds), separa create × update por created_at/updated_at, dedup Redis (shouldPublish/markPublished) e envia createManyOrganizations/updateManyOrganizations; persiste zendesk_organization_id no mapping.",
           dot: "violet",
@@ -145,8 +145,8 @@ window.ARCHIFY_GROUPS = [
         title: "sync-zendesk — Conflito de E-mails",
         short: "Conflito de E-mails",
         sequence: {
-          file: "../diagrams/synczendesk/email-conflict/sequence.html",
-          spec: "../diagrams/synczendesk/email-conflict/sequence.json",
+          file: "diagrams/synczendesk/email-conflict/sequence.html",
+          spec: "diagrams/synczendesk/email-conflict/sequence.json",
           description:
             "Sequência do sync-conflicting-user-emails: UserSyncLog failures (status=Failure) alimentam o comando, payload buscado no BigQuery, casos A (merge) / B (update mesmo cadastro) / C (linka external_id) / D (falha manual) resolvidos via ZendeskService, mapping local gravado e relatório .md opcional (--report/--dry-run).",
           dot: "amber",
@@ -162,8 +162,8 @@ window.ARCHIFY_GROUPS = [
           lens: ["backend", "database", "external"],
         },
         architecture: {
-          file: "../diagrams/synczendesk/email-conflict/architecture.html",
-          spec: "../diagrams/synczendesk/email-conflict/architecture.json",
+          file: "diagrams/synczendesk/email-conflict/architecture.html",
+          spec: "diagrams/synczendesk/email-conflict/architecture.json",
           description:
             "zendesk:sync-conflicting-user-emails — reprocessa ZendeskUserSyncLog com status=Failure (UserUpdateError): busca cadastro por external_id e/ou e-mail, decide caso A (merge), B (update no mesmo cadastro), C (linka external_id) ou D (falha manual), sincroniza org/nome, grava local mapping e emite relatório .md opcional (--report/--dry-run).",
           dot: "amber",
@@ -190,8 +190,8 @@ window.ARCHIFY_GROUPS = [
         title: "Gambit — Passagem de Controle e Histórico",
         short: "Gambit",
         sequence: {
-          file: "../diagrams/gambet/gambit/sequence.html",
-          spec: "../diagrams/gambet/gambit/sequence.json",
+          file: "diagrams/gambet/gambit/sequence.html",
+          spec: "diagrams/gambet/gambit/sequence.json",
           description:
             "Passagem de controle dos fluxos para o Gambit: webhook com horário de início, recuperação do histórico via Zendesk (intermediário), conversa intermediada e desfechos com tag de deflexão (encerra ticket) ou tag de transferência (atendimento humano).",
           dot: "cyan",
@@ -205,8 +205,8 @@ window.ARCHIFY_GROUPS = [
           lens: ["external", "cloud"],
         },
         architecture: {
-          file: "../diagrams/gambet/gambit/architecture.html",
-          spec: "../diagrams/gambet/gambit/architecture.json",
+          file: "diagrams/gambet/gambit/architecture.html",
+          spec: "diagrams/gambet/gambit/architecture.json",
           description:
             "Arquitetura do Gambit (IA com contexto Onfly): Fluxos passam o controle via webhook, Gambit recupera o histórico pelo Zendesk (intermediário), conversa intermediada — mensagem do cliente → Zendesk → webhook → resposta via API Zendesk — e desfechos com tag de deflexão (encerra ticket) ou transferência (ticket ao grupo de atendimento humano).",
           dot: "cyan",
@@ -232,8 +232,8 @@ window.ARCHIFY_GROUPS = [
         title: "PassControl",
         short: "PassControl",
         sequence: {
-          file: "../diagrams/fluxo/passcontrol/sequence.html",
-          spec: "../diagrams/fluxo/passcontrol/sequence.json",
+          file: "diagrams/fluxo/passcontrol/sequence.html",
+          spec: "diagrams/fluxo/passcontrol/sequence.json",
           description:
             "Sequência fim-a-fim via Sunco Switchboard: inbound WhatsApp, lookup de identidade no Zendesk (ENCONTRADO recupera perfil · NÃO ACHOU cria), Rota A (humano) ou Rota B — release pelo PassControl troca Zendesk PASSIVO × Gambit ATIVO, Gambit recupera histórico, responde com ações e devolve o controle com tag de deflexão (encerra ticket) ou transferência (roteia grupo/agente).",
           dot: "slate",
@@ -251,8 +251,8 @@ window.ARCHIFY_GROUPS = [
           lens: ["external", "cloud", "backend"],
         },
         architecture: {
-          file: "../diagrams/fluxo/passcontrol/architecture.html",
-          spec: "../diagrams/fluxo/passcontrol/architecture.json",
+          file: "diagrams/fluxo/passcontrol/architecture.html",
+          spec: "diagrams/fluxo/passcontrol/architecture.json",
           description:
             "Arquitetura do PassControl via Sunco Switchboard: Sunshine Conversations faz lookup de identidade no Zendesk; bot decide entre Rota A (humano) e Rota B — release control troca Zendesk PASSIVO × Gambit ATIVO; Gambit (IA com contexto Onfly) recupera histórico, responde com ações e devolve com tag de deflexão ou transferência ao Agent Workspace.",
           dot: "rose",
