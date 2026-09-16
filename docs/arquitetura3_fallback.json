@@ -1,0 +1,66 @@
+{
+  "$schema": "https://archify.dev/schema/v1.json",
+  "title": "Arquitetura 3: Fallback - Primeiro Contato sem Perfil",
+  "type": "sequence",
+  "theme": "dark",
+  "participants": [
+    { "id": "whatsapp", "label": "Usuário (WhatsApp)", "type": "actor" },
+    { "id": "sunco", "label": "Sunshine Conversations (Sunco)", "type": "platform" },
+    { "id": "middleware", "label": "Middleware / Webhook Service", "type": "service" },
+    { "id": "zendesk_search", "label": "Zendesk Search API", "type": "api" }
+  ],
+  "steps": [
+    {
+      "from": "whatsapp",
+      "to": "sunco",
+      "label": "1. Envia mensagem Inbound",
+      "protocol": "WhatsApp Business API"
+    },
+    {
+      "from": "sunco",
+      "to": "middleware",
+      "label": "2. Webhook: conversation:create / message:appUser",
+      "protocol": "HTTP POST"
+    },
+    {
+      "from": "middleware",
+      "to": "middleware",
+      "label": "3. Extrai telefone (phone) do appUser",
+      "type": "internal"
+    },
+    {
+      "from": "middleware",
+      "to": "zendesk_search",
+      "label": "4. GET /api/v2/users/search?phone={telefone}",
+      "protocol": "HTTPS Basic Auth / OAuth"
+    },
+    {
+      "from": "zendesk_search",
+      "to": "middleware",
+      "label": "5. Retorna dados do perfil + external_id",
+      "protocol": "JSON 200 OK"
+    },
+    {
+      "from": "middleware",
+      "to": "sunco",
+      "label": "6a. PATCH /sc/v2/apps/{appId}/users/{suncoUserId} (Profile + Metadata)",
+      "protocol": "HTTPS Bearer Token"
+    },
+    {
+      "from": "middleware",
+      "to": "sunco",
+      "label": "6b. PATCH /sc/v2/apps/{appId}/users/{suncoUserId} (grava externalId)",
+      "protocol": "HTTPS Bearer Token"
+    },
+    {
+      "from": "sunco",
+      "to": "whatsapp",
+      "label": "7. Atendimento prossegue com bot/humano munido de perfil",
+      "protocol": "WhatsApp In-session"
+    }
+  ],
+  "notes": [
+    "Executado uma única vez por novo usuário sem cadastro prévio no Sunco.",
+    "A partir da 2ª conversa, o perfil já estará gravado no Sunco e a Search API do Zendesk não será invocada."
+  ]
+}

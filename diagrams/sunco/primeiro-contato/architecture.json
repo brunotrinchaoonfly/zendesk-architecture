@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Sunco — Primeiro Contato",
+    "output": "architecture.html",
+    "locale": "pt-BR",
+    "quality_profile": "showcase",
+    "viewBox": [940, 430]
+  },
+  "components": [
+    {
+      "id": "whatsapp",
+      "type": "external",
+      "label": "Usuário WhatsApp",
+      "sublabel": "WhatsApp Business",
+      "description": "Pessoa iniciando a conversa pelo canal oficial do WhatsApp Business — ponto de entrada das mensagens inbound.",
+      "pos": [40, 270],
+      "size": [128, 64]
+    },
+    {
+      "id": "sunco",
+      "type": "cloud",
+      "label": "Sunshine Conversations",
+      "sublabel": "Sunco",
+      "description": "Plataforma de conversas da Zendesk: recebe a mensagem, dispara o webhook e mantém o perfil do appUser.",
+      "pos": [310, 270],
+      "size": [150, 64]
+    },
+    {
+      "id": "middleware",
+      "type": "backend",
+      "label": "Middleware",
+      "sublabel": "Webhook Service",
+      "description": "Serviço Hyperf/Swoole que assina os webhooks do Sunco, orquestra a busca no Zendesk e grava o perfil de volta.",
+      "pos": [610, 270],
+      "size": [126, 64]
+    },
+    {
+      "id": "zendesk",
+      "type": "cloud",
+      "label": "Zendesk Search API",
+      "sublabel": "users/search",
+      "description": "API de busca de usuários do Zendesk: localiza o cadastro pelo telefone com Basic Auth/OAuth.",
+      "pos": [740, 90],
+      "size": [134, 64]
+    }
+  ],
+  "connections": [
+    { "from": "whatsapp", "to": "sunco", "label": "mensagem inbound", "variant": "default", "labelDy": -12 },
+    { "from": "sunco", "to": "middleware", "label": "webhook", "variant": "emphasis", "labelDy": -14 },
+    { "from": "middleware", "to": "zendesk", "label": "busca phone", "variant": "security", "fromSide": "top", "toSide": "left", "via": [[673, 122]], "labelAt": [630, 150] },
+    { "from": "zendesk", "to": "middleware", "label": "perfil + external_id", "variant": "default", "fromSide": "bottom", "toSide": "right", "via": [[807, 240], [786, 240], [786, 302]], "labelAt": [860, 220] },
+    { "from": "middleware", "to": "sunco", "label": "PATCH profile · externalId", "variant": "emphasis", "labelDy": 12 },
+    { "from": "sunco", "to": "whatsapp", "label": "atendimento prossegue", "variant": "default", "labelDy": 12 }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Quando executa",
+      "items": [
+        "Executado uma única vez por novo usuário sem cadastro prévio no Sunco.",
+        "Da 2ª conversa em diante o perfil já está gravado e a Search API não é invocada."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Fluxo em três fases",
+      "items": [
+        "Contato: webhook conversation:create / message:appUser aciona o Middleware.",
+        "Enriquecimento: extrai phone do appUser e consulta a Search API por telefone.",
+        "Gravação: PATCH grava profile + metadata e externalId no Sunco."
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "Credenciais",
+      "items": [
+        "Search API: HTTPS com Basic Auth / OAuth.",
+        "PATCH no Sunco: HTTPS com Bearer Token."
+      ]
+    }
+  ]
+}

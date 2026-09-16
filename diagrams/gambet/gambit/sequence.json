@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "Gambit — Passagem de Controle e Histórico",
+    "output": "sequence.html",
+    "viewBox": [
+      1080,
+      596
+    ],
+    "column_fit": "spread",
+    "locale": "pt-BR",
+    "quality_profile": "showcase"
+  },
+  "participants": [
+    {
+      "id": "client",
+      "type": "external",
+      "label": "Cliente",
+      "sublabel": "Usuário final",
+      "description": "Usuário que inicia a conversa no atendimento zendesk e troca mensagens com o bot enquanto o caso não é resolvido."
+    },
+    {
+      "id": "flows",
+      "type": "cloud",
+      "label": "Fluxos (Atendimento)",
+      "sublabel": "Sunco",
+      "description": "Fluxos do atendimento: identificam a necessidade de passar o controle da conversa para o Gambit e acionam a passagem via webhook."
+    },
+    {
+      "id": "gambit",
+      "type": "external",
+      "label": "Gambit",
+      "sublabel": "Integração de conversas",
+      "description": "Módulo de integração de conversas cadastrado no Zendesk: possui identificador próprio, escuta webhooks em URL específica, recupera o histórico, responde o cliente e devolve o controle ao final."
+    },
+    {
+      "id": "zendesk",
+      "type": "cloud",
+      "label": "Zendesk",
+      "sublabel": "Intermediário",
+      "description": "Intermediário de todas as mensagens: entrega o histórico ao Gambit, encaminha mensagens via webhook, recebe as respostas via API e executa tags/gatilhos no encerramento."
+    },
+    {
+      "id": "agent",
+      "type": "external",
+      "label": "Atendimento humano",
+      "sublabel": "Agente (grupo)",
+      "description": "Destino do desfecho B: o ticket é direcionado conforme a regra de distribuição de grupos vigente."
+    }
+  ],
+  "segments": [
+    {
+      "from": 150,
+      "to": 212,
+      "label": "Passagem para o Gambit"
+    },
+    {
+      "from": 224,
+      "to": 286,
+      "label": "Recuperação do histórico"
+    },
+    {
+      "from": 296,
+      "to": 410,
+      "label": "Conversa intermediada pelo Zendesk"
+    },
+    {
+      "from": 420,
+      "to": 514,
+      "label": "Encerramento e direcionamento"
+    }
+  ],
+  "messages": [
+    {
+      "id": "m1-start",
+      "from": "client",
+      "to": "flows",
+      "y": 160,
+      "label": "1. Conversa iniciada",
+      "variant": "default"
+    },
+    {
+      "id": "m2-handoff",
+      "from": "flows",
+      "to": "gambit",
+      "y": 192,
+      "label": "2. Passagem de controle: webhook + horário de início",
+      "variant": "emphasis",
+      "note": "Integração do Gambit: identificador próprio; escuta webhook em URL específica"
+    },
+    {
+      "id": "m3-history",
+      "from": "gambit",
+      "to": "zendesk",
+      "y": 228,
+      "label": "3. GET mensagens desde o horário de início",
+      "variant": "security"
+    },
+    {
+      "id": "m4-context",
+      "from": "zendesk",
+      "to": "gambit",
+      "y": 262,
+      "label": "4. Mensagens filtradas",
+      "variant": "return",
+      "note": "Gambit salva e usa como contexto prévio antes de responder"
+    },
+    {
+      "id": "m5-client-msg",
+      "from": "client",
+      "to": "zendesk",
+      "y": 300,
+      "label": "5. Mensagem do cliente",
+      "variant": "default"
+    },
+    {
+      "id": "m6-webhook",
+      "from": "zendesk",
+      "to": "gambit",
+      "y": 332,
+      "label": "6. Webhook: mensagem recebida",
+      "variant": "emphasis"
+    },
+    {
+      "id": "m7-reply",
+      "from": "gambit",
+      "to": "zendesk",
+      "y": 364,
+      "label": "7. Resposta via API do Zendesk",
+      "variant": "default"
+    },
+    {
+      "id": "m8-deliver",
+      "from": "zendesk",
+      "to": "client",
+      "y": 396,
+      "label": "8. Resposta entregue",
+      "variant": "return"
+    },
+    {
+      "id": "m9-deflection",
+      "from": "gambit",
+      "to": "zendesk",
+      "y": 430,
+      "label": "9. Desfecho A: controle de volta + tag de deflexão",
+      "variant": "emphasis",
+      "note": "Gatilho do Zendesk encerra o ticket"
+    },
+    {
+      "id": "m10-transfer",
+      "from": "gambit",
+      "to": "zendesk",
+      "y": 462,
+      "label": "10. Desfecho B: controle + tag de transferência",
+      "variant": "emphasis",
+      "note": "Direciona pela regra de distribuição de grupos"
+    },
+    {
+      "id": "m11-agent",
+      "from": "zendesk",
+      "to": "agent",
+      "y": 494,
+      "label": "11. Ticket ao grupo humano",
+      "variant": "return"
+    }
+  ],
+  "activations": [
+    {
+      "participant": "client",
+      "from": 155,
+      "to": 401
+    },
+    {
+      "participant": "flows",
+      "from": 155,
+      "to": 198
+    },
+    {
+      "participant": "gambit",
+      "from": 187,
+      "to": 468
+    },
+    {
+      "participant": "zendesk",
+      "from": 223,
+      "to": 500
+    },
+    {
+      "participant": "agent",
+      "from": 489,
+      "to": 500
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Passagem para o Gambit",
+      "items": [
+        "Fluxos identificam a necessidade e chamam a passagem de controle.",
+        "Webhook na URL da integração com metadado do horário de início.",
+        "O controle da conversa passa a ser do Gambit nesse momento."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Histórico e intermediação",
+      "items": [
+        "Gambit busca no Zendesk as mensagens a partir do horário de início.",
+        "Zendesk intermediário no envio e recebimento das mensagens.",
+        "Gambit processa via webhook e responde acionando a API do Zendesk."
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "Encerramento e direcionamento",
+      "items": [
+        "Caso resolvido: controle volta ao Zendesk com tag de deflexão — gatilho encerra o ticket.",
+        "Caso humano: tag de transferência direciona o ticket pela regra de distribuição de grupos."
+      ]
+    }
+  ]
+}

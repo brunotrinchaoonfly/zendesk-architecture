@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "sync-zendesk — Sync de Usuários",
+    "quality_profile": "showcase",
+    "locale": "pt-BR",
+    "output": "architecture.html"
+  },
+  "components": [
+    {
+      "id": "console",
+      "type": "backend",
+      "label": "Hyperf Console",
+      "sublabel": "bigquery:sync-users",
+      "pos": [
+        40,
+        330
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "description": "<p>Entrada do command <code>bigquery:sync-users</code> (<code>bin/hyperf.php</code>). Expõe as opções da base:</p>\n<ul>\n<li><code>--batch-size</code>, <code>--concurrency</code>, <code>--hours</code>, <code>--resume</code>, <code>--dry-run</code></li>\n</ul>"
+    },
+    {
+      "id": "cmd",
+      "type": "backend",
+      "label": "SyncUsersCmd",
+      "sublabel": "lotes 100 · resolve org",
+      "pos": [
+        270,
+        330
+      ],
+      "size": [
+        180,
+        60
+      ],
+      "description": "<p><strong>Orquestrador do fluxo</strong>: pagina o BigQuery em lotes de <code>100</code>, resolve a organização de cada usuário e coordena o envio ao Zendesk.</p>"
+    },
+    {
+      "id": "base",
+      "type": "backend",
+      "label": "AbstractLoad",
+      "sublabel": "stream · Parallel · resume",
+      "pos": [
+        530,
+        330
+      ],
+      "size": [
+        170,
+        60
+      ],
+      "description": "<p><code>AbstractBigQueryLoadCommand</code> — <strong>template da carga</strong>: <code>streamQuery</code> (Generator), buffer por lote, <code>Parallel(concurrency)</code>, <code>pollJobStatus</code> do job e <code>reconcileBatchLocal</code>.</p>\n<p><strong>Limites de request</strong>:</p>\n<ul>\n<li>lotes de até <code>100</code> registros por chamada bulk (<code>BIGQUERY_BATCH_SIZE</code>, default <code>100</code>, clamp <code>min(100, max(1, x))</code> — teto da API <code>create_many</code> do Zendesk)</li>\n<li>concorrência <code>BQ_USERS_CONCURRENCY</code> (default <code>1</code>, override <code>--concurrency</code>)</li>\n<li><code>flushBatchesInParallel</code> mantém até N coroutine(s) de envio em paralelo</li>\n</ul>\n<p><code>ZendeskService</code> aplica <code>throttleRequest()</code> antes de cada request; <code>429/5xx/network</code> viram <code>TransientZendeskException</code> com retry em backoff (<code>Coroutine::sleep</code> não-bloqueante).</p>"
+    },
+    {
+      "id": "bqClient",
+      "type": "backend",
+      "label": "BigQueryClient",
+      "sublabel": "streamQuery",
+      "pos": [
+        530,
+        170
+      ],
+      "size": [
+        160,
+        60
+      ],
+      "description": "<p><code>BigQueryClientService::streamQuery(sql, maxResults)</code> — <strong>Generator coroutine-safe</strong> que normaliza cada linha.</p>"
+    },
+    {
+      "id": "bq",
+      "type": "external",
+      "label": "BigQuery",
+      "sublabel": "Google Cloud",
+      "pos": [
+        760,
+        170
+      ],
+      "size": [
+        140,
+        60
+      ],
+      "description": "<p>BigQuery (Google Cloud) — <strong>origem</strong> dos usuários alterados no período.</p>"
+    },
+    {
+      "id": "zs",
+      "type": "backend",
+      "label": "ZendeskService",
+      "sublabel": "createOrUpdateManyUsers",
+      "pos": [
+        770,
+        330
+      ],
+      "size": [
+        170,
+        60
+      ],
+      "description": "<p><code>ZendeskService</code> — <code>createOrUpdateManyUsers</code> (bulk, até <code>100</code> por chamada) e <code>pollJobStatus</code> com backoff.</p>\n<p>Aplica <code>throttleRequest()</code> antes de cada request; <code>429/5xx/network</code> viram <code>TransientZendeskException</code> com retry em backoff (<code>Coroutine::sleep</code> não-bloqueante).</p>"
+    },
+    {
+      "id": "zendesk",
+      "type": "external",
+      "label": "Zendesk API",
+      "sublabel": "bulk · job",
+      "pos": [
+        1010,
+        330
+      ],
+      "size": [
+        160,
+        60
+      ],
+      "description": "<p>API bulk do Zendesk (<code>create_or_update_many_users</code>) — aceita até <code>100</code> registros por chamada e devolve <code>job_id</code> consultado por <code>pollJobStatus</code>.</p>"
+    },
+    {
+      "id": "syncLog",
+      "type": "database",
+      "label": "UserSyncLog",
+      "sublabel": "status · resume",
+      "pos": [
+        530,
+        500
+      ],
+      "size": [
+        190,
+        60
+      ],
+      "description": "<p><code>ZendeskUserSyncLog</code> — grava <code>status</code>/<code>last_error</code> por usuário; alimenta o <strong>resume</strong> (<code>alwaysResume</code>) e o command de conflito de e-mails (registros <code>status=Failure</code>).</p>"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "sync-zendesk (Hyperf + Swoole)",
+      "wraps": [
+        "console",
+        "cmd",
+        "base",
+        "bqClient",
+        "zs",
+        "syncLog"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "run",
+      "from": "console",
+      "to": "cmd"
+    },
+    {
+      "id": "ext",
+      "from": "cmd",
+      "to": "base"
+    },
+    {
+      "id": "stream",
+      "from": "base",
+      "to": "bqClient",
+      "label": "streamQuery",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "sql",
+      "from": "bqClient",
+      "to": "bq",
+      "label": "SQL"
+    },
+    {
+      "id": "send",
+      "from": "base",
+      "to": "zs",
+      "label": "sendBatch"
+    },
+    {
+      "id": "bulk",
+      "from": "zs",
+      "to": "zendesk",
+      "label": "bulk job"
+    },
+    {
+      "id": "log",
+      "from": "base",
+      "to": "syncLog",
+      "label": "resume · log",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 30
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "sync-zendesk — Sequência de Sync de Usuários",
+    "output": "sequence.html",
+    "viewBox": [1080, 640],
+    "locale": "pt-BR",
+    "quality_profile": "showcase",
+    "column_fit": "spread"
+  },
+  "participants": [
+    { "id": "console", "type": "external", "label": "Console Hyperf", "sublabel": "bin/hyperf.php" },
+    { "id": "cmd", "type": "backend", "label": "SyncUsersCmd", "sublabel": "orquestrador" },
+    { "id": "base", "type": "backend", "label": "AbstractLoad", "sublabel": "stream · Parallel" },
+    { "id": "bq", "type": "database", "label": "BigQuery", "sublabel": "Google Cloud" },
+    { "id": "zs", "type": "backend", "label": "ZendeskService", "sublabel": "bulk users" },
+    { "id": "zendesk", "type": "cloud", "label": "Zendesk API", "sublabel": "create_or_update_many" },
+    { "id": "syncLog", "type": "database", "label": "UserSyncLog", "sublabel": "status · resume" }
+  ],
+  "segments": [
+    { "from": 150, "to": 205, "label": "Disparo" },
+    { "from": 205, "to": 295, "label": "Leitura e resume" },
+    { "from": 295, "to": 445, "label": "Envio bulk" },
+    { "from": 445, "to": 505, "label": "Reconciliação" }
+  ],
+  "messages": [
+    { "from": "console", "to": "cmd", "y": 160, "label": "bigquery:sync-users", "variant": "emphasis", "note": "opções: --batch-size, --concurrency, --hours, --resume, --dry-run" },
+    { "from": "cmd", "to": "base", "y": 190, "label": "orquestrar carga", "variant": "default" },
+    { "from": "base", "to": "bq", "y": 220, "label": "streamQuery (SQL)", "variant": "default", "note": "BigQueryClientService — Generator coroutine-safe que normaliza cada linha" },
+    { "from": "bq", "to": "base", "y": 250, "label": "usuários alterados no período", "variant": "return" },
+    { "from": "base", "to": "syncLog", "y": 280, "label": "consultar resume", "variant": "dashed", "note": "alwaysResume — sem dedup; tudo parte do log" },
+    { "from": "base", "to": "zs", "y": 310, "label": "sendBatch — lote de 100", "variant": "emphasis", "note": "buffer por lote + Parallel(BQ_USERS_CONCURRENCY)" },
+    { "from": "zs", "to": "zendesk", "y": 340, "label": "createOrUpdateManyUsers", "variant": "emphasis", "note": "bulk create_or_update_many_users — até 100 por chamada; throttleRequest antes de cada request" },
+    { "from": "zendesk", "to": "zs", "y": 370, "label": "job_id", "variant": "return" },
+    { "from": "zs", "to": "zendesk", "y": 400, "label": "pollJobStatus", "variant": "dashed", "note": "backoff — 429/5xx/network viram TransientZendeskException com retry" },
+    { "from": "zendesk", "to": "zs", "y": 430, "label": "job concluído", "variant": "return" },
+    { "from": "base", "to": "syncLog", "y": 460, "label": "gravar status por usuário", "variant": "emphasis", "note": "reconcileBatchLocal — status/last_error alimenta o resume e o command de conflito de e-mails" },
+    { "from": "base", "to": "cmd", "y": 490, "label": "sync concluída", "variant": "return" }
+  ],
+  "activations": [
+    { "participant": "cmd", "from": 152, "to": 500, "type": "backend" },
+    { "participant": "base", "from": 182, "to": 498, "type": "backend" },
+    { "participant": "bq", "from": 212, "to": 258, "type": "database" },
+    { "participant": "syncLog", "from": 272, "to": 296, "type": "database" },
+    { "participant": "zs", "from": 302, "to": 438, "type": "backend" },
+    { "participant": "zendesk", "from": 332, "to": 438, "type": "cloud" },
+    { "participant": "syncLog", "from": 452, "to": 470, "type": "database" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Seleção determinística", "items": [
+      "streamQuery pagina o BigQuery em Generator coroutine-safe",
+      "Sem dedup: sempre resume pelo UserSyncLog",
+      "Lotes de 100 com clamp min(100, max(1, x))"
+    ] },
+    { "dot": "orange", "title": "Envio bulk com retry", "items": [
+      "Parallel mantém até N coroutines de envio em paralelo",
+      "throttleRequest antes de cada request",
+      "429/5xx/network viram TransientZendeskException em backoff"
+    ] },
+    { "dot": "emerald", "title": "Rastreabilidade", "items": [
+      "pollJobStatus consulta o job_id até concluir",
+      "status/last_error gravados por usuário",
+      "logs alimentam o command de conflito de e-mails"
+    ] }
+  ]
+}

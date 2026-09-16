@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "sync-zendesk — Sequência de Sync de Organizações",
+    "output": "sequence.html",
+    "viewBox": [1080, 640],
+    "locale": "pt-BR",
+    "quality_profile": "showcase",
+    "column_fit": "spread"
+  },
+  "participants": [
+    { "id": "console", "type": "external", "label": "Console Hyperf", "sublabel": "bin/hyperf.php" },
+    { "id": "cmd", "type": "backend", "label": "SyncOrgCmd", "sublabel": "create × update" },
+    { "id": "bq", "type": "database", "label": "BigQuery", "sublabel": "Google Cloud" },
+    { "id": "dedup", "type": "database", "label": "Dedup Service", "sublabel": "Redis · hash" },
+    { "id": "zs", "type": "backend", "label": "ZendeskService", "sublabel": "createMany · updateMany" },
+    { "id": "zendesk", "type": "cloud", "label": "Zendesk API", "sublabel": "bulk · job" },
+    { "id": "mapping", "type": "database", "label": "Org Mapping", "sublabel": "synced_at · zendesk_id" }
+  ],
+  "segments": [
+    { "from": 150, "to": 205, "label": "Disparo" },
+    { "from": 205, "to": 295, "label": "Seleção no BigQuery" },
+    { "from": 295, "to": 355, "label": "Dedup Redis" },
+    { "from": 355, "to": 445, "label": "Bulk Zendesk" },
+    { "from": 445, "to": 505, "label": "Persistência" }
+  ],
+  "messages": [
+    { "from": "console", "to": "cmd", "y": 160, "label": "bigquery:sync-organizations", "variant": "emphasis", "note": "opções: --batch-size, --concurrency, --hours, --resume" },
+    { "from": "cmd", "to": "mapping", "y": 190, "label": "loadAlreadySyncedIds", "variant": "dashed", "note": "resume do dia — ZendeskOrganizationMapping.synced_at" },
+    { "from": "mapping", "to": "cmd", "y": 220, "label": "pular já sincronizadas", "variant": "return" },
+    { "from": "cmd", "to": "bq", "y": 250, "label": "streamQuery (SQL)", "variant": "default", "note": "Generator coroutine-safe que normaliza cada linha" },
+    { "from": "bq", "to": "cmd", "y": 280, "label": "organizations alteradas no período", "variant": "return" },
+    { "from": "cmd", "to": "dedup", "y": 310, "label": "shouldPublish", "variant": "default", "note": "hash do payload por namespace+external_id — evita reenvio redundante" },
+    { "from": "dedup", "to": "cmd", "y": 340, "label": "permitido", "variant": "return", "note": "markPublished grava o hash após o envio" },
+    { "from": "cmd", "to": "zs", "y": 370, "label": "sendBatch — create × update", "variant": "emphasis", "note": "separação por created_at/updated_at — lotes de até 100" },
+    { "from": "zs", "to": "zendesk", "y": 400, "label": "createMany/updateManyOrganizations", "variant": "emphasis", "note": "POST/PUT create_many — teto de 100 por chamada; throttleRequest antes de cada request" },
+    { "from": "zendesk", "to": "zs", "y": 430, "label": "job_id + conclusão", "variant": "return", "note": "pollJobStatus com backoff até o job terminar" },
+    { "from": "zs", "to": "mapping", "y": 460, "label": "persistir zendesk_organization_id", "variant": "emphasis", "note": "updateLocalMapping" },
+    { "from": "cmd", "to": "console", "y": 490, "label": "sync concluída", "variant": "return" }
+  ],
+  "activations": [
+    { "participant": "cmd", "from": 152, "to": 498, "type": "backend" },
+    { "participant": "mapping", "from": 182, "to": 228, "type": "database" },
+    { "participant": "bq", "from": 242, "to": 288, "type": "database" },
+    { "participant": "dedup", "from": 302, "to": 348, "type": "database" },
+    { "participant": "zs", "from": 362, "to": 468, "type": "backend" },
+    { "participant": "zendesk", "from": 392, "to": 438, "type": "cloud" },
+    { "participant": "mapping", "from": 452, "to": 470, "type": "database" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Resume diário", "items": [
+      "loadAlreadySyncedIds consulta synced_at de hoje",
+      "alwaysResume = true",
+      "organizations já sincronizadas são puladas antes da leitura"
+    ] },
+    { "dot": "orange", "title": "Dedup no Redis", "items": [
+      "shouldPublish compara o hash do payload",
+      "namespace + external_id definem a chave",
+      "markPublished economiza requests ao Zendesk"
+    ] },
+    { "dot": "emerald", "title": "Persistência do vínculo", "items": [
+      "create × update separados por created_at/updated_at",
+      "bulk de até 100 por chamada com pollJobStatus",
+      "updateLocalMapping grava o zendesk_organization_id"
+    ] }
+  ]
+}

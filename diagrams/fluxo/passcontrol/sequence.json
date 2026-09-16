@@ -1,0 +1,242 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "PassControl — Sunco · Zendesk · Gambit",
+    "locale": "pt-BR",
+    "output": "sequence.html",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1080,
+      640
+    ],
+    "column_fit": "spread"
+  },
+  "participants": [
+    {
+      "id": "cliente",
+      "type": "external",
+      "label": "Usuário (WhatsApp)",
+      "sublabel": "Cliente"
+    },
+    {
+      "id": "sunco",
+      "type": "cloud",
+      "label": "Sunco",
+      "sublabel": "Sunshine · Switchboard"
+    },
+    {
+      "id": "bot",
+      "type": "backend",
+      "label": "Triagem & Bot",
+      "sublabel": "Zendesk"
+    },
+    {
+      "id": "passcontrol",
+      "type": "backend",
+      "label": "PassControl",
+      "sublabel": "release · return"
+    },
+    {
+      "id": "gambit",
+      "type": "backend",
+      "label": "Gambit (IA)",
+      "sublabel": "IA · ações"
+    },
+    {
+      "id": "agentws",
+      "type": "frontend",
+      "label": "Agent Workspace",
+      "sublabel": "humano"
+    }
+  ],
+  "segments": [
+    {
+      "from": 192,
+      "to": 264,
+      "label": "Identidade (Sunco)"
+    },
+    {
+      "from": 272,
+      "to": 304,
+      "label": "Triagem & decisão"
+    },
+    {
+      "from": 312,
+      "to": 476,
+      "label": "Controle no Gambit"
+    },
+    {
+      "from": 490,
+      "to": 536,
+      "label": "Desfecho (tags)"
+    }
+  ],
+  "messages": [
+    {
+      "id": "m01",
+      "from": "cliente",
+      "to": "sunco",
+      "y": 168,
+      "label": "1. Inbound · WhatsApp Business API",
+      "variant": "emphasis"
+    },
+    {
+      "id": "m02",
+      "from": "sunco",
+      "to": "bot",
+      "y": 198,
+      "label": "2. Lookup: ENCONTRADO recupera ID + perfil",
+      "variant": "emphasis"
+    },
+    {
+      "id": "m03",
+      "from": "sunco",
+      "to": "bot",
+      "y": 228,
+      "label": "3. NÃO ACHOU: cria perfil dinamicamente",
+      "variant": "dashed"
+    },
+    {
+      "id": "m04state",
+      "from": "sunco",
+      "to": "bot",
+      "y": 258,
+      "label": "4. Estado do controle: Zendesk AI/Bot assume",
+      "variant": "default"
+    },
+    {
+      "id": "m04",
+      "from": "bot",
+      "to": "passcontrol",
+      "y": 288,
+      "label": "5. Rota B · release",
+      "variant": "emphasis"
+    },
+    {
+      "id": "m05",
+      "from": "passcontrol",
+      "to": "sunco",
+      "y": 318,
+      "label": "6. Switchboard: Zendesk PASSIVO · Gambit ATIVO",
+      "variant": "security"
+    },
+    {
+      "id": "m06",
+      "from": "passcontrol",
+      "to": "gambit",
+      "y": 348,
+      "label": "7. Webhook · horário de início",
+      "variant": "emphasis"
+    },
+    {
+      "id": "m07",
+      "from": "gambit",
+      "to": "bot",
+      "y": 378,
+      "label": "8. Recupera histórico e sessão",
+      "variant": "default"
+    },
+    {
+      "id": "m08",
+      "from": "cliente",
+      "to": "gambit",
+      "y": 408,
+      "label": "9. Mensagens via API Zendesk",
+      "variant": "default"
+    },
+    {
+      "id": "m09",
+      "from": "gambit",
+      "to": "cliente",
+      "y": 438,
+      "label": "10. IA responde com ações",
+      "variant": "return"
+    },
+    {
+      "id": "m10",
+      "from": "gambit",
+      "to": "passcontrol",
+      "y": 468,
+      "label": "11. Devolve controle + tag",
+      "variant": "emphasis"
+    },
+    {
+      "id": "m11",
+      "from": "passcontrol",
+      "to": "agentws",
+      "y": 498,
+      "label": "12. Tag: deflexão (encerra) · transferência (roteia)",
+      "variant": "emphasis"
+    },
+    {
+      "id": "m12",
+      "from": "agentws",
+      "to": "cliente",
+      "y": 528,
+      "label": "13. Atendente assume com histórico",
+      "variant": "return"
+    }
+  ],
+  "activations": [
+    {
+      "participant": "sunco",
+      "from": 192,
+      "to": 326,
+      "type": "cloud"
+    },
+    {
+      "participant": "bot",
+      "from": 192,
+      "to": 390,
+      "type": "backend"
+    },
+    {
+      "participant": "passcontrol",
+      "from": 282,
+      "to": 506,
+      "type": "backend"
+    },
+    {
+      "participant": "gambit",
+      "from": 372,
+      "to": 476,
+      "type": "backend"
+    },
+    {
+      "participant": "agentws",
+      "from": 522,
+      "to": 536,
+      "type": "frontend"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Identidade (Sunco)",
+      "items": [
+        "Phone do payload WhatsApp identifica o usuário",
+        "Lookup no Zendesk: ENCONTRADO recupera ID + perfil",
+        "NÃO ACHOU: cria perfil dinamicamente no Zendesk"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Controle (Switchboard)",
+      "items": [
+        "Release: Zendesk PASSIVO · Gambit ATIVO",
+        "Webhook carrega o horário de início",
+        "Return: Zendesk volta a ATIVO no Sunco"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Desfecho (tags)",
+      "items": [
+        "Deflexão: gatilho encerra o ticket sem humano",
+        "Transferência: roteia grupo/agente no Workspace",
+        "Atendente recebe histórico completo do Gambit"
+      ]
+    }
+  ]
+}

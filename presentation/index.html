@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zendesk — Arquiteturas</title>
+<meta name="description" content="Apresentação interativa de arquiteturas geradas pela skill Archify.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/shell.css">
+</head>
+<body>
+<a class="skip-link" href="#stage">Pular para o diagrama</a>
+
+<!-- Topbar -->
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-dot" aria-hidden="true"></span>
+    <span class="brand-name">Arquiteturas</span>
+  </div>
+
+  <div class="topbar-center" id="current-title" aria-live="polite">
+    <span class="current-dot" id="current-dot" aria-hidden="true"></span>
+    <h1 id="current-title-text">Selecione uma arquitetura</h1>
+  </div>
+
+  <div class="topbar-actions">
+    <button id="btn-theme" class="btn ghost" type="button" aria-label="Alternar tema claro/escuro" aria-pressed="false">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v2m0 14v2m9-9h-2M5 12H3m14.07-6.07-1.41 1.41M8.34 15.66l-1.41 1.41m0-9.34 1.41 1.41m7.32 7.32 1.41 1.41M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/></svg>
+      <span id="theme-label">Clean</span>
+    </button>
+    <button id="btn-present" class="btn ghost" type="button" aria-label="Modo apresentação (Esc para sair)">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 5v11h16V5M9 20h6m-3-4v4"/></svg>
+      <span>Apresentar</span>
+    </button>
+  </div>
+</header>
+
+<div class="workspace">
+  <!-- Sidebar -->
+  <nav class="sidebar" aria-label="Arquiteturas disponíveis">
+    <!-- <p class="sidebar-heading">Arquiteturas</p> -->
+    <ul id="diagram-list" class="diagram-list" role="listbox" aria-label="Lista de arquiteturas"></ul>
+    <!-- <div class="sidebar-foot">
+      <p class="sidebar-hint">Gerado por <span class="mono">archify</span> · specs em <span class="mono">diagrams/*.json</span></p>
+    </div> -->
+  </nav>
+
+  <!-- Main -->
+  <main id="stage" class="stage" tabindex="-1">
+    <!-- Description da arquitetura selecionada -->
+    <p id="arch-description" class="arch-description" hidden></p>
+
+    <!-- Container do diagrama -->
+    <div class="frame-wrap" id="frame-wrap">
+      <iframe id="frame" class="frame" title="Diagrama de arquitetura" src="about:blank"></iframe>
+      <div id="empty-state" class="empty-state">
+        <div class="empty-card">
+          <span class="empty-dot" aria-hidden="true"></span>
+          <h2>Nenhuma arquitetura selecionada</h2>
+          <p>Escolha um diagrama na lista à esquerda para carregá-lo aqui.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Barra flutuante do modo apresentação -->
+<button id="present-exit" class="present-exit" type="button" hidden aria-label="Sair do modo apresentação (Esc)">Sair da apresentação (Esc)</button>
+
+<script src="registry.js"></script>
+<script src="assets/shell.js"></script>
+</body>
+</html>

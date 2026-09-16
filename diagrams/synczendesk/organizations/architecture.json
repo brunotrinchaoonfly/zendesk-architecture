@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "sync-zendesk — Sync de Organizações",
+    "quality_profile": "showcase",
+    "locale": "pt-BR",
+    "output": "architecture.html"
+  },
+  "components": [
+    {
+      "id": "console",
+      "type": "backend",
+      "label": "Hyperf Console",
+      "sublabel": "bigquery:sync-organizations",
+      "pos": [
+        40,
+        330
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "description": "<p>Entrada do command <code>bigquery:sync-organizations</code> (<code>bin/hyperf.php</code>), com as opções da base: <code>--batch-size</code>, <code>--concurrency</code>, <code>--hours</code>, <code>--resume</code>…</p>"
+    },
+    {
+      "id": "cmd",
+      "type": "backend",
+      "label": "SyncOrgCmd",
+      "sublabel": "split create · update",
+      "pos": [
+        270,
+        330
+      ],
+      "size": [
+        190,
+        60
+      ],
+      "description": "<p><code>BigQuerySyncOrganizationsCommand</code> (extends <code>AbstractOrganizationBigQueryCommand</code>). <strong>Separa registros em create × update</strong> comparando <code>created_at</code>/<code>updated_at</code>; usa <code>loadAlreadySyncedIds()</code> para pular organizations já sincronizadas no dia (<code>ZendeskOrganizationMapping.synced_at</code>). <code>alwaysResume()</code> = <code>true</code>.</p>"
+    },
+    {
+      "id": "base",
+      "type": "backend",
+      "label": "AbstractLoad",
+      "sublabel": "stream · Parallel · resume",
+      "pos": [
+        540,
+        330
+      ],
+      "size": [
+        170,
+        60
+      ],
+      "description": "<p><code>AbstractBigQueryLoadCommand</code> — <strong>template da carga</strong>: <code>streamQuery</code>, buffer por lote, <code>Parallel(concurrency)</code>, <code>pollJobStatus</code> e <code>reconcileBatchLocal</code>.</p>\n<p><strong>Limites de request</strong>:</p>\n<ul>\n<li>lotes de até <code>100</code> por chamada bulk (<code>BIGQUERY_BATCH_SIZE</code>, default <code>100</code>, clamp <code>min(100, max(1, x))</code> — teto da API <code>create_many</code> do Zendesk)</li>\n<li>concorrência <code>BQ_ORGS_CONCURRENCY</code> (default <code>1</code>, override <code>--concurrency</code>)</li>\n<li><code>flushBatchesInParallel</code> mantém até N coroutine(s) de envio em paralelo</li>\n</ul>\n<p><code>ZendeskService</code> aplica <code>throttleRequest()</code> antes de cada request; <code>429/5xx/network</code> viram <code>TransientZendeskException</code> com retry em backoff (<code>Coroutine::sleep</code> não-bloqueante).</p>"
+    },
+    {
+      "id": "bqClient",
+      "type": "backend",
+      "label": "BigQueryClient",
+      "sublabel": "streamQuery",
+      "pos": [
+        540,
+        170
+      ],
+      "size": [
+        160,
+        60
+      ],
+      "description": "<p><code>BigQueryClientService::streamQuery(sql, maxResults)</code> — <strong>Generator coroutine-safe</strong> que normaliza cada linha.</p>"
+    },
+    {
+      "id": "bq",
+      "type": "external",
+      "label": "BigQuery",
+      "sublabel": "Google Cloud",
+      "pos": [
+        770,
+        170
+      ],
+      "size": [
+        140,
+        60
+      ],
+      "description": "<p>BigQuery (Google Cloud) — <strong>origem</strong> das organizations alteradas no período.</p>"
+    },
+    {
+      "id": "dedup",
+      "type": "database",
+      "label": "Dedup Service",
+      "sublabel": "Redis · hash",
+      "pos": [
+        300,
+        170
+      ],
+      "size": [
+        170,
+        60
+      ],
+      "description": "<p><code>BigQueryDeduplicationService</code> (Redis) — <code>shouldPublish()</code>/<code>markPublished()</code> por <code>namespace+external_id</code> com hash do payload; <strong>evita reenvio redundante</strong> ao Zendesk (economiza requests).</p>"
+    },
+    {
+      "id": "zs",
+      "type": "backend",
+      "label": "ZendeskService",
+      "sublabel": "createMany · updateMany",
+      "pos": [
+        780,
+        330
+      ],
+      "size": [
+        170,
+        60
+      ],
+      "description": "<p><code>ZendeskService</code> — <code>createManyOrganizations</code> (POST) e <code>updateManyOrganizations</code> (PUT), até <code>100</code> por chamada; <code>pollJobStatus</code> com backoff.</p>\n<p>Aplica <code>throttleRequest()</code> antes de cada request; <code>429/5xx/network</code> viram <code>TransientZendeskException</code> com retry em backoff (<code>Coroutine::sleep</code> não-bloqueante).</p>"
+    },
+    {
+      "id": "zendesk",
+      "type": "external",
+      "label": "Zendesk API",
+      "sublabel": "bulk · job",
+      "pos": [
+        1020,
+        330
+      ],
+      "size": [
+        160,
+        60
+      ],
+      "description": "<p>API bulk do Zendesk (<code>organizations create/update many</code>) — até <code>100</code> registros por chamada; devolve <code>job_id</code>.</p>"
+    },
+    {
+      "id": "mapping",
+      "type": "database",
+      "label": "OrganizationMapping",
+      "sublabel": "synced_at · zendesk_id",
+      "pos": [
+        540,
+        500
+      ],
+      "size": [
+        200,
+        60
+      ],
+      "description": "<p><code>ZendeskOrganizationMapping</code> — <strong>resume</strong> (<code>synced_at</code> de hoje) e persistência do <code>zendesk_organization_id</code> retornado (<code>updateLocalMapping</code>).</p>"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "sync-zendesk (Hyperf + Swoole)",
+      "wraps": [
+        "console",
+        "cmd",
+        "base",
+        "bqClient",
+        "dedup",
+        "zs",
+        "mapping"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "run",
+      "from": "console",
+      "to": "cmd"
+    },
+    {
+      "id": "ext",
+      "from": "cmd",
+      "to": "base"
+    },
+    {
+      "id": "stream",
+      "from": "base",
+      "to": "bqClient",
+      "label": "streamQuery",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelDx": 48
+    },
+    {
+      "id": "sql",
+      "from": "bqClient",
+      "to": "bq",
+      "label": "SQL"
+    },
+    {
+      "id": "dedupe",
+      "from": "base",
+      "to": "dedup",
+      "label": "shouldPublish",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelDx": -48
+    },
+    {
+      "id": "send",
+      "from": "base",
+      "to": "zs",
+      "label": "sendBatch"
+    },
+    {
+      "id": "bulk",
+      "from": "zs",
+      "to": "zendesk",
+      "label": "bulk job"
+    },
+    {
+      "id": "resume",
+      "from": "base",
+      "to": "mapping",
+      "label": "resume",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 30
+    },
+    {
+      "id": "persist",
+      "from": "zs",
+      "to": "mapping",
+      "label": "persist id",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 30
+    }
+  ]
+}
