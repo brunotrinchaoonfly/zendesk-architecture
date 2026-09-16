@@ -3,181 +3,414 @@
   "diagram_type": "architecture",
   "meta": {
     "title": "sync-zendesk — Conflito de E-mails",
+    "output": "architecture.html",
     "quality_profile": "showcase",
+    "repository": {
+      "url": "git@gitlab.com:onflylabs/general/microservicos/travel-ms/sync-zendesk.git",
+      "link_mode": "local-only",
+      "revision": "2df526033d6b4d1b75b941cdd159daab570652f6"
+    },
+    "views": [
+      {
+        "id": "main-path",
+        "label": "Fluxo principal",
+        "focus": [
+          "cron",
+          "cmd",
+          "synclog",
+          "zsrv",
+          "zapi"
+        ],
+        "note": "Comando carrega falhas do sync log, busca os cadastros no Zendesk por external_id e e-mail e aplica o caso A/B/C/D."
+      },
+      {
+        "id": "cases",
+        "label": "Casos A · B · C · D",
+        "focus": [
+          "cmd",
+          "zsrv",
+          "zapi"
+        ],
+        "note": "A=merge com guarda; B=sync no próprio cadastro; C=linka external_id; D=revisão manual."
+      },
+      {
+        "id": "higiene",
+        "label": "Higienização de identidades",
+        "focus": [
+          "cmd",
+          "zsrv",
+          "bqsrv",
+          "bq"
+        ],
+        "note": "Em todo sucesso, identidades extras de e-mail são removidas e o dono real é re-sincronizado via BigQuery."
+      },
+      {
+        "id": "rate-limit",
+        "label": "Rate limit e retry",
+        "focus": [
+          "zsrv",
+          "zapi"
+        ],
+        "note": "Mesmo ZendeskService: throttle de 600ms, retry ×3 com backoff e Retry-After no 429."
+      }
+    ],
     "locale": "pt-BR",
-    "output": "architecture.html"
+    "viewBox": [
+      1170,
+      540
+    ]
   },
   "components": [
     {
-      "id": "console",
-      "type": "backend",
-      "label": "Hyperf Console",
-      "sublabel": "conflicting-emails",
+      "id": "cron",
+      "type": "external",
+      "label": "Operador / Cron",
+      "sublabel": "sync-conflicting-user-emails",
       "pos": [
         40,
-        330
+        220
       ],
       "size": [
         150,
-        60
-      ],
-      "description": "<p>Entrada do command <code>zendesk:sync-conflicting-user-emails</code>. Opções:</p>\n<ul>\n<li><code>--id</code> (external_id)</li>\n<li><code>--case</code> (<code>A|B|C|D</code>)</li>\n<li><code>--report</code> (<code>.md</code> em <code>runtime/reports</code>)</li>\n<li><code>--dry-run</code> da base</li>\n</ul>"
+        64
+      ]
     },
     {
       "id": "cmd",
       "type": "backend",
-      "label": "ConflictingEmailCmd",
-      "sublabel": "casos A·B·C·D · dry-run",
+      "label": "SyncConflictingEmailCmd",
+      "sublabel": "casos A · B · C · D",
+      "tag": "--dry-run · --report",
+      "sources": [
+        {
+          "path": "app/Command/Sync/ZendeskSyncConflictingUserEmailCommand.php",
+          "label": "handle · casos"
+        }
+      ],
       "pos": [
-        290,
-        330
+        315,
+        220
       ],
       "size": [
-        200,
-        60
-      ],
-      "description": "<p><code>ZendeskSyncConflictingUserEmailCommand</code> (extends <code>AbstractUserBigQueryCommand</code>). Seleciona <code>ZendeskUserSyncLog</code> com <code>status=Failure</code> e <code>last_error=UserUpdateError</code>; busca cadastro no Zendesk por <code>external_id</code> e/ou e-mail e <strong>decide o caso</strong>:</p>\n<ul>\n<li><strong>A</strong> = merge dos dois cadastros (com guarda de segurança)</li>\n<li><strong>B</strong> = <code>external_id</code> já existe (atualiza sem merge)</li>\n<li><strong>C</strong> = só o e-mail existe (linka <code>external_id</code>)</li>\n<li><strong>D</strong> = nada encontrado (falha manual)</li>\n</ul>\n<p><strong>Sem bulk</strong>: operações user a user (<code>updateUser</code>, <code>updateUserEmail</code>, <code>updateUserNotes</code>, <code>updateUserAfterMergeWithRetry</code>); <code>retryOnTransientEmailConflict</code> para conflito transitório de e-mail.</p>\n<p><code>ZendeskService</code> aplica <code>throttleRequest()</code> antes de cada request; <code>429/5xx/network</code> viram <code>TransientZendeskException</code> com retry em backoff (<code>Coroutine::sleep</code> não-bloqueante).</p>"
+        210,
+        64
+      ]
     },
     {
-      "id": "bq",
-      "type": "external",
-      "label": "BigQuery",
-      "sublabel": "by external_id · email",
-      "pos": [
-        300,
-        170
-      ],
-      "size": [
-        180,
-        60
-      ],
-      "description": "<p>BigQuery — consulta cruzada por <code>external_id</code> e <code>email</code> para detectar contas em conflito.</p>"
-    },
-    {
-      "id": "zs",
+      "id": "zsrv",
       "type": "backend",
       "label": "ZendeskService",
-      "sublabel": "find · update · merge",
+      "sublabel": "find · merge · identities",
+      "tag": "throttle 600ms",
+      "sources": [
+        {
+          "path": "app/Service/Zendesk/ZendeskService.php",
+          "label": "getUserBy · mergeUser"
+        }
+      ],
       "pos": [
-        660,
-        330
-      ],
-      "size": [
-        180,
-        60
-      ],
-      "description": "<p><code>ZendeskService</code> — <code>getUserByExternalId</code>/<code>getUserByEmail</code>/<code>findUserIdByEmail</code> (resolução do caso), <code>updateUser</code>, <code>updateUserEmail</code>, <code>updateUserNotes</code>, <code>updateUserAfterMergeWithRetry</code>.</p>\n<p>Aplica <code>throttleRequest()</code> antes de cada request; <code>429/5xx/network</code> viram <code>TransientZendeskException</code> com retry em backoff (<code>Coroutine::sleep</code> não-bloqueante).</p>"
-    },
-    {
-      "id": "zendesk",
-      "type": "external",
-      "label": "Zendesk API",
-      "sublabel": "users",
-      "pos": [
-        920,
-        330
-      ],
-      "size": [
-        160,
-        60
-      ],
-      "description": "<p>API do Zendesk (<code>users</code>) — busca e atualização user a user durante a resolução do conflito.</p>"
-    },
-    {
-      "id": "syncLog",
-      "type": "database",
-      "label": "UserSyncLog",
-      "sublabel": "Failure → success",
-      "pos": [
-        240,
-        500
+        665,
+        220
       ],
       "size": [
         190,
-        60
-      ],
-      "description": "<p><code>ZendeskUserSyncLog</code> — seleciona registros <code>status=Failure</code> e <strong>reclassifica</strong> <code>Failure → success</code> conforme os casos são resolvidos.</p>"
+        64
+      ]
     },
     {
-      "id": "mapping",
-      "type": "database",
-      "label": "Local mapping",
-      "sublabel": "zendesk_user_id",
+      "id": "zapi",
+      "type": "external",
+      "label": "Zendesk REST API",
+      "sublabel": "search · merge · identities",
       "pos": [
-        660,
-        500
+        920,
+        220
+      ],
+      "size": [
+        175,
+        64
+      ]
+    },
+    {
+      "id": "bqsrv",
+      "type": "backend",
+      "label": "BigQueryClientService",
+      "sublabel": "streamQuery() · payload",
+      "pos": [
+        600,
+        60
       ],
       "size": [
         180,
+        64
+      ]
+    },
+    {
+      "id": "bq",
+      "type": "cloud",
+      "label": "BigQuery",
+      "sublabel": "temp_to_zenddesk_users",
+      "tag": "dono do e-mail",
+      "pos": [
+        830,
         60
       ],
-      "description": "<p><code>Local mapping</code> — <code>zendesk_user_id</code>: garante rastreabilidade do merge com o registro de origem.</p>"
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "mapper",
+      "type": "backend",
+      "label": "Mapping Layer",
+      "sublabel": "RowMapper · ZendeskMapper",
+      "tag": "→ ZendeskUserDTO",
+      "sources": [
+        {
+          "path": "app/Mapping/ZendeskMapper.php",
+          "label": "toUser()"
+        },
+        {
+          "path": "app/Mapping/BigQueryRowMapper.php",
+          "label": "mapUserRow()"
+        }
+      ],
+      "pos": [
+        340,
+        60
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "synclog",
+      "type": "database",
+      "label": "MySQL sync log",
+      "sublabel": "zendesk_users_sync_log",
+      "tag": "falhas UserUpdateError",
+      "sources": [
+        {
+          "path": "app/Model/ZendeskUserSyncLog.php",
+          "label": "status · last_error"
+        }
+      ],
+      "pos": [
+        315,
+        400
+      ],
+      "size": [
+        210,
+        64
+      ]
+    },
+    {
+      "id": "report",
+      "type": "backend",
+      "label": "Relatório .md",
+      "sublabel": "runtime/reports/",
+      "tag": "--report",
+      "pos": [
+        720,
+        400
+      ],
+      "size": [
+        180,
+        64
+      ]
     }
   ],
   "boundaries": [
     {
       "kind": "region",
-      "label": "sync-zendesk (Hyperf + Swoole)",
+      "label": "sync-zendesk (Hyperf 3.1 · Swoole 6.1)",
       "wraps": [
-        "console",
         "cmd",
-        "zs",
-        "syncLog",
-        "mapping"
+        "zsrv",
+        "bqsrv",
+        "mapper"
       ]
     }
   ],
   "connections": [
     {
       "id": "run",
-      "from": "console",
-      "to": "cmd"
-    },
-    {
-      "id": "pick",
-      "from": "syncLog",
+      "from": "cron",
       "to": "cmd",
-      "label": "failures",
-      "fromSide": "top",
-      "toSide": "bottom",
-      "labelDy": 30
-    },
-    {
-      "id": "done",
-      "from": "cmd",
-      "to": "syncLog",
-      "fromSide": "bottom",
-      "toSide": "right"
-    },
-    {
-      "id": "fetch",
-      "from": "cmd",
-      "to": "bq",
-      "label": "fetch payload",
-      "fromSide": "top",
-      "toSide": "bottom"
-    },
-    {
-      "id": "cases",
-      "from": "cmd",
-      "to": "zs",
-      "label": "A·B·C",
       "variant": "emphasis"
     },
     {
-      "id": "update",
-      "from": "zs",
-      "to": "zendesk",
-      "label": "update · merge"
+      "id": "fetch",
+      "from": "synclog",
+      "to": "cmd",
+      "label": "falhas por e-mail",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelDx": -160
     },
     {
-      "id": "persist",
-      "from": "zs",
-      "to": "mapping",
-      "label": "local id",
+      "id": "lookup",
+      "from": "cmd",
+      "to": "zsrv",
+      "label": "casos A·B·C",
+      "labelDy": -16
+    },
+    {
+      "id": "api",
+      "from": "zsrv",
+      "to": "zapi",
+      "label": "merge · update · identities",
+      "labelDy": -40
+    },
+    {
+      "id": "state",
+      "from": "zsrv",
+      "to": "synclog",
+      "label": "updateUserLocalMapping",
       "fromSide": "bottom",
       "toSide": "top",
-      "labelDy": 30
+      "via": [
+        [
+          805,
+          340
+        ],
+        [
+          520,
+          340
+        ]
+      ],
+      "labelAt": [
+        660,
+        328
+      ]
+    },
+    {
+      "id": "bqfetch",
+      "from": "cmd",
+      "to": "bqsrv",
+      "label": "payload + donos de e-mail",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "via": [
+        [
+          420,
+          190
+        ],
+        [
+          690,
+          190
+        ],
+        [
+          690,
+          124
+        ]
+      ],
+      "labelAt": [
+        555,
+        178
+      ]
+    },
+    {
+      "id": "bqreq",
+      "from": "bqsrv",
+      "to": "bq",
+      "label": "SQL"
+    },
+    {
+      "id": "map",
+      "from": "zsrv",
+      "to": "mapper",
+      "label": "resolveZendeskUserId()",
+      "fromSide": "top",
+      "toSide": "right",
+      "via": [
+        [
+          760,
+          160
+        ],
+        [
+          560,
+          160
+        ],
+        [
+          560,
+          92
+        ],
+        [
+          510,
+          92
+        ]
+      ],
+      "labelAt": [
+        635,
+        148
+      ]
+    },
+    {
+      "id": "report-edge",
+      "from": "cmd",
+      "to": "report",
+      "label": "agrupa por caso",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "via": [
+        [
+          480,
+          284
+        ],
+        [
+          480,
+          365
+        ],
+        [
+          810,
+          365
+        ],
+        [
+          810,
+          400
+        ]
+      ],
+      "labelAt": [
+        645,
+        378
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Casos de conflito",
+      "items": [
+        "Fonte: zendesk_users_sync_log (status=failure, zendesk_user_id IS NULL, error_message \"Email: %\")",
+        "A: e-mail em outro cadastro → mergeUser(e-mail → external_id) com guarda de segurança",
+        "A.REALOCADO: fonte tem external_id real próprio → merge bloqueado; sync direto no alvo, sem merge",
+        "B: só external_id → b.1 e-mail correto (sync dos dados) / b.2 desatualizado (atualiza e-mail + dados); sem merge",
+        "C: só e-mail → linka external_id + sync; D: nada encontrado → revisão manual"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Higienização de identidades",
+      "items": [
+        "Em todo sucesso (A, B, C): getUserIdentities() lista todas as identidades de e-mail do cadastro",
+        "Identidade ≠ e-mail Onfly pertencente a outro usuário ativo (BigQuery) → deleteUserIdentity()",
+        "Dono real re-sincronizado como cadastro novo via resolveZendeskUserId()",
+        "Falha no re-sync → sync log do OUTRO external_id com last_error = UserCreatedError (pendente)"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Rate limit (Zendesk)",
+      "items": [
+        "throttleRequest(): mínimo 600ms entre requisições (~100 req/min)",
+        "requestWithRetry(): MAX_ATTEMPTS=3; Connect/Server → backoff 2^n (1/2/4s)",
+        "429 → Retry-After; esgotado → TransientZendeskException; outros 4xx → PermanentValidationException",
+        "pollJobStatus(): backoff 2/5/10/30s, timeout 300s; failed/killed → TransientZendeskException",
+        "esperas via Coroutine::sleep() — não bloqueiam worker Swoole"
+      ]
     }
   ]
 }

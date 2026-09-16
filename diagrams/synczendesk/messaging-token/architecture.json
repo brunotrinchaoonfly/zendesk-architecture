@@ -1,0 +1,331 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Messaging Token",
+    "output": "architecture.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "git@gitlab.com:onflylabs/general/microservicos/travel-ms/sync-zendesk.git",
+      "link_mode": "local-only",
+      "revision": "2df526033d6b4d1b75b941cdd159daab570652f6"
+    },
+    "views": [
+      {
+        "id": "main-path",
+        "label": "Fluxo da rota",
+        "focus": [
+          "client",
+          "mid",
+          "val",
+          "ctl",
+          "svc"
+        ],
+        "note": "GET /sync-zendesk/messaging-token: JWT Onfly validado no middleware, controller extrai claims e o serviço emite o token de Messaging."
+      },
+      {
+        "id": "claims",
+        "label": "Token gerado",
+        "focus": [
+          "ctl",
+          "svc",
+          "jwt",
+          "cfg"
+        ],
+        "note": "JWT HS256 assinado com shared_secret; claims external_id, scope, email, email_verified e name."
+      },
+      {
+        "id": "auth-chain",
+        "label": "Cadeia de autenticação",
+        "focus": [
+          "client",
+          "mid",
+          "val",
+          "ctl"
+        ],
+        "note": "AuthenticationMiddleware (CoreConnect) publica Authentication no Context; falha = ZendeskMessagingUnauthenticatedException."
+      },
+      {
+        "id": "messaging",
+        "label": "Consumo do token",
+        "focus": [
+          "client",
+          "zsdk"
+        ],
+        "note": "Frontend usa o token no Zendesk Messaging Web SDK para autenticar o chat do usuário."
+      }
+    ],
+    "locale": "pt-BR"
+  },
+  "components": [
+    {
+      "id": "client",
+      "type": "external",
+      "label": "Frontend / SDK",
+      "sublabel": "GET /messaging-token",
+      "tag": "Bearer JWT Onfly",
+      "pos": [
+        40,
+        190
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "mid",
+      "type": "security",
+      "label": "AuthenticationMiddleware",
+      "sublabel": "Onfly\\CoreConnect · Context",
+      "tag": "valida JWT",
+      "pos": [
+        250,
+        190
+      ],
+      "size": [
+        200,
+        64
+      ]
+    },
+    {
+      "id": "val",
+      "type": "backend",
+      "label": "ValidationMiddleware",
+      "sublabel": "Hyperf validation",
+      "pos": [
+        510,
+        190
+      ],
+      "size": [
+        180,
+        64
+      ]
+    },
+    {
+      "id": "ctl",
+      "type": "backend",
+      "label": "ZendeskMessagingTokenController",
+      "sublabel": "claims user_id · email · name",
+      "tag": "GET /sync-zendesk",
+      "sources": [
+        {
+          "path": "app/Controller/ZendeskMessagingTokenController.php",
+          "label": "__invoke"
+        }
+      ],
+      "pos": [
+        750,
+        190
+      ],
+      "size": [
+        210,
+        64
+      ]
+    },
+    {
+      "id": "svc",
+      "type": "backend",
+      "label": "GenerateMessagingTokenService",
+      "sublabel": "JWT HS256 · ttl 3600s",
+      "sources": [
+        {
+          "path": "app/Service/Zendesk/GenerateMessagingTokenService.php",
+          "label": "handle()"
+        }
+      ],
+      "pos": [
+        1020,
+        190
+      ],
+      "size": [
+        190,
+        64
+      ]
+    },
+    {
+      "id": "cfg",
+      "type": "backend",
+      "label": "zendesk.messaging",
+      "sublabel": "key_id · shared_secret · ttl",
+      "tag": "config/autoload",
+      "sources": [
+        {
+          "path": "config/autoload/zendesk.php",
+          "label": "messaging[]"
+        }
+      ],
+      "pos": [
+        560,
+        30
+      ],
+      "size": [
+        190,
+        64
+      ]
+    },
+    {
+      "id": "jwt",
+      "type": "security",
+      "label": "Lcobucci JWT",
+      "sublabel": "Sha256 · InMemory secret",
+      "tag": "kid + claims",
+      "pos": [
+        820,
+        30
+      ],
+      "size": [
+        190,
+        64
+      ]
+    },
+    {
+      "id": "zsdk",
+      "type": "external",
+      "label": "Zendesk Messaging",
+      "sublabel": "Web SDK · valida JWT",
+      "tag": "chat do usuário",
+      "pos": [
+        250,
+        350
+      ],
+      "size": [
+        190,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "sync-zendesk (Hyperf 3.1 · Swoole 6.1)",
+      "wraps": [
+        "mid",
+        "val",
+        "ctl",
+        "svc",
+        "cfg",
+        "jwt"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "Bearer JWT Onfly",
+      "wraps": [
+        "client",
+        "mid"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "request",
+      "from": "client",
+      "to": "mid",
+      "label": "GET /messaging-token",
+      "variant": "emphasis",
+      "labelAt": [
+        175,
+        268
+      ]
+    },
+    {
+      "id": "chain",
+      "from": "mid",
+      "to": "val"
+    },
+    {
+      "id": "invoke",
+      "from": "val",
+      "to": "ctl"
+    },
+    {
+      "id": "gen",
+      "from": "ctl",
+      "to": "svc",
+      "label": "handle(userId, email, name)",
+      "labelAt": [
+        935,
+        268
+      ]
+    },
+    {
+      "id": "cfgread",
+      "from": "svc",
+      "to": "cfg",
+      "label": "zendesk.messaging",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelDx": -80
+    },
+    {
+      "id": "sign",
+      "from": "svc",
+      "to": "jwt",
+      "label": "sign HS256",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "response",
+      "from": "ctl",
+      "to": "client",
+      "label": "200 {token} · no-store",
+      "variant": "dashed",
+      "fromSide": "top",
+      "toSide": "top",
+      "via": [
+        [
+          855,
+          155
+        ],
+        [
+          115,
+          155
+        ]
+      ]
+    },
+    {
+      "id": "use",
+      "from": "client",
+      "to": "zsdk",
+      "label": "token → autentica chat",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Requisição",
+      "items": [
+        "GET /sync-zendesk/messaging-token?name=... com JWT Onfly (Bearer)",
+        "AuthenticationMiddleware (CoreConnect) valida o JWT e publica Authentication no Context (Hyperf\\Context, isolado por coroutine)",
+        "Controller extrai claims: user_id ?? scopes.User.id e scopes.User.email — ausente = ZendeskMessagingUnauthenticatedException",
+        "name: query ?name (trim, não-vazio) ?? scopes.User.name"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Token gerado (JWT)",
+      "items": [
+        "GenerateMessagingTokenService::handle() lê config zendesk.messaging (key_id, shared_secret, token_ttl_seconds)",
+        "key_id ou shared_secret ausentes → ZendeskMessagingMisconfiguredException",
+        "JWT HS256 (Sha256, InMemory) com timestamps unix; header kid = key_id",
+        "Claims: iat, exp = iat + ttl (3600s), jti = uuid4, external_id, scope \"user\", email, email_verified = true, name (se houver)",
+        "Resposta 200 {token} com Cache-Control: no-store (token nunca cacheado)"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Consumo no Messaging",
+      "items": [
+        "Frontend entrega o token ao Zendesk Messaging Web SDK",
+        "Zendesk valida assinatura HS256 com o shared_secret da integração (kid identifica a chave)",
+        "external_id vincula o chat ao usuário já sincronizado pelo bigquery:sync-users",
+        "email_verified = true evita duplicidade por e-mail no chat"
+      ]
+    }
+  ]
+}

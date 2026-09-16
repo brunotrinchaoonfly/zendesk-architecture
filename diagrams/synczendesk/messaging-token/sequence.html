@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="generator" content="archify 2.17.0-dev.1">
-  <title>sync-zendesk — Sync de Usuários</title>
+  <title>sync-zendesk — Messaging Token</title>
   <script>
     // Resolve the theme before first paint so light-preference users don't
     // see a dark flash. The toolbar script below re-applies with UI state.
@@ -5215,12 +5215,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
            data-preset-badge-blueprint="BLUEPRINT / REV 01"
            data-preset-badge-editorial="EDITORIAL / NOTA DE CAMPO">
         <div class="pulse-dot"></div>
-        <h1>sync-zendesk — Sync de Usuários</h1>
+        <h1>sync-zendesk — Messaging Token</h1>
       </div>
     </div>
 
-    <script id="archify-guided-views-data" type="application/json">[{"id":"main-path","label":"Fluxo principal","focus":["cron","cmd","abstract","zsrv","zapi"],"note":"Cron dispara o comando, que consulta o delta no BigQuery, mapeia, agrupa em lotes e envia ao Zendesk."},{"id":"rate-limit","label":"Rate limit e retry","focus":["zsrv","zapi"],"note":"ZendeskService aplica throttle de 600ms, retry com backoff exponencial e respeito ao Retry-After do 429."},{"id":"dedup-resume","label":"Dedup e resume","focus":["cmd","dedup","redis","mysql"],"note":"Dedup Redis desativado para users; resume vem do ZendeskUserSyncLog e o org lookup tem cache em memória."},{"id":"org-resolution","label":"Resolução de organização","focus":["cmd","orgres","zsrv","mysql","bq"],"note":"buildDto() consulta organizations_mapping; sem mapping, faz fallback upsertando a organização via BigQuery."}]</script>
-    <script id="archify-source-evidence-data" type="application/json">{"schemaVersion":1,"verified":true,"repository":{"url":"git@gitlab.com:onflylabs/general/microservicos/travel-ms/sync-zendesk.git","revision":"2df526033d6b4d1b75b941cdd159daab570652f6","shortRevision":"2df5260","label":"gitlab.com:onflylabs/general/microservicos/travel-ms/sync-zendesk.git","linkMode":"local-only"},"referenceCount":9,"nodes":{"cmd":[{"path":"app/Command/Sync/BigQuerySyncUsersCommand.php","label":"buildDto · resume"}],"abstract":[{"path":"app/Command/Load/AbstractBigQueryLoadCommand.php","label":"handle · processBatch"},{"path":"app/Command/Load/AbstractUserBigQueryCommand.php","label":"mapRow · buildDto base"}],"zsrv":[{"path":"app/Service/Zendesk/ZendeskService.php","label":"throttle · retry · poll"}],"mapper":[{"path":"app/Mapping/ZendeskMapper.php","label":"toUser()"},{"path":"app/Mapping/BigQueryRowMapper.php","label":"mapUserRow()"}],"mysql":[{"path":"app/Model/ZendeskUserSyncLog.php","label":"resume diário"},{"path":"app/Model/ZendeskOrganizationMapping.php","label":"org → Zendesk ID"}],"dedup":[{"path":"app/Service/BigQuery/BigQueryDeduplicationService.php","label":"hash sha256"}]}}</script>
+    <script id="archify-guided-views-data" type="application/json">[]</script>
+
     <script id="archify-i18n-data" type="application/json">{"locale":"pt-BR","messages":{"viewer.kind.frontend":"Frontend","viewer.kind.backend":"Backend","viewer.kind.database":"Banco de dados","viewer.kind.cloud":"Nuvem","viewer.kind.security":"Segurança","viewer.kind.messagebus":"Barramento de mensagens","viewer.kind.external":"Externo","viewer.kind.neutral":"Neutro","viewer.kind.node":"Nó","viewer.kind.start":"Início","viewer.kind.active":"Ativo","viewer.kind.waiting":"Aguardando","viewer.kind.decision":"Decisão","viewer.kind.success":"Sucesso","viewer.kind.failure":"Falha","viewer.toolbar.actions":"Ações do diagrama","viewer.theme.toggle.title":"Alternar tema (T)","viewer.theme.toggle":"Alternar tema de cores","viewer.theme.dark":"Escuro","viewer.theme.light":"Claro","viewer.preset.choose.title":"Escolher estilo visual (S alterna)","viewer.preset.choose":"Escolher estilo visual","viewer.preset.style":"Estilo","viewer.preset.menu":"Estilo visual","viewer.preset.identity":"Identidade visual","viewer.preset.cycles":"S alterna","viewer.preset.classic":"Classic","viewer.preset.classic.short":"Classic","viewer.preset.classic.hint":"Padrão técnico estável","viewer.preset.flow":"Signal Flow","viewer.preset.flow.short":"Flow","viewer.preset.flow.hint":"Apresentação com foco em movimento","viewer.preset.blueprint":"Blueprint","viewer.preset.blueprint.hint":"Revisão de engenharia","viewer.preset.editorial":"Editorial","viewer.preset.editorial.hint":"Notas de publicação e lançamento","viewer.preset.badge.signalFlow":"SIGNAL FLOW","viewer.preset.badge.blueprint":"BLUEPRINT / REV 01","viewer.preset.badge.editorial":"EDITORIAL / NOTA DE CAMPO","viewer.preset.badge.editorialPlate":"ARCHIFY / PRANCHA 04","viewer.preset.current":"Estilo visual: {style}. Escolher estilo visual","viewer.motion.live":"Ao vivo","viewer.motion.still":"Estático","viewer.motion.pause":"Pausar movimento","viewer.motion.resume":"Retomar movimento","viewer.motion.reduced":"Movimento pausado pela preferência de movimento reduzido","viewer.motion.hidden":"Movimento pausado enquanto esta página está oculta","viewer.motion.yielding":"Pausar movimento; cedendo para {owner}","viewer.motion.yielding.title":"Prévia ao vivo ativada · cedendo para {owner}","viewer.owner.story":"a narrativa guiada","viewer.owner.chapter":"o capítulo ativo","viewer.owner.chapterPreview":"a prévia de delta do capítulo","viewer.owner.handoff":"a transição do capítulo","viewer.owner.route":"Sonda de rota","viewer.owner.lens":"Lente semântica","viewer.owner.relationship":"Prévia de relacionamento","viewer.owner.intent":"Rastreio de intenção","viewer.owner.focus":"foco semântico","viewer.owner.legend":"prévia da legenda","viewer.owner.reader":"interação do leitor","viewer.present.enter":"Entrar no palco de apresentação","viewer.present.enter.title":"Palco de apresentação (F)","viewer.present.exit":"Sair do palco de apresentação","viewer.present.exit.title":"Sair do palco de apresentação (F ou Escape)","viewer.present.present":"Apresentar","viewer.present.exit.label":"Sair","viewer.export.button":"Exportar","viewer.export.button.title":"Exportar diagrama (E)","viewer.export.diagram":"Exportar diagrama","viewer.export.menu":"Exportar","viewer.export.subtitle":"Saídas limpas e portáteis","viewer.export.share":"Compartilhar","viewer.export.shareCard":"Share Card","viewer.export.routeShareCard":"Share Card de rota","viewer.export.reachShareCard":"Share Card de alcance","viewer.export.copyShareCard":"Copiar Share Card","viewer.export.copyDiagram":"Copiar diagrama","viewer.export.clipboardPng":"PNG para a área de transferência","viewer.export.raster":"Imagens raster","viewer.export.image":"Imagem","viewer.export.lossless":"Imagem sem perdas","viewer.export.compact":"Imagem compacta","viewer.export.modern":"Imagem moderna","viewer.export.vectorMotion":"Vetor e movimento","viewer.export.vectorMotion.heading":"Vetor \u0026 movimento","viewer.export.editable":"Vetor editável","viewer.export.motion6s":"Movimento de 6s","viewer.export.unsupported":"Não suportado por este navegador","viewer.export.clipboardUnsupported":"Escrita de imagem na área de transferência não suportada por este navegador","viewer.export.clipboardUnsupported.period":"A escrita de imagem na área de transferência não é suportada por este navegador.","viewer.export.clipboardUnsupported.short":"Escrita de imagem não suportada neste navegador.","viewer.export.motionUnavailable":"Captura de movimento indisponível neste navegador","viewer.export.webmUnavailable":"WebM indisponível neste navegador","viewer.export.failed":"Falha na exportação: {message}","viewer.export.unknownVariant":"Variante de Share Card desconhecida: {variant}","viewer.export.routeRequired":"Trace uma rota antes de exportar um Share Card de rota","viewer.export.reachRequired":"Meça o alcance antes de exportar um Share Card de alcance","viewer.export.unknown":"desconhecido","viewer.export.routeFailed":"Falha na exportação do Share Card de rota: {message}","viewer.export.reachFailed":"Falha na exportação do Share Card de alcance: {message}","viewer.export.copyFailed":"Falha ao copiar: {message}","viewer.export.copiedPng":"PNG copiado para a área de transferência","viewer.export.copiedShare":"Share Card copiado","viewer.export.downloadedShare":"Share Card baixado","viewer.export.downloadedRoute":"Share Card de rota baixado","viewer.export.downloadedReach":"Share Card de alcance baixado","viewer.export.downloadedWebm":"WebM baixado","viewer.export.recording":"Gravando 6 segundos de movimento…","viewer.export.card.routeSummary.one":"Rota: {source} → {target} · {count} salto dirigido","viewer.export.card.routeSummary.other":"Rota: {source} → {target} · {count} saltos dirigidos","viewer.export.card.reachSummary":"Alcance {direction} a partir de {origin} · {nodes} · {links} · máx. {hops}","viewer.export.card.node.one":"{count} nó","viewer.export.card.node.other":"{count} nós","viewer.export.card.link.one":"{count} conexão","viewer.export.card.link.other":"{count} conexões","viewer.export.card.hop.one":"{count} salto","viewer.export.card.hop.other":"{count} saltos","viewer.export.card.routeBadge":"ARCHIFY · ROTA · {hops}","viewer.export.card.reachBadge":"ARCHIFY · ALCANCE {direction}","viewer.export.card.defaultBadge":"ARCHIFY · {preset} · {theme}","viewer.export.direction.upstream":"a montante","viewer.export.direction.downstream":"a jusante","viewer.export.error.canvasUnavailable":"Canvas indisponível para {label}","viewer.export.error.contextUnavailable":"Contexto 2D do canvas indisponível para {label}","viewer.export.error.toBlobUnavailable":"canvas.toBlob indisponível para {label}","viewer.export.error.toBlobNull":"canvas.toBlob não retornou dados para {label}","viewer.export.error.variantsCombined":"As variantes de Share Card não podem ser combinadas","viewer.export.error.viewerState":"A exportação do Share Card não pôde remover o estado temporário do viewer","viewer.export.error.routeState":"A exportação do Route Card não pôde preservar a rota resolvida com segurança","viewer.export.error.reachState":"A exportação do Reach Card não pôde preservar o alcance com segurança","viewer.export.error.webmRequirements":"A exportação de movimento WebM exige uma animação de trace e suporte a MediaRecorder no navegador","viewer.export.error.mediaRecorder":"Falha do MediaRecorder","viewer.export.error.emptyWebm":"O MediaRecorder produziu um WebM vazio","viewer.export.error.webmBackground":"O fundo SVG não pôde ser carregado para a exportação WebM","viewer.guided.region":"Visões guiadas do diagrama","viewer.guided.previous":"Visão guiada anterior","viewer.guided.previous.title":"Visão guiada anterior ([)","viewer.guided.next":"Próxima visão guiada","viewer.guided.next.title":"Próxima visão guiada (])","viewer.guided.views":"Visões guiadas","viewer.guided.explore":"Explore este sistema","viewer.guided.intro":"Percorra caminhos curados sem alterar o diagrama de origem.","viewer.guided.trail":"Trilha da narrativa","viewer.guided.beat":"Passo","viewer.guided.nextBeat":"Próximo","viewer.guided.play":"Reproduzir narrativa guiada","viewer.guided.play.title":"Reproduzir narrativa guiada (P)","viewer.guided.pause":"Pausar narrativa guiada","viewer.guided.pause.title":"Pausar narrativa guiada (P)","viewer.guided.replay":"Repetir narrativa guiada","viewer.guided.replay.title":"Repetir narrativa guiada (P)","viewer.guided.playStory":"Reproduzir narrativa","viewer.guided.pauseStory":"Pausar","viewer.guided.replayStory":"Repetir narrativa","viewer.guided.motionUnavailable":"A reprodução da narrativa está indisponível com movimento Estático","viewer.guided.enableMotion":"Alterne o movimento para Ao vivo para reproduzir a narrativa guiada","viewer.guided.selectBeatLink":"Selecione um Passo da narrativa para copiar o link exato","viewer.guided.copyMoment":"Copiar momento","viewer.guided.momentCopied":"Link do momento copiado","viewer.guided.momentCopyFailed":"Não foi possível copiar o link do momento da narrativa","viewer.guided.copied":"Copiado","viewer.guided.copyFailed":"Falha ao copiar","viewer.guided.showAll":"Mostrar tudo","viewer.guided.showAll.aria":"Mostrar o diagrama inteiro","viewer.guided.chapters":"Capítulos da narrativa","viewer.guided.storyTrail":"Trilha da narrativa de {label}: {count} passos","viewer.guided.chapter.open":"Abrir capítulo {index} de {total}: {label}, {count} paradas","viewer.guided.chapter.current":"Capítulo atual {index} de {total}: {label}, {count} paradas","viewer.guided.chapter.selectedNodes":"{count} nós selecionados","viewer.guided.chapter.stops":"{count} paradas","viewer.guided.chapter.stop.one":"{count} parada","viewer.guided.chapter.stop.other":"{count} paradas","viewer.guided.chapter.current.title":"{label} — capítulo atual, {count} paradas","viewer.guided.chapter.delta.expanded":"{stay} permanecem, {enter} entram, {leave} saem","viewer.guided.chapter.delta.aria":"Abrir capítulo {index} de {total}: {label}. Delta de foco do capítulo: {delta}","viewer.guided.chapter.delta.title":"{label} — {delta} de foco do capítulo","viewer.guided.handoff":"{from} → {to} · via {label}","viewer.guided.share.chapter":"Capítulo {index} / {total}","viewer.guided.share.initial":"Capítulo 01 / 01","viewer.guided.share.default":"Capítulo guiado","viewer.guided.state.ready":"Pronto","viewer.guided.state.playing":"Reproduzindo","viewer.guided.state.settled":"Assentado","viewer.guided.state.paused":"Pausado","viewer.guided.state.pinned":"Fixado","viewer.guided.state.still":"Estático","viewer.guided.share.step":"Passo {index} / {total} · {label}","viewer.guided.share.staticMoment":"{step} · Momento estático","viewer.guided.share.complete":"{count} passos concluídos · {note}","viewer.guided.share.settled":"Caminho assentado para leitura.","viewer.guided.share.staticPath":"{count} passos · Caminho estático","viewer.guided.share.ready":"{count} passos · Pronto","viewer.guided.share.aria":"{state} capítulo {index} de {total}: {label}. {beat}. {route}","viewer.guided.beat.start":"Passo {index} / {total} · {label} · ponto de partida","viewer.guided.beat.forward":"Passo {index} / {total} · {from} → {to}","viewer.guided.beat.reverse":"Passo {index} / {total} · {from} → {to} · link autoral reverso","viewer.guided.beat.multiple":"Passo {index} / {total} · {from} ⇄ {to} · {count} links autorais","viewer.guided.beat.group":"Passo {index} / {total} · {from} · {to} · agrupado · sem link direto","viewer.guided.beat.aria.prefix":"Passo da narrativa {index} de {total}: {label}. ","viewer.guided.beat.aria.start":"Ponto de partida.","viewer.guided.beat.aria.forward":"De {from} por um relacionamento autoral direto.","viewer.guided.beat.aria.reverse":"De {from}; o relacionamento autoral aponta de {to} para {from}.","viewer.guided.beat.aria.multiple":"De {from} por {count} relacionamentos autorais; exibido sem movimento arbitrário.","viewer.guided.beat.aria.group":"Agrupado a partir de {from} sem relacionamento autoral direto.","viewer.guided.caption.start":"Ponto de partida","viewer.guided.caption.grouped":"Transição agrupada · sem link autoral direto","viewer.guided.caption.more":"  +{count} mais","viewer.guided.caption.reverse":"Relacionamento autoral reverso","viewer.guided.caption.relationships":"{count} relacionamentos autorais","viewer.guided.caption.relationship":"Relacionamento autoral","viewer.guided.caption.direction":"direção autoral: {from} → {to}","viewer.guided.caption.starting":"Ponto de partida autoral","viewer.guided.beatLink":"Copiar link do momento atual da narrativa: Passo {index} de {total}: {label}","viewer.guided.noStory":"Este diagrama não tem narrativa guiada autoral.","viewer.guide.eyebrow":"Guia do diagrama","viewer.guide.close":"Fechar guia do diagrama","viewer.guide.inspecting":"Inspecionando semântica compilada","viewer.guide.actions":"Ações de exploração do diagrama","viewer.guide.find":"Encontrar qualquer nó","viewer.guide.find.hint":"Busque rótulos, responsabilidades, tipos e IDs estáveis.","viewer.guide.route":"Traçar uma rota","viewer.guide.route.aria":"Traçar uma rota dirigida","viewer.guide.route.hint":"Pergunte como dois nós semânticos se conectam na direção autoral.","viewer.guide.map":"Ver o sistema inteiro","viewer.guide.map.hint":"Abra o Radar semântico com viewport ao vivo e nós estáveis.","viewer.guide.lens":"Comparar tipos semânticos","viewer.guide.lens.hint":"Conte papéis, revele seu tráfego e compare links autorais diretos.","viewer.guide.story":"Reproduzir a narrativa guiada","viewer.guide.story.hint":"Percorra os capítulos autorais e os relacionamentos reais.","viewer.guide.present":"Entrar no Palco de Apresentação","viewer.guide.present.hint":"Dê o viewport ao diagrama ao vivo sem alterar a exportação.","viewer.guide.shortcuts":"Atalhos de teclado adicionais","viewer.guide.shortcut.export":"Exportar","viewer.guide.shortcut.theme":"Tema","viewer.guide.shortcut.style":"Estilo","viewer.guide.shortcut.reset":"Redefinir","viewer.guide.shortcut.zoomIn":"Ampliar","viewer.guide.shortcut.zoomOut":"Reduzir","viewer.guide.shortcut.close":"Fechar","viewer.guide.facts":"{nodes} · {relationships} · {views}","viewer.guide.fact.node.one":"{count} nó semântico","viewer.guide.fact.node.other":"{count} nós semânticos","viewer.guide.fact.relationship.one":"{count} relacionamento","viewer.guide.fact.relationship.other":"{count} relacionamentos","viewer.guide.fact.view.one":"{count} visão guiada","viewer.guide.fact.view.other":"{count} visões guiadas","viewer.guide.story.available.one":"Percorra {count} capítulo autoral e seus relacionamentos reais.","viewer.guide.story.available.other":"Percorra {count} capítulos autorais e seus relacionamentos reais.","viewer.guide.story.unavailable":"Sem narrativa guiada autoral neste diagrama.","viewer.guide.open":"Abrir guia do diagrama","viewer.guide.noStory":"Este diagrama não tem narrativa guiada autoral.","viewer.finder.title":"Encontrar um nó","viewer.finder.close":"Fechar busca de nós","viewer.finder.placeholder":"Buscar rótulos ou IDs","viewer.finder.search":"Buscar nós do diagrama","viewer.finder.results":"Nós do diagrama","viewer.finder.empty":"Nenhum nó correspondente","viewer.finder.result.focus":"Focar {label}","viewer.finder.result.routeStart":"Escolher {label} como início da rota","viewer.finder.result.routeTarget":"Escolher {label} como destino da rota, {links}","viewer.finder.status.empty":"Nenhum nó correspondente","viewer.finder.status.count.one":"{count} nó correspondente","viewer.finder.status.count.other":"{count} nós correspondentes","viewer.finder.noun.nodes":"nós","viewer.finder.link.one":"{count} conexão","viewer.finder.link.other":"{count} conexões","viewer.finder.result.focus.one":"Focar {label}, {count} conexão relacionada","viewer.finder.result.focus.other":"Focar {label}, {count} conexões relacionadas","viewer.finder.status.filtered":"{visible} de {available} {noun}","viewer.finder.status.all":"{available} {noun}","viewer.passport.eyebrow":"Passaporte semântico","viewer.passport.metadata":"Metadados do nó","viewer.passport.evidence":"Evidência de fonte verificada","viewer.passport.verified":"Fonte verificada","viewer.passport.verificationScope":"Verificado contra o Git local na revisão fixada. Acesso remoto não foi verificado.","viewer.passport.reach":"Alcance autoral","viewer.passport.reach.trace":"Medir alcance autoral","viewer.passport.upstream":"A montante","viewer.passport.downstream":"A jusante","viewer.passport.upstream.trace":"Medir alcance autoral a montante","viewer.passport.downstream.trace":"Medir alcance autoral a jusante","viewer.passport.close":"Fechar passaporte semântico","viewer.passport.copy":"Copiar link","viewer.passport.copy.focus":"Copiar link do nó em foco","viewer.passport.relations":"Relações","viewer.passport.relations.show":"Mostrar relacionamentos conectados","viewer.passport.relations.hide":"Ocultar relacionamentos conectados","viewer.passport.relations.list":"Relacionamentos conectados","viewer.passport.copyRelation":"Copiar relação","viewer.passport.copyNode":"Copiar nó","viewer.passport.copyPinned":"Copiar link do relacionamento fixado","viewer.passport.copySource":"Copiar link do nó de origem","viewer.passport.copy.focused.success":"Link do nó em foco copiado","viewer.passport.copy.pinned.success":"Link do relacionamento fixado copiado","viewer.passport.copy.focused.failed":"Não foi possível copiar o link do nó em foco","viewer.passport.copy.pinned.failed":"Não foi possível copiar o link do relacionamento fixado","viewer.passport.relationship.none":"Sem relacionamentos conectados","viewer.passport.relationship.count.one":"{count} relação","viewer.passport.relationship.count.other":"{count} relações","viewer.passport.relationship.show.one":"Mostrar {count} relacionamento conectado","viewer.passport.relationship.show.other":"Mostrar {count} relacionamentos conectados","viewer.passport.relationship.summary":"{out} de saída · {in} de entrada{loops}","viewer.passport.relationship.loops":"  · {count} laço","viewer.passport.relationship.explorer":"Explorador de relacionamentos diretos","viewer.passport.relationship.help":"Use as setas para explorar relacionamentos. Pressione Enter ou Espaço para fixar detalhes; Escape limpa.","viewer.passport.relationship.loopsBack":"retorna ao próprio nó","viewer.passport.relationship.connectsTo":"conecta a","viewer.passport.relationship.connectsFrom":"recebe de","viewer.passport.relationship.pinned":"Relacionamento fixado · {from} → {to} · {label}","viewer.passport.relationship.inspect":"Inspecionar relacionamento {index} de {total}: {from} para {to}, {label}. Pressione Enter para detalhes.","viewer.passport.relationship.group.out":"De saída","viewer.passport.relationship.group.in":"De entrada","viewer.passport.relationship.group.loop":"Auto-laços","viewer.passport.relationship.row":"{group}: {relationship}, {neighbor}","viewer.passport.relationship.direction.out":"SAÍ →","viewer.passport.relationship.direction.in":"← ENT","viewer.passport.relationship.direction.loop":"LAÇO","viewer.passport.sourceCount.one":"{count} referência de fonte verificada","viewer.passport.sourceCount.other":"{count} referências de fontes verificadas","viewer.passport.sourceMarker":"FONTE","viewer.passport.beacon.one":"{count} fonte verificada; foque este nó para inspecionar","viewer.passport.beacon.other":"{count} fontes verificadas; foque este nó para inspecionar","viewer.passport.repository.open":"Abrir revisão {revision} verificada do repositório","viewer.passport.source.open":"Abrir fonte verificada {path} na revisão {revision}","viewer.passport.source.openLink":"Abrir ↗","viewer.passport.reach.upstream.one":"Medir {count} nó autoral a montante","viewer.passport.reach.upstream.other":"Medir {count} nós autorais a montante","viewer.passport.reach.downstream.one":"Medir {count} nó autoral a jusante","viewer.passport.reach.downstream.other":"Medir {count} nós autorais a jusante","viewer.passport.reach.noUpstream":"Sem nós autorais a montante","viewer.passport.reach.noDownstream":"Sem nós autorais a jusante","viewer.passport.reach.status":"{direction} · {nodes} nós · {links} conexões · máx. {hops} saltos","viewer.route.eyebrow":"Sonda de rota","viewer.route.start":"Escolha um nó de origem","viewer.route.start.find":"Encontrar origem","viewer.route.start.find.aria":"Encontrar um início de rota","viewer.route.copy":"Copiar link","viewer.route.copy.aria":"Copiar link da rota traçada","viewer.route.clear":"Limpar","viewer.route.clear.aria":"Limpar sonda de rota","viewer.route.traced":"Rota traçada","viewer.route.pickTwo":"Escolha dois nós semânticos no diagrama","viewer.route.pickOne":"Escolha um nó semântico no diagrama","viewer.route.controls":"Controles do percurso da rota","viewer.route.previous":"Posição anterior da rota","viewer.route.play":"Reproduzir percurso da rota","viewer.route.pause":"Pausar percurso da rota","viewer.route.replay":"Repetir percurso da rota","viewer.route.next":"Próxima posição da rota","viewer.route.journey":"Percurso","viewer.route.pause.label":"Pausar","viewer.route.replay.label":"Repetir","viewer.route.overview":"Visão geral","viewer.route.overview.aria":"Mostrar visão geral completa da rota","viewer.route.instructions":"Escolha a origem e depois o destino. A direção importa.","viewer.route.destination":"Escolha um destino a partir de {label}","viewer.route.destination.find":"Encontrar destino","viewer.route.destination.find.aria":"Encontrar um destino alcançável pela rota","viewer.route.differentDestination":"Escolha um destino diferente","viewer.route.distinct":"Uma rota precisa de dois nós semânticos distintos.","viewer.route.unreachable":"Sem rota dirigida até {label}","viewer.route.unreachable.detail":"{target} não é alcançável a partir de {source}. Escolha um destino destacado.","viewer.route.start.instructions":"Selecione a origem. O próximo passo revelará apenas destinos dirigidos.","viewer.route.copy.success":"Link da rota traçada copiado","viewer.route.copy.failed":"Não foi possível copiar o link da rota traçada","viewer.route.position":"Posição da rota {index} de {total}: {label}","viewer.route.step":"Passo {index} de {total} · {phase} · {label}","viewer.route.motionRequired":"O percurso automático exige movimento Ao vivo","viewer.route.trigger.clear":"Limpar rota traçada","viewer.route.overview.status":"{nodes} · {hops} · rota autoral mais curta","viewer.route.overview.node.one":"{count} nó","viewer.route.overview.node.other":"{count} nós","viewer.route.overview.hop.one":"{count} salto dirigido","viewer.route.overview.hop.other":"{count} saltos dirigidos","viewer.route.phase.playing":"Reproduzindo","viewer.route.phase.complete":"Concluída","viewer.route.phase.inspecting":"Inspecionando","viewer.route.destination.count.one":"{count} destino dirigido disponível. Escolha um nó destacado.","viewer.route.destination.count.other":"{count} destinos dirigidos disponíveis. Escolha um nó destacado.","viewer.route.noOutgoing":"Nenhuma rota sai daqui. Limpe e escolha outra origem.","viewer.route.result.title":"{source} para {target}","viewer.route.finder.source.title":"Escolher início da rota","viewer.route.finder.source.placeholder":"Buscar origens de rota","viewer.route.finder.source.empty":"Nenhuma origem de rota correspondente","viewer.route.finder.source.results":"Nós que podem iniciar uma rota","viewer.route.finder.source.noun":"origens de rota","viewer.route.finder.source.badge":"início","viewer.route.finder.target.title":"Destino a partir de {label}","viewer.route.finder.target.placeholder":"Buscar destinos alcançáveis","viewer.route.finder.target.empty":"Nenhum destino alcançável correspondente","viewer.route.finder.target.results":"Destinos alcançáveis pela rota","viewer.route.finder.target.noun":"destinos alcançáveis","viewer.route.hop.one":"{count} salto","viewer.route.hop.other":"{count} saltos","viewer.lens.eyebrow":"Lente semântica","viewer.lens.title":"Comparar papéis do sistema","viewer.lens.close":"Fechar lente semântica","viewer.lens.instruction":"Escolha até dois tipos semânticos. Um revela seu tráfego real; dois comparam apenas relacionamentos autorais diretos.","viewer.lens.kinds":"Tipos semânticos","viewer.lens.choose":"Escolha um tipo para inspecionar seus nós e relacionamentos conectados.","viewer.lens.copy":"Copiar link da lente semântica","viewer.lens.clear":"Limpar lente semântica","viewer.lens.open":"Abrir lente semântica","viewer.lens.openActive":"Abrir lente semântica ativa","viewer.lens.legend":"Legenda semântica","viewer.lens.legend.inspect.one":"Inspecionar {label}, {count} nó","viewer.lens.legend.inspect.other":"Inspecionar {label}, {count} nós","viewer.lens.kind.count.one":"{label}, {count} nó","viewer.lens.kind.count.other":"{label}, {count} nós","viewer.lens.compare.one":"{first} → {second}: {forward} · {second} → {first}: {reverse} · {count} relacionamento direto","viewer.lens.compare.other":"{first} → {second}: {forward} · {second} → {first}: {reverse} · {count} relacionamentos diretos","viewer.lens.single":"{nodes} · {relationships} · nós conectados permanecem visíveis","viewer.lens.node.one":"{count} nó {label}","viewer.lens.node.other":"{count} nós {label}","viewer.lens.relationship.one":"{count} relacionamento conectado","viewer.lens.relationship.other":"{count} relacionamentos conectados","viewer.radar.title":"Radar semântico","viewer.radar.building":"Construindo visão geral","viewer.radar.openFull":"Abrir radar semântico completo","viewer.radar.open":"Abrir radar","viewer.radar.close":"Fechar radar semântico","viewer.radar.surface":"Visão geral do diagrama. Clique em um nó para focá-lo ou use as setas para mover.","viewer.radar.click":"Clique no nó","viewer.radar.drag":"Arraste para mover","viewer.radar.space":"O radar semântico precisa de mais espaço em MAP.","viewer.radar.nodes":"Nós do radar semântico do diagrama","viewer.radar.focus":"Focar {label} a partir do Radar Semântico","viewer.radar.status":"{count} nós · {viewport}","viewer.radar.fullMap":"{count} nós · mapa completo","viewer.radar.compacted":"Radar compactado para não cobrir o Passaporte Semântico ou os controles MAP.","viewer.radar.cancelWaiting":"Cancelar radar semântico aguardando mais espaço em MAP","viewer.radar.needsSpace":"O radar semântico precisa de mais espaço visível em MAP","viewer.radar.viewport.full":"mapa completo","viewer.radar.viewport.width":"{percent}% da largura","viewer.radar.viewport.scale":"{percent}% do viewport","viewer.nav.controls":"Controles de visualização do diagrama","viewer.nav.route":"Traçar uma rota dirigida","viewer.nav.route.title":"Traçar rota (R)","viewer.nav.route.short":"PATH","viewer.nav.radar":"Abrir radar semântico","viewer.nav.radar.title":"Radar semântico (M)","viewer.nav.radar.short":"MAP","viewer.nav.lens":"Abrir lente semântica","viewer.nav.lens.title":"Lente semântica (L)","viewer.nav.lens.short":"LENS","viewer.nav.find":"Encontrar um nó","viewer.nav.find.title":"Encontrar um nó (/)","viewer.nav.guide":"Abrir guia do diagrama","viewer.nav.guide.title":"Guia do diagrama (?)","viewer.nav.zoomOut":"Reduzir zoom","viewer.nav.zoomOut.title":"Reduzir zoom (-)","viewer.nav.reset":"Redefinir visualização do diagrama","viewer.nav.reset.title":"Redefinir visualização (0)","viewer.nav.read":"READ","viewer.nav.zoomIn":"Ampliar zoom","viewer.nav.zoomIn.title":"Ampliar zoom (+)","viewer.nav.camera":"{hint}. Redefinir visualização do diagrama","viewer.nav.camera.title":"{semantic}{hint} · redefinir visualização (0)","viewer.nav.camera.semantic":"Câmera semântica ativa · ","viewer.nav.level.map":"MAP","viewer.nav.level.read":"READ","viewer.nav.level.full":"FULL","viewer.nav.level.auto":"AUTO","viewer.nav.detail.map":"Amplie para revelar rótulos de relacionamentos e contexto dos nós","viewer.nav.detail.read":"Amplie novamente para revelar tags e anotações","viewer.nav.detail.full":"Detalhe completo do diagrama","viewer.intent.summary":"{label}. {out} de saída, {in} de entrada{loops}. {total} conexões. Pressione Enter para detalhes.","viewer.intent.loops":", {count} auto-laço","viewer.common.copied":"Copiado","viewer.common.copyFailed":"Falha ao copiar","viewer.common.copyLink":"Copiar link","viewer.common.clear":"Limpar","viewer.common.close":"Fechar"}}</script>
     <div class="guided-views no-print" id="guided-views" hidden aria-label="Visões guiadas do diagrama">
       <button id="guided-view-prev" type="button" aria-label="Visão guiada anterior" title="Visão guiada anterior ([)">&#8592;</button>
@@ -5264,9 +5264,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     <!-- Main Diagram -->
     <div class="diagram-container" data-detail-level="read"
          data-preset-badge-editorial-plate="ARCHIFY / PRANCHA 04">
-      <svg viewBox="0 0 1360 502" role="img" lang="pt-BR" aria-labelledby="archify-diagram-title archify-diagram-description" data-preset="classic" data-quality-profile="showcase">
-        <title id="archify-diagram-title">sync-zendesk — Sync de Usuários</title>
-        <desc id="archify-diagram-description">Um diagrama de arquitetura gerado pelo Archify.</desc>
+      <svg viewBox="0 0 1080 640" role="img" lang="pt-BR" aria-labelledby="archify-diagram-title archify-diagram-description" data-preset="classic" data-quality-profile="showcase">
+        <title id="archify-diagram-title">sync-zendesk — Messaging Token</title>
+        <desc id="archify-diagram-description">Um diagrama de sequência gerado pelo Archify.</desc>
         <!-- Definitions -->
         <defs>
           <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
@@ -5289,244 +5289,250 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <!-- Background Grid -->
         <rect width="100%" height="100%" fill="url(#grid)" />
 
-        <!-- Boundaries (behind everything) -->
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="0" data-composition-frame-label="sync-zendesk (Hyperf 3.1 · Swoole 6.1)" x="280" y="0" width="1040" height="434" rx="12" class="c-region" stroke-width="1"/>
+        <!-- Time Segments -->
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="segment" data-composition-frame-id="0" x="48" y="187" width="984" height="30" rx="10" class="c-lane" stroke-width="1"/>
 
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="security-group" data-composition-frame-id="1" data-composition-frame-label="auth basic e-mail/token" x="760" y="160" width="475" height="114" rx="8" class="c-security-group" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="segment" data-composition-frame-id="1" x="48" y="277" width="984" height="30" rx="10" class="c-lane" stroke-width="1"/>
 
-        <!-- Connection paths (before components for correct z-order) -->
-        <path data-edge-from="cron" data-edge-to="cmd" data-edge-key="0" data-edge-id="run" data-composition-points="160,222;310,222" d="M 160 222 L 310 222" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="cmd" data-edge-to="abstract" data-edge-label="extends" data-edge-key="1" data-edge-id="main" data-composition-points="500,215;555,215" d="M 500 215 L 555 215" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="abstract" data-edge-to="bqsrv" data-edge-label="streamQuery() — SQL delta" data-edge-key="2" data-edge-id="stream" data-composition-points="638,190;638,142;760,142;760,94" d="M 638 190 L 638 150 Q 638 142 646 142 L 752 142 Q 760 142 760 134 L 760 94" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="bqsrv" data-edge-to="bq" data-edge-label="SQL" data-edge-key="3" data-edge-id="bqreq" data-composition-points="850,62;900,62" d="M 850 62 L 900 62" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="abstract" data-edge-to="mapper" data-edge-label="mapRow() + buildDto()" data-edge-key="4" data-edge-id="map" data-composition-points="652,190;652,142;1195,142;1195,94" d="M 652 190 L 652 150 Q 652 142 660 142 L 1187 142 Q 1195 142 1195 134 L 1195 94" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="abstract" data-edge-to="zsrv" data-edge-label="Parallel" data-edge-key="5" data-edge-id="send" data-composition-points="735,215;790,215" d="M 735 215 L 790 215" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="zsrv" data-edge-to="zapi" data-edge-label="bulk" data-edge-key="6" data-edge-id="bulk" data-composition-points="970,222;1025,222" d="M 970 222 L 1025 222" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="zsrv" data-edge-to="mysql" data-edge-label="resolve org · sync log" data-edge-key="7" data-edge-id="state" data-composition-points="880,254;880,302;1115,302;1115,350" d="M 880 254 L 880 294 Q 880 302 888 302 L 1107 302 Q 1115 302 1115 310 L 1115 350" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="cmd" data-edge-to="orgres" data-edge-label="buildDto() — cache" data-edge-key="8" data-edge-id="org" data-composition-points="500,229;527.5,229;527.5,382;555,382" d="M 500 229 L 519.5 229 Q 527.5 229 527.5 237 L 527.5 374 Q 527.5 382 535.5 382 L 555 382" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="orgres" data-edge-to="zsrv" data-edge-label="resolveZendeskOrganizationId()" data-edge-key="9" data-edge-id="resolve" data-composition-points="735,382;762.5,382;762.5,229;790,229" d="M 735 382 L 754.5 382 Q 762.5 382 762.5 374 L 762.5 237 Q 762.5 229 770.5 229 L 790 229" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="cmd" data-edge-to="dedup" data-edge-label="shouldPublish() — off" data-edge-key="10" data-edge-id="dedup-edge" data-composition-points="405,254;405,278;426,278;426,326;410,326;410,350" d="M 405 254 L 405 270 Q 405 278 413 278 L 418 278 Q 426 278 426 286 L 426 318 Q 426 326 418 326 L 418 326 Q 410 326 410 334 L 410 350" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="dedup" data-edge-to="redis" data-edge-label="sha256 · TTL 30d" data-edge-key="11" data-edge-id="redis-edge" data-composition-points="310,382;210,382" d="M 310 382 L 210 382" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="segment" data-composition-frame-id="2" x="48" y="337" width="984" height="90" rx="10" class="c-lane" stroke-width="1"/>
 
-        <!-- Components -->
-        <g id="node-cron" data-node-id="cron" data-node-label="Operador / Cron" tabindex="0" role="button" aria-label="Focar Operador / Cron, bigquery:sync-users, Componente de arquitetura" aria-pressed="false" data-node-kind="external" data-node-sublabel="bigquery:sync-users" data-node-context="Componente de arquitetura">
-          <title>Operador / Cron · bigquery:sync-users · Componente de arquitetura</title>
-          <rect x="40" y="190" width="120" height="64" rx="6" class="c-mask"/>
-          <rect x="40" y="190" width="120" height="64" rx="6" class="c-external" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(46 196) scale(0.6875)">
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="segment" data-composition-frame-id="3" x="48" y="457" width="984" height="30" rx="10" class="c-lane" stroke-width="1"/>
+
+        <!-- Lifelines -->
+        <path d="M 129.5 142 L 129.5 575" class="a-default" stroke-width="0.8" stroke-dasharray="3,7"/>
+        <path d="M 298.1 142 L 298.1 575" class="a-default" stroke-width="0.8" stroke-dasharray="3,7"/>
+        <path d="M 466.7 142 L 466.7 575" class="a-default" stroke-width="0.8" stroke-dasharray="3,7"/>
+        <path d="M 635.3 142 L 635.3 575" class="a-default" stroke-width="0.8" stroke-dasharray="3,7"/>
+        <path d="M 803.9 142 L 803.9 575" class="a-default" stroke-width="0.8" stroke-dasharray="3,7"/>
+        <path d="M 972.5 142 L 972.5 575" class="a-default" stroke-width="0.8" stroke-dasharray="3,7"/>
+
+        <!-- Activations -->
+        <rect x="293.1" y="166" width="10" height="226" rx="3" class="c-mask"/>
+        <rect x="293.1" y="166" width="10" height="226" rx="3" class="c-backend" stroke-width="1"/>
+        <rect x="461.7" y="196" width="10" height="166" rx="3" class="c-mask"/>
+        <rect x="461.7" y="196" width="10" height="166" rx="3" class="c-backend" stroke-width="1"/>
+        <rect x="630.3" y="226" width="10" height="106" rx="3" class="c-mask"/>
+        <rect x="630.3" y="226" width="10" height="106" rx="3" class="c-backend" stroke-width="1"/>
+        <rect x="798.9" y="256" width="10" height="46" rx="3" class="c-mask"/>
+        <rect x="798.9" y="256" width="10" height="46" rx="3" class="c-database" stroke-width="1"/>
+        <rect x="967.5" y="406" width="10" height="106" rx="3" class="c-mask"/>
+        <rect x="967.5" y="406" width="10" height="106" rx="3" class="c-external" stroke-width="1"/>
+
+        <!-- Messages -->
+        <g data-edge-from="client" data-edge-to="mid" data-edge-label="1. GET /messaging-token · JWT Bearer" data-edge-key="0" data-edge-id="m01">
+          <path data-composition-edge-from="client" data-composition-edge-to="mid" data-composition-edge-id="m01" data-composition-points="136.5,172;291.1,172" d="M 136.5 172 L 291.1 172" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <g data-detail="context">
+          <rect x="114.2" y="152" width="199.20000000000002" height="16" rx="3" class="c-mask"/>
+          <text x="213.8" y="162" class="t-backend" font-size="9" text-anchor="middle">1. GET /messaging-token · JWT Bearer</text>
+        </g>
+        <text data-detail="fine" x="148.5" y="190" class="t-dim" font-size="7">GET /sync-zendesk/messaging-token?name=... com JWT Onfly no header Authorization (Bearer).</text>
+        </g>
+
+        <g data-edge-from="mid" data-edge-to="ctl" data-edge-label="2. Authentication no Context" data-edge-key="1" data-edge-id="m02">
+          <path data-composition-edge-from="mid" data-composition-edge-to="ctl" data-composition-edge-id="m02" data-composition-points="305.1,202;459.7,202" d="M 305.1 202 L 459.7 202" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <g data-detail="context">
+          <rect x="303.59999999999997" y="182" width="157.6" height="16" rx="3" class="c-mask"/>
+          <text x="382.4" y="192" class="t-backend" font-size="9" text-anchor="middle">2. Authentication no Context</text>
+        </g>
+        <text data-detail="fine" x="317.1" y="220" class="t-dim" font-size="7">CoreConnect valida o JWT e publica Authentication no Context; falha → UnauthenticatedException.</text>
+        </g>
+
+        <g data-edge-from="ctl" data-edge-to="svc" data-edge-label="3. handle(userId, email, name)" data-edge-key="2" data-edge-id="m03">
+          <path data-composition-edge-from="ctl" data-composition-edge-to="svc" data-composition-edge-id="m03" data-composition-points="473.7,232;628.3,232" d="M 473.7 232 L 628.3 232" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <g data-detail="context">
+          <rect x="467" y="212" width="168" height="16" rx="3" class="c-mask"/>
+          <text x="551" y="222" class="t-backend" font-size="9" text-anchor="middle">3. handle(userId, email, name)</text>
+        </g>
+        <text data-detail="fine" x="485.7" y="250" class="t-dim" font-size="7">Controller extrai user_id ?? scopes.User.id e scopes.User.email; name = query ?name ?? scopes.User.name.</text>
+        </g>
+
+        <g data-edge-from="svc" data-edge-to="cfg" data-edge-label="4. lê key_id · shared_secret · ttl" data-edge-key="3" data-edge-id="m04">
+          <path data-composition-edge-from="svc" data-composition-edge-to="cfg" data-composition-edge-id="m04" data-composition-points="642.3,262;796.9,262" d="M 642.3 262 L 796.9 262" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <g data-detail="context">
+          <rect x="625.1999999999999" y="242" width="188.8" height="16" rx="3" class="c-mask"/>
+          <text x="719.5999999999999" y="252" class="t-backend" font-size="9" text-anchor="middle">4. lê key_id · shared_secret · ttl</text>
+        </g>
+        <text data-detail="fine" x="654.3" y="280" class="t-dim" font-size="7">handle() lê a config zendesk.messaging; chaves ausentes → MisconfiguredException.</text>
+        </g>
+
+        <g data-edge-from="cfg" data-edge-to="svc" data-edge-label="5. credenciais OK" data-edge-key="4" data-edge-id="m05">
+          <path data-composition-edge-from="cfg" data-composition-edge-to="svc" data-composition-edge-id="m05" data-composition-points="796.9,292;642.3,292" d="M 796.9 292 L 642.3 292" class="a-default" stroke-width="1.4" stroke-dasharray="3,5" marker-end="url(#arrowhead)"/>
+        <g data-detail="context">
+          <rect x="669.3999999999999" y="272" width="100.4" height="16" rx="3" class="c-mask"/>
+          <text x="719.5999999999999" y="282" class="t-muted" font-size="9" text-anchor="middle">5. credenciais OK</text>
+        </g>
+        <text data-detail="fine" x="654.3" y="310" class="t-dim" font-size="7">key_id vai no header kid do JWT; token_ttl_seconds controla o exp.</text>
+        </g>
+
+        <g data-edge-from="svc" data-edge-to="ctl" data-edge-label="6. JWT HS256 assinado" data-edge-key="5" data-edge-id="m06">
+          <path data-composition-edge-from="svc" data-composition-edge-to="ctl" data-composition-edge-id="m06" data-composition-points="628.3,322;473.7,322" d="M 628.3 322 L 473.7 322" class="a-default" stroke-width="1.4" stroke-dasharray="3,5" marker-end="url(#arrowhead)"/>
+        <g data-detail="context">
+          <rect x="490.4" y="302" width="121.2" height="16" rx="3" class="c-mask"/>
+          <text x="551" y="312" class="t-muted" font-size="9" text-anchor="middle">6. JWT HS256 assinado</text>
+        </g>
+        <text data-detail="fine" x="485.7" y="340" class="t-dim" font-size="7">Lcobucci (Sha256, InMemory): kid = key_id, jti = uuid4, exp = iat + 3600s; claims external_id, email, name.</text>
+        </g>
+
+        <g data-edge-from="ctl" data-edge-to="mid" data-edge-label="7. resposta {token}" data-edge-key="6" data-edge-id="m07">
+          <path data-composition-edge-from="ctl" data-composition-edge-to="mid" data-composition-edge-id="m07" data-composition-points="459.7,352;305.1,352" d="M 459.7 352 L 305.1 352" class="a-default" stroke-width="1.4" stroke-dasharray="3,5" marker-end="url(#arrowhead)"/>
+        <g data-detail="context">
+          <rect x="327" y="332" width="110.8" height="16" rx="3" class="c-mask"/>
+          <text x="382.4" y="342" class="t-muted" font-size="9" text-anchor="middle">7. resposta {token}</text>
+        </g>
+        <text data-detail="fine" x="317.1" y="370" class="t-dim" font-size="7">Controller devolve o token para a cadeia de middlewares.</text>
+        </g>
+
+        <g data-edge-from="mid" data-edge-to="client" data-edge-label="8. 200 {token} · no-store" data-edge-key="7" data-edge-id="m08">
+          <path data-composition-edge-from="mid" data-composition-edge-to="client" data-composition-edge-id="m08" data-composition-points="291.1,382;136.5,382" d="M 291.1 382 L 136.5 382" class="a-default" stroke-width="1.4" stroke-dasharray="3,5" marker-end="url(#arrowhead)"/>
+        <g data-detail="context">
+          <rect x="142.8" y="362" width="142" height="16" rx="3" class="c-mask"/>
+          <text x="213.8" y="372" class="t-muted" font-size="9" text-anchor="middle">8. 200 {token} · no-store</text>
+        </g>
+        <text data-detail="fine" x="148.5" y="400" class="t-dim" font-size="7">Resposta 200 com Cache-Control: no-store — o token nunca é cacheado.</text>
+        </g>
+
+        <g data-edge-from="client" data-edge-to="zsdk" data-edge-label="9. token → Zendesk Messaging SDK" data-edge-key="8" data-edge-id="m09">
+          <path data-composition-edge-from="client" data-composition-edge-to="zsdk" data-composition-edge-id="m09" data-composition-points="136.5,412;965.5,412" d="M 136.5 412 L 965.5 412" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <g data-detail="context">
+          <rect x="461.8" y="392" width="178.4" height="16" rx="3" class="c-mask"/>
+          <text x="551" y="402" class="t-backend" font-size="9" text-anchor="middle">9. token → Zendesk Messaging SDK</text>
+        </g>
+        <text data-detail="fine" x="148.5" y="430" class="t-dim" font-size="7">Frontend entrega o token ao Zendesk Messaging Web SDK para autenticar o chat do usuário.</text>
+        </g>
+
+        <g data-edge-from="zsdk" data-edge-to="client" data-edge-label="10. HS256 validado · kid" data-edge-key="9" data-edge-id="m10">
+          <path data-composition-edge-from="zsdk" data-composition-edge-to="client" data-composition-edge-id="m10" data-composition-points="965.5,442;136.5,442" d="M 965.5 442 L 136.5 442" class="a-default" stroke-width="1.4" stroke-dasharray="3,5" marker-end="url(#arrowhead)"/>
+        <g data-detail="context">
+          <rect x="482.6" y="422" width="136.8" height="16" rx="3" class="c-mask"/>
+          <text x="551" y="432" class="t-muted" font-size="9" text-anchor="middle">10. HS256 validado · kid</text>
+        </g>
+        <text data-detail="fine" x="148.5" y="460" class="t-dim" font-size="7">Zendesk valida a assinatura HS256 com o shared_secret da integração; kid identifica a chave.</text>
+        </g>
+
+        <g data-edge-from="client" data-edge-to="zsdk" data-edge-label="11. chat vinculado · external_id" data-edge-key="10" data-edge-id="m11">
+          <path data-composition-edge-from="client" data-composition-edge-to="zsdk" data-composition-edge-id="m11" data-composition-points="136.5,472;965.5,472" d="M 136.5 472 L 965.5 472" class="a-dashed" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <g data-detail="context">
+          <rect x="461.8" y="452" width="178.4" height="16" rx="3" class="c-mask"/>
+          <text x="551" y="462" class="t-messagebus" font-size="9" text-anchor="middle">11. chat vinculado · external_id</text>
+        </g>
+        <text data-detail="fine" x="148.5" y="490" class="t-dim" font-size="7">external_id vincula o chat ao usuário sincronizado; email_verified = true evita duplicidade.</text>
+        </g>
+
+        <g data-edge-from="zsdk" data-edge-to="client" data-edge-label="12. sessão de chat iniciada" data-edge-key="11" data-edge-id="m12">
+          <path data-composition-edge-from="zsdk" data-composition-edge-to="client" data-composition-edge-id="m12" data-composition-points="965.5,502;136.5,502" d="M 965.5 502 L 136.5 502" class="a-dashed" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <g data-detail="context">
+          <rect x="474.8" y="482" width="152.4" height="16" rx="3" class="c-mask"/>
+          <text x="551" y="492" class="t-messagebus" font-size="9" text-anchor="middle">12. sessão de chat iniciada</text>
+        </g>
+        <text data-detail="fine" x="148.5" y="520" class="t-dim" font-size="7">Usuário autenticado no Zendesk Messaging; token tem vida útil de 3600s (token_ttl_seconds).</text>
+        </g>
+
+        <!-- Segment Labels -->
+        <g data-graph-role="segment-label" data-segment-id="0">
+          <rect x="56" y="121" width="138.8" height="18" rx="3" class="c-mask"/>
+          <text x="62" y="134" class="t-dim" font-size="9" font-weight="600">Autenticação CoreConnect</text>
+        </g>
+        <g data-graph-role="segment-label" data-segment-id="1">
+          <rect x="56" y="255" width="102.4" height="18" rx="3" class="c-mask"/>
+          <text x="62" y="268" class="t-dim" font-size="9" font-weight="600">Leitura de config</text>
+        </g>
+        <g data-graph-role="segment-label" data-segment-id="2">
+          <rect x="56" y="315" width="107.60000000000001" height="18" rx="3" class="c-mask"/>
+          <text x="62" y="328" class="t-dim" font-size="9" font-weight="600">JWT HS256 · claims</text>
+        </g>
+        <g data-graph-role="segment-label" data-segment-id="3">
+          <rect x="56" y="347" width="102.4" height="18" rx="3" class="c-mask"/>
+          <text x="62" y="360" class="t-dim" font-size="9" font-weight="600">Consumo Messaging</text>
+        </g>
+
+        <!-- Participants -->
+        <g id="node-client" data-node-id="client" data-node-label="Frontend / SDK" tabindex="0" role="button" aria-label="Focar Frontend / SDK, Zendesk Messaging, Participante da sequência" aria-pressed="false" data-node-kind="external" data-node-sublabel="Zendesk Messaging" data-node-context="Participante da sequência">
+          <title>Frontend / SDK · Zendesk Messaging · Participante da sequência</title>
+          <rect x="62" y="72" width="135" height="54" rx="6" class="c-mask"/>
+          <rect x="62" y="72" width="135" height="54" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(68 78) scale(0.6875)">
             <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
             <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="100" y="220" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Operador / Cron</text>
-        <text data-detail="context" x="100" y="236" class="t-muted" font-size="9" text-anchor="middle">bigquery:sync-users</text>
+          <text data-node-label="" data-detail-anchor="" x="129.5" y="94" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Frontend / SDK</text>
+          <text data-detail="context" x="129.5" y="111" class="t-muted" font-size="7" text-anchor="middle">Zendesk Messaging</text>
         </g>
 
-        <g id="node-cmd" data-node-id="cmd" data-node-label="BigQuerySyncUsersCommand" tabindex="0" role="button" aria-label="Focar BigQuerySyncUsersCommand, delta 24h · resolvedOrgsCache, sync-zendesk (Hyperf 3.1 · Swoole 6.1)" aria-pressed="false" data-node-kind="backend" data-node-sublabel="delta 24h · resolvedOrgsCache" data-node-tag="resume diário" data-node-context="sync-zendesk (Hyperf 3.1 · Swoole 6.1)">
-          <title>BigQuerySyncUsersCommand · delta 24h · resolvedOrgsCache · sync-zendesk (Hyperf 3.1 · Swoole 6.1) · resume diário</title>
-          <rect x="310" y="190" width="190" height="64" rx="6" class="c-mask"/>
-          <rect x="310" y="190" width="190" height="64" rx="6" class="c-backend" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(316 196) scale(0.6875)">
+        <g id="node-mid" data-node-id="mid" data-node-label="AuthMiddleware" tabindex="0" role="button" aria-label="Focar AuthMiddleware, CoreConnect · JWT, Participante da sequência" aria-pressed="false" data-node-kind="backend" data-node-sublabel="CoreConnect · JWT" data-node-context="Participante da sequência">
+          <title>AuthMiddleware · CoreConnect · JWT · Participante da sequência</title>
+          <rect x="230.60000000000002" y="72" width="135" height="54" rx="6" class="c-mask"/>
+          <rect x="230.60000000000002" y="72" width="135" height="54" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(236.60000000000002 78) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="405" y="220" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">BigQuerySyncUsersCommand</text>
-        <text data-detail="context" x="405" y="236" class="t-muted" font-size="9" text-anchor="middle">delta 24h · resolvedOrgsCache</text>
-        <text data-detail="fine" x="405" y="246" class="t-backend" font-size="7" text-anchor="middle">resume diário</text>
+          <text data-node-label="" data-detail-anchor="" x="298.1" y="94" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">AuthMiddleware</text>
+          <text data-detail="context" x="298.1" y="111" class="t-muted" font-size="7" text-anchor="middle">CoreConnect · JWT</text>
         </g>
 
-        <g id="node-abstract" data-node-id="abstract" data-node-label="AbstractBigQueryLoadCommand" tabindex="0" role="button" aria-label="Focar AbstractBigQueryLoadCommand, stream · Parallel · reconcílio, sync-zendesk (Hyperf 3.1 · Swoole 6.1)" aria-pressed="false" data-node-kind="backend" data-node-sublabel="stream · Parallel · reconcílio" data-node-context="sync-zendesk (Hyperf 3.1 · Swoole 6.1)">
-          <title>AbstractBigQueryLoadCommand · stream · Parallel · reconcílio · sync-zendesk (Hyperf 3.1 · Swoole 6.1)</title>
-          <rect x="555" y="190" width="180" height="64" rx="6" class="c-mask"/>
-          <rect x="555" y="190" width="180" height="64" rx="6" class="c-backend" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(561 196) scale(0.6875)">
+        <g id="node-ctl" data-node-id="ctl" data-node-label="TokenController" tabindex="0" role="button" aria-label="Focar TokenController, MessagingToken · claims, Participante da sequência" aria-pressed="false" data-node-kind="backend" data-node-sublabel="MessagingToken · claims" data-node-context="Participante da sequência">
+          <title>TokenController · MessagingToken · claims · Participante da sequência</title>
+          <rect x="399.2" y="72" width="135" height="54" rx="6" class="c-mask"/>
+          <rect x="399.2" y="72" width="135" height="54" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(405.2 78) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="645" y="220" class="t-primary" font-size="10.6" font-weight="600" text-anchor="middle">AbstractBigQueryLoadCommand</text>
-        <text data-detail="context" x="645" y="236" class="t-muted" font-size="9" text-anchor="middle">stream · Parallel · reconcílio</text>
+          <text data-node-label="" data-detail-anchor="" x="466.7" y="94" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">TokenController</text>
+          <text data-detail="context" x="466.7" y="111" class="t-muted" font-size="7" text-anchor="middle">MessagingToken · claims</text>
         </g>
 
-        <g id="node-zsrv" data-node-id="zsrv" data-node-label="ZendeskService" tabindex="0" role="button" aria-label="Focar ZendeskService, throttle 600ms · retry ×3, sync-zendesk (Hyperf 3.1 · Swoole 6.1) › auth basic e-mail/token" aria-pressed="false" data-node-kind="backend" data-node-sublabel="throttle 600ms · retry ×3" data-node-tag="100 req/min" data-node-context="sync-zendesk (Hyperf 3.1 · Swoole 6.1) › auth basic e-mail/token">
-          <title>ZendeskService · throttle 600ms · retry ×3 · sync-zendesk (Hyperf 3.1 · Swoole 6.1) › auth basic e-mail/token · 100 req/min</title>
-          <rect x="790" y="190" width="180" height="64" rx="6" class="c-mask"/>
-          <rect x="790" y="190" width="180" height="64" rx="6" class="c-backend" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(796 196) scale(0.6875)">
+        <g id="node-svc" data-node-id="svc" data-node-label="GenerateTokenSvc" tabindex="0" role="button" aria-label="Focar GenerateTokenSvc, MessagingToken · HS256, Participante da sequência" aria-pressed="false" data-node-kind="backend" data-node-sublabel="MessagingToken · HS256" data-node-context="Participante da sequência">
+          <title>GenerateTokenSvc · MessagingToken · HS256 · Participante da sequência</title>
+          <rect x="567.8" y="72" width="135" height="54" rx="6" class="c-mask"/>
+          <rect x="567.8" y="72" width="135" height="54" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(573.8 78) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="880" y="220" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">ZendeskService</text>
-        <text data-detail="context" x="880" y="236" class="t-muted" font-size="9" text-anchor="middle">throttle 600ms · retry ×3</text>
-        <text data-detail="fine" x="880" y="246" class="t-backend" font-size="7" text-anchor="middle">100 req/min</text>
+          <text data-node-label="" data-detail-anchor="" x="635.3" y="94" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">GenerateTokenSvc</text>
+          <text data-detail="context" x="635.3" y="111" class="t-muted" font-size="7" text-anchor="middle">MessagingToken · HS256</text>
         </g>
 
-        <g id="node-zapi" data-node-id="zapi" data-node-label="Zendesk REST API" tabindex="0" role="button" aria-label="Focar Zendesk REST API, create_or_update_many · job poll, auth basic e-mail/token" aria-pressed="false" data-node-kind="external" data-node-sublabel="create_or_update_many · job poll" data-node-context="auth basic e-mail/token">
-          <title>Zendesk REST API · create_or_update_many · job poll · auth basic e-mail/token</title>
-          <rect x="1025" y="190" width="180" height="64" rx="6" class="c-mask"/>
-          <rect x="1025" y="190" width="180" height="64" rx="6" class="c-external" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(1031 196) scale(0.6875)">
+        <g id="node-cfg" data-node-id="cfg" data-node-label="zendesk.messaging" tabindex="0" role="button" aria-label="Focar zendesk.messaging, key_id · secret · ttl, Participante da sequência" aria-pressed="false" data-node-kind="database" data-node-sublabel="key_id · secret · ttl" data-node-context="Participante da sequência">
+          <title>zendesk.messaging · key_id · secret · ttl · Participante da sequência</title>
+          <rect x="736.4" y="72" width="135" height="54" rx="6" class="c-mask"/>
+          <rect x="736.4" y="72" width="135" height="54" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(742.4 78) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="803.9" y="94" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">zendesk.messaging</text>
+          <text data-detail="context" x="803.9" y="111" class="t-muted" font-size="7" text-anchor="middle">key_id · secret · ttl</text>
+        </g>
+
+        <g id="node-zsdk" data-node-id="zsdk" data-node-label="Zendesk Messaging" tabindex="0" role="button" aria-label="Focar Zendesk Messaging, Web SDK · chat, Participante da sequência" aria-pressed="false" data-node-kind="external" data-node-sublabel="Web SDK · chat" data-node-context="Participante da sequência">
+          <title>Zendesk Messaging · Web SDK · chat · Participante da sequência</title>
+          <rect x="905" y="72" width="135" height="54" rx="6" class="c-mask"/>
+          <rect x="905" y="72" width="135" height="54" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(911 78) scale(0.6875)">
             <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
             <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="1115" y="220" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Zendesk REST API</text>
-        <text data-detail="context" x="1115" y="236" class="t-muted" font-size="8.9" text-anchor="middle">create_or_update_many · job poll</text>
-        </g>
-
-        <g id="node-bqsrv" data-node-id="bqsrv" data-node-label="BigQueryClientService" tabindex="0" role="button" aria-label="Focar BigQueryClientService, streamQuery() · page 1000, sync-zendesk (Hyperf 3.1 · Swoole 6.1)" aria-pressed="false" data-node-kind="backend" data-node-sublabel="streamQuery() · page 1000" data-node-context="sync-zendesk (Hyperf 3.1 · Swoole 6.1)">
-          <title>BigQueryClientService · streamQuery() · page 1000 · sync-zendesk (Hyperf 3.1 · Swoole 6.1)</title>
-          <rect x="670" y="30" width="180" height="64" rx="6" class="c-mask"/>
-          <rect x="670" y="30" width="180" height="64" rx="6" class="c-backend" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(676 36) scale(0.6875)">
-            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="760" y="60" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">BigQueryClientService</text>
-        <text data-detail="context" x="760" y="76" class="t-muted" font-size="9" text-anchor="middle">streamQuery() · page 1000</text>
-        </g>
-
-        <g id="node-bq" data-node-id="bq" data-node-label="BigQuery" tabindex="0" role="button" aria-label="Focar BigQuery, temp_to_zenddesk_users, Componente de arquitetura" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="temp_to_zenddesk_users" data-node-tag="delta 24h" data-node-context="Componente de arquitetura">
-          <title>BigQuery · temp_to_zenddesk_users · Componente de arquitetura · delta 24h</title>
-          <rect x="900" y="30" width="150" height="64" rx="6" class="c-mask"/>
-          <rect x="900" y="30" width="150" height="64" rx="6" class="c-cloud" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="cloud" class="semantic-sigil s-cloud" transform="translate(906 36) scale(0.6875)">
-            <path d="M4.3 12.5h7.3a2.4 2.4 0 0 0 .2-4.8 4 4 0 0 0-7.5-1.3A3.1 3.1 0 0 0 4.3 12.5Z"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="975" y="60" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">BigQuery</text>
-        <text data-detail="context" x="975" y="76" class="t-muted" font-size="9" text-anchor="middle">temp_to_zenddesk_users</text>
-        <text data-detail="fine" x="975" y="86" class="t-cloud" font-size="7" text-anchor="middle">delta 24h</text>
-        </g>
-
-        <g id="node-mapper" data-node-id="mapper" data-node-label="Mapping Layer" tabindex="0" role="button" aria-label="Focar Mapping Layer, BigQueryRowMapper · ZendeskMapper, sync-zendesk (Hyperf 3.1 · Swoole 6.1)" aria-pressed="false" data-node-kind="backend" data-node-sublabel="BigQueryRowMapper · ZendeskMapper" data-node-tag="→ ZendeskUserDTO" data-node-context="sync-zendesk (Hyperf 3.1 · Swoole 6.1)">
-          <title>Mapping Layer · BigQueryRowMapper · ZendeskMapper · sync-zendesk (Hyperf 3.1 · Swoole 6.1) · → ZendeskUserDTO</title>
-          <rect x="1100" y="30" width="190" height="64" rx="6" class="c-mask"/>
-          <rect x="1100" y="30" width="190" height="64" rx="6" class="c-backend" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(1106 36) scale(0.6875)">
-            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="1195" y="60" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Mapping Layer</text>
-        <text data-detail="context" x="1195" y="76" class="t-muted" font-size="9" text-anchor="middle">BigQueryRowMapper · ZendeskMapper</text>
-        <text data-detail="fine" x="1195" y="86" class="t-backend" font-size="7" text-anchor="middle">→ ZendeskUserDTO</text>
-        </g>
-
-        <g id="node-mysql" data-node-id="mysql" data-node-label="MySQL local" tabindex="0" role="button" aria-label="Focar MySQL local, mapping · sync log, Componente de arquitetura" aria-pressed="false" data-node-kind="database" data-node-sublabel="mapping · sync log" data-node-tag="resume · persist" data-node-context="Componente de arquitetura">
-          <title>MySQL local · mapping · sync log · Componente de arquitetura · resume · persist</title>
-          <rect x="1025" y="350" width="180" height="64" rx="6" class="c-mask"/>
-          <rect x="1025" y="350" width="180" height="64" rx="6" class="c-database" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(1031 356) scale(0.6875)">
-            <ellipse cx="8" cy="4" rx="5" ry="2"/>
-            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="1115" y="380" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">MySQL local</text>
-        <text data-detail="context" x="1115" y="396" class="t-muted" font-size="9" text-anchor="middle">mapping · sync log</text>
-        <text data-detail="fine" x="1115" y="406" class="t-database" font-size="7" text-anchor="middle">resume · persist</text>
-        </g>
-
-        <g id="node-orgres" data-node-id="orgres" data-node-label="Org Resolver" tabindex="0" role="button" aria-label="Focar Org Resolver, buildDto() · resolvedOrgsCache, sync-zendesk (Hyperf 3.1 · Swoole 6.1)" aria-pressed="false" data-node-kind="backend" data-node-sublabel="buildDto() · resolvedOrgsCache" data-node-context="sync-zendesk (Hyperf 3.1 · Swoole 6.1)">
-          <title>Org Resolver · buildDto() · resolvedOrgsCache · sync-zendesk (Hyperf 3.1 · Swoole 6.1)</title>
-          <rect x="555" y="350" width="180" height="64" rx="6" class="c-mask"/>
-          <rect x="555" y="350" width="180" height="64" rx="6" class="c-backend" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(561 356) scale(0.6875)">
-            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="645" y="380" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Org Resolver</text>
-        <text data-detail="context" x="645" y="396" class="t-muted" font-size="9" text-anchor="middle">buildDto() · resolvedOrgsCache</text>
-        </g>
-
-        <g id="node-dedup" data-node-id="dedup" data-node-label="BigQueryDeduplicationService" tabindex="0" role="button" aria-label="Focar BigQueryDeduplicationService, shouldPublish · markPublished, sync-zendesk (Hyperf 3.1 · Swoole 6.1)" aria-pressed="false" data-node-kind="backend" data-node-sublabel="shouldPublish · markPublished" data-node-tag="off p/ users" data-node-context="sync-zendesk (Hyperf 3.1 · Swoole 6.1)">
-          <title>BigQueryDeduplicationService · shouldPublish · markPublished · sync-zendesk (Hyperf 3.1 · Swoole 6.1) · off p/ users</title>
-          <rect x="310" y="350" width="200" height="64" rx="6" class="c-mask"/>
-          <rect x="310" y="350" width="200" height="64" rx="6" class="c-backend" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(316 356) scale(0.6875)">
-            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="410" y="380" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">BigQueryDeduplicationService</text>
-        <text data-detail="context" x="410" y="396" class="t-muted" font-size="9" text-anchor="middle">shouldPublish · markPublished</text>
-        <text data-detail="fine" x="410" y="406" class="t-backend" font-size="7" text-anchor="middle">off p/ users</text>
-        </g>
-
-        <g id="node-redis" data-node-id="redis" data-node-label="Redis" tabindex="0" role="button" aria-label="Focar Redis, bq-dedup · TTL 30d, Componente de arquitetura" aria-pressed="false" data-node-kind="database" data-node-sublabel="bq-dedup · TTL 30d" data-node-context="Componente de arquitetura">
-          <title>Redis · bq-dedup · TTL 30d · Componente de arquitetura</title>
-          <rect x="40" y="350" width="170" height="64" rx="6" class="c-mask"/>
-          <rect x="40" y="350" width="170" height="64" rx="6" class="c-database" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(46 356) scale(0.6875)">
-            <ellipse cx="8" cy="4" rx="5" ry="2"/>
-            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="125" y="380" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Redis</text>
-        <text data-detail="context" x="125" y="396" class="t-muted" font-size="9" text-anchor="middle">bq-dedup · TTL 30d</text>
-        </g>
-
-        <!-- Connection labels -->
-
-        <g data-detail="context" data-edge-from="cmd" data-edge-to="abstract" data-edge-label="extends" data-edge-key="1" data-edge-id="main">
-          <rect x="505.7" y="195" width="43.6" height="14" rx="3" class="c-mask"/>
-          <text x="527.5" y="205" class="t-muted" font-size="8" text-anchor="middle">extends</text>
-        </g>
-        <g data-detail="context" data-edge-from="abstract" data-edge-to="bqsrv" data-edge-label="streamQuery() — SQL delta" data-edge-key="2" data-edge-id="stream">
-          <rect x="494" y="122" width="130" height="14" rx="3" class="c-mask"/>
-          <text x="559" y="132" class="t-muted" font-size="8" text-anchor="middle">streamQuery() — SQL delta</text>
-        </g>
-        <g data-detail="context" data-edge-from="bqsrv" data-edge-to="bq" data-edge-label="SQL" data-edge-key="3" data-edge-id="bqreq">
-          <rect x="860" y="42" width="30" height="14" rx="3" class="c-mask"/>
-          <text x="875" y="52" class="t-muted" font-size="8" text-anchor="middle">SQL</text>
-        </g>
-        <g data-detail="context" data-edge-from="abstract" data-edge-to="mapper" data-edge-label="mapRow() + buildDto()" data-edge-key="4" data-edge-id="map">
-          <rect x="868.1" y="122" width="110.8" height="14" rx="3" class="c-mask"/>
-          <text x="923.5" y="132" class="t-muted" font-size="8" text-anchor="middle">mapRow() + buildDto()</text>
-        </g>
-        <g data-detail="context" data-edge-from="abstract" data-edge-to="zsrv" data-edge-label="Parallel" data-edge-key="5" data-edge-id="send">
-          <rect x="738.3" y="195" width="48.4" height="14" rx="3" class="c-mask"/>
-          <text x="762.5" y="205" class="t-muted" font-size="8" text-anchor="middle">Parallel</text>
-        </g>
-        <g data-detail="context" data-edge-from="zsrv" data-edge-to="zapi" data-edge-label="bulk" data-edge-key="6" data-edge-id="bulk">
-          <rect x="982.5" y="202" width="30" height="14" rx="3" class="c-mask"/>
-          <text x="997.5" y="212" class="t-muted" font-size="8" text-anchor="middle">bulk</text>
-        </g>
-        <g data-detail="context" data-edge-from="zsrv" data-edge-to="mysql" data-edge-label="resolve org · sync log" data-edge-key="7" data-edge-id="state">
-          <rect x="939.7" y="282" width="115.6" height="14" rx="3" class="c-mask"/>
-          <text x="997.5" y="292" class="t-muted" font-size="8" text-anchor="middle">resolve org · sync log</text>
-        </g>
-        <g data-detail="context" data-edge-from="cmd" data-edge-to="orgres" data-edge-label="buildDto() — cache" data-edge-key="8" data-edge-id="org">
-          <rect x="479.3" y="285.5" width="96.39999999999999" height="14" rx="3" class="c-mask"/>
-          <text x="527.5" y="295.5" class="t-muted" font-size="8" text-anchor="middle">buildDto() — cache</text>
-        </g>
-        <g data-detail="context" data-edge-from="orgres" data-edge-to="zsrv" data-edge-label="resolveZendeskOrganizationId()" data-edge-key="9" data-edge-id="resolve">
-          <rect x="685.5" y="285.5" width="154" height="14" rx="3" class="c-mask"/>
-          <text x="762.5" y="295.5" class="t-muted" font-size="8" text-anchor="middle">resolveZendeskOrganizationId()</text>
-        </g>
-        <g data-detail="context" data-edge-from="cmd" data-edge-to="dedup" data-edge-label="shouldPublish() — off" data-edge-key="10" data-edge-id="dedup-edge">
-          <rect x="360.1" y="282" width="110.8" height="14" rx="3" class="c-mask"/>
-          <text x="415.5" y="292" class="t-messagebus" font-size="8" text-anchor="middle">shouldPublish() — off</text>
-        </g>
-        <g data-detail="context" data-edge-from="dedup" data-edge-to="redis" data-edge-label="sha256 · TTL 30d" data-edge-key="11" data-edge-id="redis-edge">
-          <rect x="216.6" y="362" width="86.8" height="14" rx="3" class="c-mask"/>
-          <text x="260" y="372" class="t-messagebus" font-size="8" text-anchor="middle">sha256 · TTL 30d</text>
-        </g>
-
-        <!-- Boundary labels (foreground masks keep routes out of titles) -->
-        <g data-graph-role="structural-frame-label" data-composition-frame-id="0" data-composition-frame-kind="region" data-composition-frame-label="sync-zendesk (Hyperf 3.1 · Swoole 6.1)">
-          <rect data-graph-role="structural-frame-label-mask" x="284" y="10" width="215.2" height="16" rx="3" class="c-mask"/>
-          <text data-boundary-label="" x="288" y="23" class="t-cloud" font-size="9" font-weight="600">sync-zendesk (Hyperf 3.1 · Swoole 6.1)</text>
-        </g>
-
-        <g data-graph-role="structural-frame-label" data-composition-frame-id="1" data-composition-frame-kind="security-group" data-composition-frame-label="auth basic e-mail/token">
-          <rect data-graph-role="structural-frame-label-mask" x="764" y="170" width="134.2" height="16" rx="3" class="c-mask"/>
-          <text data-boundary-label="" x="768" y="183" class="t-security" font-size="9" font-weight="600">auth basic e-mail/token</text>
+          <text data-node-label="" data-detail-anchor="" x="972.5" y="94" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Zendesk Messaging</text>
+          <text data-detail="context" x="972.5" y="111" class="t-muted" font-size="7" text-anchor="middle">Web SDK · chat</text>
         </g>
 
         <!-- Legend -->
-        <g data-legend="" data-legend-bridge="">
-          <text x="40" y="466" class="t-primary" font-size="12" font-weight="650">Legenda</text>
-          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Backend" data-legend-x="40" data-legend-baseline="486" data-legend-width="78">
-            <rect x="40" y="477" width="16" height="10" rx="2.5" class="c-backend" stroke-width="1"/>
-            <text x="62" y="486" class="t-muted" font-size="10" font-weight="500">Backend</text>
+        <g data-legend="">
+          <text x="40" y="566" class="t-primary" font-size="12" font-weight="650">Legenda</text>
+          <g data-legend-semantic-kind="emphasis" data-legend-x="40" data-legend-baseline="586" data-legend-width="93">
+            <path d="M 40 583 L 74 583" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+            <text x="83" y="586" class="t-muted" font-size="10" font-weight="500">requisição</text>
           </g>
-          <g data-legend-semantic-kind="database" data-legend-kind="database" data-legend-label="Banco de dados" data-legend-x="140" data-legend-baseline="486" data-legend-width="113">
-            <rect x="140" y="477" width="16" height="10" rx="2.5" class="c-database" stroke-width="1"/>
-            <text x="162" y="486" class="t-muted" font-size="10" font-weight="500">Banco de dados</text>
+          <g data-legend-semantic-kind="return" data-legend-x="155" data-legend-baseline="586" data-legend-width="83">
+            <path d="M 155 583 L 189 583" class="a-default" stroke-width="1.4" stroke-dasharray="3,5" marker-end="url(#arrowhead)"/>
+            <text x="198" y="586" class="t-muted" font-size="10" font-weight="500">resposta</text>
           </g>
-          <g data-legend-semantic-kind="cloud" data-legend-kind="cloud" data-legend-label="Nuvem" data-legend-x="275" data-legend-baseline="486" data-legend-width="68">
-            <rect x="275" y="477" width="16" height="10" rx="2.5" class="c-cloud" stroke-width="1"/>
-            <text x="297" y="486" class="t-muted" font-size="10" font-weight="500">Nuvem</text>
+          <g data-legend-semantic-kind="dashed" data-legend-x="260" data-legend-baseline="586" data-legend-width="123">
+            <path d="M 260 583 L 294 583" class="a-dashed" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+            <text x="303" y="586" class="t-muted" font-size="10" font-weight="500">trace assíncrono</text>
           </g>
-          <g data-legend-semantic-kind="external" data-legend-kind="external" data-legend-label="Externo" data-legend-x="365" data-legend-baseline="486" data-legend-width="78">
-            <rect x="365" y="477" width="16" height="10" rx="2.5" class="c-external" stroke-width="1"/>
-            <text x="387" y="486" class="t-muted" font-size="10" font-weight="500">Externo</text>
+          <g data-legend-semantic-kind="default" data-legend-x="405" data-legend-baseline="586" data-legend-width="118">
+            <path d="M 405 583 L 439 583" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+            <text x="448" y="586" class="t-muted" font-size="10" font-weight="500">mensagem padrão</text>
           </g>
         </g>
       </svg>
@@ -5719,40 +5725,36 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       <div class="card">
         <div class="card-header">
           <div class="card-dot cyan"></div>
-          <h3>Pipeline</h3>
+          <h3>Requisição e autenticação</h3>
         </div>
         <ul>
-          <li>&bull; streamQuery(): SQL delta (janela horária, America/Sao_Paulo) na view dw-onfly-prd.service.temp_to_zenddesk_users</li>
-          <li>&bull; mapRow() → ZendeskMapper::toUser() → ZendeskUserDTO (role end-user salvo @onfly.com.br, tags VIP, loyalty fields)</li>
-          <li>&bull; buildDto(): org via resolvedOrgsCache → organizations_mapping; sem mapping → fallback upsertOrganization via BigQuery</li>
-          <li>&bull; Batches ≤100 → Parallel (concurrency_users) → createOrUpdateManyUsers → pollJobStatus → reconcílio registro a registro</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="card-dot amber"></div>
-          <h3>Rate limit (Zendesk)</h3>
-        </div>
-        <ul>
-          <li>&bull; throttleRequest(): mínimo 600ms entre requisições (~100 req/min)</li>
-          <li>&bull; requestWithRetry(): MAX_ATTEMPTS=3; Connect/Server → backoff 2^n (1/2/4s)</li>
-          <li>&bull; 429 → Retry-After; esgotado → TransientZendeskException; outros 4xx → PermanentValidationException</li>
-          <li>&bull; pollJobStatus(): backoff 2/5/10/30s, timeout 300s (ZENDESK_JOB_POLL_TIMEOUT_S); failed/killed → TransientZendeskException</li>
-          <li>&bull; esperas via Coroutine::sleep() — não bloqueiam worker Swoole</li>
+          <li>&bull; GET /sync-zendesk/messaging-token?name=... com JWT Onfly (Bearer)</li>
+          <li>&bull; CoreConnect publica Authentication no Context (Hyperf, por coroutine)</li>
+          <li>&bull; Claims ausentes = ZendeskMessagingUnauthenticatedException</li>
         </ul>
       </div>
 
       <div class="card">
         <div class="card-header">
           <div class="card-dot violet"></div>
-          <h3>Dedup, resume e estado (MySQL)</h3>
+          <h3>Token JWT emitido</h3>
         </div>
         <ul>
-          <li>&bull; useDeduplication() = false: dedup Redis (sha256, TTL 30d) off para users</li>
-          <li>&bull; Resume: ZendeskUserSyncLog (status=Success, synced_at = hoje) → skipped_resume</li>
-          <li>&bull; organizations_mapping: company_id → zendesk_organization_id</li>
-          <li>&bull; Falhas por stage: missing_id, batch_failure, per_record, unmatched_result</li>
+          <li>&bull; Config zendesk.messaging; chaves ausentes → MisconfiguredException</li>
+          <li>&bull; JWT HS256 (Lcobucci): kid = key_id, jti = uuid4, exp = iat + 3600s</li>
+          <li>&bull; Claims external_id, scope &quot;user&quot;, email, email_verified; no-store</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-dot amber"></div>
+          <h3>Consumo no Messaging</h3>
+        </div>
+        <ul>
+          <li>&bull; Token entregue ao Zendesk Messaging Web SDK</li>
+          <li>&bull; Zendesk valida HS256 com shared_secret (kid identifica a chave)</li>
+          <li>&bull; external_id liga ao usuário sincronizado; email_verified evita duplicidade</li>
         </ul>
       </div>
     </div>

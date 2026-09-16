@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "sync-zendesk — Messaging Token",
+    "output": "sequence.html",
+    "viewBox": [1080, 640],
+    "column_fit": "spread",
+    "locale": "pt-BR",
+    "quality_profile": "showcase"
+  },
+  "participants": [
+    {
+      "id": "client",
+      "type": "external",
+      "label": "Frontend / SDK",
+      "sublabel": "Zendesk Messaging"
+    },
+    {
+      "id": "mid",
+      "type": "backend",
+      "label": "AuthMiddleware",
+      "sublabel": "CoreConnect · JWT"
+    },
+    {
+      "id": "ctl",
+      "type": "backend",
+      "label": "TokenController",
+      "sublabel": "MessagingToken · claims"
+    },
+    {
+      "id": "svc",
+      "type": "backend",
+      "label": "GenerateTokenSvc",
+      "sublabel": "MessagingToken · HS256"
+    },
+    {
+      "id": "cfg",
+      "type": "database",
+      "label": "zendesk.messaging",
+      "sublabel": "key_id · secret · ttl"
+    },
+    {
+      "id": "zsdk",
+      "type": "external",
+      "label": "Zendesk Messaging",
+      "sublabel": "Web SDK · chat"
+    }
+  ],
+  "segments": [
+    { "from": 187, "to": 217, "label": "Autenticação CoreConnect" },
+    { "from": 277, "to": 307, "label": "Leitura de config" },
+    { "from": 337, "to": 427, "label": "JWT HS256 · claims" },
+    { "from": 457, "to": 487, "label": "Consumo Messaging" }
+  ],
+  "messages": [
+    {
+      "id": "m01",
+      "from": "client",
+      "to": "mid",
+      "y": 172,
+      "label": "1. GET /messaging-token · JWT Bearer",
+      "variant": "emphasis",
+      "note": "GET /sync-zendesk/messaging-token?name=... com JWT Onfly no header Authorization (Bearer)."
+    },
+    {
+      "id": "m02",
+      "from": "mid",
+      "to": "ctl",
+      "y": 202,
+      "label": "2. Authentication no Context",
+      "variant": "default",
+      "note": "CoreConnect valida o JWT e publica Authentication no Context; falha → UnauthenticatedException."
+    },
+    {
+      "id": "m03",
+      "from": "ctl",
+      "to": "svc",
+      "y": 232,
+      "label": "3. handle(userId, email, name)",
+      "variant": "default",
+      "note": "Controller extrai user_id ?? scopes.User.id e scopes.User.email; name = query ?name ?? scopes.User.name."
+    },
+    {
+      "id": "m04",
+      "from": "svc",
+      "to": "cfg",
+      "y": 262,
+      "label": "4. lê key_id · shared_secret · ttl",
+      "variant": "default",
+      "note": "handle() lê a config zendesk.messaging; chaves ausentes → MisconfiguredException."
+    },
+    {
+      "id": "m05",
+      "from": "cfg",
+      "to": "svc",
+      "y": 292,
+      "label": "5. credenciais OK",
+      "variant": "return",
+      "note": "key_id vai no header kid do JWT; token_ttl_seconds controla o exp."
+    },
+    {
+      "id": "m06",
+      "from": "svc",
+      "to": "ctl",
+      "y": 322,
+      "label": "6. JWT HS256 assinado",
+      "variant": "return",
+      "note": "Lcobucci (Sha256, InMemory): kid = key_id, jti = uuid4, exp = iat + 3600s; claims external_id, email, name."
+    },
+    {
+      "id": "m07",
+      "from": "ctl",
+      "to": "mid",
+      "y": 352,
+      "label": "7. resposta {token}",
+      "variant": "return",
+      "note": "Controller devolve o token para a cadeia de middlewares."
+    },
+    {
+      "id": "m08",
+      "from": "mid",
+      "to": "client",
+      "y": 382,
+      "label": "8. 200 {token} · no-store",
+      "variant": "return",
+      "note": "Resposta 200 com Cache-Control: no-store — o token nunca é cacheado."
+    },
+    {
+      "id": "m09",
+      "from": "client",
+      "to": "zsdk",
+      "y": 412,
+      "label": "9. token → Zendesk Messaging SDK",
+      "variant": "emphasis",
+      "note": "Frontend entrega o token ao Zendesk Messaging Web SDK para autenticar o chat do usuário."
+    },
+    {
+      "id": "m10",
+      "from": "zsdk",
+      "to": "client",
+      "y": 442,
+      "label": "10. HS256 validado · kid",
+      "variant": "return",
+      "note": "Zendesk valida a assinatura HS256 com o shared_secret da integração; kid identifica a chave."
+    },
+    {
+      "id": "m11",
+      "from": "client",
+      "to": "zsdk",
+      "y": 472,
+      "label": "11. chat vinculado · external_id",
+      "variant": "dashed",
+      "note": "external_id vincula o chat ao usuário sincronizado; email_verified = true evita duplicidade."
+    },
+    {
+      "id": "m12",
+      "from": "zsdk",
+      "to": "client",
+      "y": 502,
+      "label": "12. sessão de chat iniciada",
+      "variant": "dashed",
+      "note": "Usuário autenticado no Zendesk Messaging; token tem vida útil de 3600s (token_ttl_seconds)."
+    }
+  ],
+  "activations": [
+    { "participant": "mid", "from": 166, "to": 392, "type": "backend" },
+    { "participant": "ctl", "from": 196, "to": 362, "type": "backend" },
+    { "participant": "svc", "from": 226, "to": 332, "type": "backend" },
+    { "participant": "cfg", "from": 256, "to": 302, "type": "database" },
+    { "participant": "zsdk", "from": 406, "to": 512, "type": "external" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Requisição e autenticação",
+      "items": [
+        "GET /sync-zendesk/messaging-token?name=... com JWT Onfly (Bearer)",
+        "CoreConnect publica Authentication no Context (Hyperf, por coroutine)",
+        "Claims ausentes = ZendeskMessagingUnauthenticatedException"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Token JWT emitido",
+      "items": [
+        "Config zendesk.messaging; chaves ausentes → MisconfiguredException",
+        "JWT HS256 (Lcobucci): kid = key_id, jti = uuid4, exp = iat + 3600s",
+        "Claims external_id, scope \"user\", email, email_verified; no-store"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Consumo no Messaging",
+      "items": [
+        "Token entregue ao Zendesk Messaging Web SDK",
+        "Zendesk valida HS256 com shared_secret (kid identifica a chave)",
+        "external_id liga ao usuário sincronizado; email_verified evita duplicidade"
+      ]
+    }
+  ]
+}

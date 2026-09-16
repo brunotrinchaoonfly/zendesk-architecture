@@ -2,227 +2,397 @@
   "schema_version": 1,
   "diagram_type": "architecture",
   "meta": {
-    "title": "sync-zendesk — Sync de Organizações",
+    "title": "Sync de Organizações",
+    "output": "architecture.html",
     "quality_profile": "showcase",
+    "repository": {
+      "url": "git@gitlab.com:onflylabs/general/microservicos/travel-ms/sync-zendesk.git",
+      "link_mode": "local-only",
+      "revision": "2df526033d6b4d1b75b941cdd159daab570652f6"
+    },
+    "views": [
+      {
+        "id": "main-path",
+        "label": "Fluxo principal",
+        "focus": [
+          "cron",
+          "cmd",
+          "abstract",
+          "zsrv",
+          "zapi"
+        ],
+        "note": "Cron dispara o comando; delta do BigQuery é mapeado, dividido em create × update e enviado em lotes ao Zendesk."
+      },
+      {
+        "id": "split",
+        "label": "Create × update",
+        "focus": [
+          "cmd",
+          "zsrv",
+          "zapi"
+        ],
+        "note": "splitBatch() compara created_at/updated_at e roteia cada grupo para createManyOrganizations ou updateManyOrganizations."
+      },
+      {
+        "id": "rate-limit",
+        "label": "Rate limit e retry",
+        "focus": [
+          "zsrv",
+          "zapi"
+        ],
+        "note": "ZendeskService aplica throttle de 600ms, retry com backoff exponencial e respeito ao Retry-After do 429."
+      },
+      {
+        "id": "resume",
+        "label": "Resume e estado",
+        "focus": [
+          "cmd",
+          "mapping",
+          "dedup",
+          "redis"
+        ],
+        "note": "Resume vem de organizations_mapping.synced_at (hoje); dedup Redis está off para organizations."
+      }
+    ],
     "locale": "pt-BR",
-    "output": "architecture.html"
+    "viewBox": [
+      1140,
+      470
+    ]
   },
   "components": [
     {
-      "id": "console",
-      "type": "backend",
-      "label": "Hyperf Console",
+      "id": "cron",
+      "type": "external",
+      "label": "Operador / Cron",
       "sublabel": "bigquery:sync-organizations",
       "pos": [
         40,
-        330
+        180
       ],
       "size": [
         150,
-        60
-      ],
-      "description": "<p>Entrada do command <code>bigquery:sync-organizations</code> (<code>bin/hyperf.php</code>), com as opções da base: <code>--batch-size</code>, <code>--concurrency</code>, <code>--hours</code>, <code>--resume</code>…</p>"
+        64
+      ]
     },
     {
       "id": "cmd",
       "type": "backend",
-      "label": "SyncOrgCmd",
-      "sublabel": "split create · update",
+      "label": "SyncOrganizationsCmd",
+      "sublabel": "split create × update",
+      "tag": "resume diário",
+      "sources": [
+        {
+          "path": "app/Command/Sync/BigQuerySyncOrganizationsCommand.php",
+          "label": "splitBatch · resume"
+        }
+      ],
       "pos": [
-        270,
-        330
+        340,
+        180
       ],
       "size": [
-        190,
-        60
-      ],
-      "description": "<p><code>BigQuerySyncOrganizationsCommand</code> (extends <code>AbstractOrganizationBigQueryCommand</code>). <strong>Separa registros em create × update</strong> comparando <code>created_at</code>/<code>updated_at</code>; usa <code>loadAlreadySyncedIds()</code> para pular organizations já sincronizadas no dia (<code>ZendeskOrganizationMapping.synced_at</code>). <code>alwaysResume()</code> = <code>true</code>.</p>"
+        200,
+        64
+      ]
     },
     {
-      "id": "base",
+      "id": "abstract",
       "type": "backend",
-      "label": "AbstractLoad",
-      "sublabel": "stream · Parallel · resume",
+      "label": "AbstractBigQueryLoadCommand",
+      "sublabel": "stream · Parallel · reconcílio",
+      "sources": [
+        {
+          "path": "app/Command/Load/AbstractBigQueryLoadCommand.php",
+          "label": "handle · processBatch"
+        },
+        {
+          "path": "app/Command/Load/AbstractOrganizationBigQueryCommand.php",
+          "label": "mapRow · buildDto base"
+        }
+      ],
       "pos": [
-        540,
-        330
+        640,
+        180
       ],
       "size": [
-        170,
-        60
-      ],
-      "description": "<p><code>AbstractBigQueryLoadCommand</code> — <strong>template da carga</strong>: <code>streamQuery</code>, buffer por lote, <code>Parallel(concurrency)</code>, <code>pollJobStatus</code> e <code>reconcileBatchLocal</code>.</p>\n<p><strong>Limites de request</strong>:</p>\n<ul>\n<li>lotes de até <code>100</code> por chamada bulk (<code>BIGQUERY_BATCH_SIZE</code>, default <code>100</code>, clamp <code>min(100, max(1, x))</code> — teto da API <code>create_many</code> do Zendesk)</li>\n<li>concorrência <code>BQ_ORGS_CONCURRENCY</code> (default <code>1</code>, override <code>--concurrency</code>)</li>\n<li><code>flushBatchesInParallel</code> mantém até N coroutine(s) de envio em paralelo</li>\n</ul>\n<p><code>ZendeskService</code> aplica <code>throttleRequest()</code> antes de cada request; <code>429/5xx/network</code> viram <code>TransientZendeskException</code> com retry em backoff (<code>Coroutine::sleep</code> não-bloqueante).</p>"
+        180,
+        64
+      ]
     },
     {
-      "id": "bqClient",
+      "id": "zsrv",
       "type": "backend",
-      "label": "BigQueryClient",
-      "sublabel": "streamQuery",
+      "label": "ZendeskService",
+      "sublabel": "throttle 600ms · retry ×3",
+      "tag": "100 req/min",
+      "sources": [
+        {
+          "path": "app/Service/Zendesk/ZendeskService.php",
+          "label": "throttle · retry · poll"
+        }
+      ],
       "pos": [
-        540,
-        170
+        920,
+        180
       ],
       "size": [
         160,
-        60
+        64
+      ]
+    },
+    {
+      "id": "zapi",
+      "type": "external",
+      "label": "Zendesk REST API",
+      "sublabel": "create_many · update_many",
+      "pos": [
+        920,
+        340
       ],
-      "description": "<p><code>BigQueryClientService::streamQuery(sql, maxResults)</code> — <strong>Generator coroutine-safe</strong> que normaliza cada linha.</p>"
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "bqsrv",
+      "type": "backend",
+      "label": "BigQueryClientService",
+      "sublabel": "streamQuery() · page 1000",
+      "pos": [
+        640,
+        40
+      ],
+      "size": [
+        180,
+        64
+      ]
     },
     {
       "id": "bq",
-      "type": "external",
+      "type": "cloud",
       "label": "BigQuery",
-      "sublabel": "Google Cloud",
+      "sublabel": "temp_to_zenddesk_companies",
+      "tag": "delta 24h",
       "pos": [
-        770,
-        170
-      ],
-      "size": [
-        140,
-        60
-      ],
-      "description": "<p>BigQuery (Google Cloud) — <strong>origem</strong> das organizations alteradas no período.</p>"
-    },
-    {
-      "id": "dedup",
-      "type": "database",
-      "label": "Dedup Service",
-      "sublabel": "Redis · hash",
-      "pos": [
-        300,
-        170
+        880,
+        40
       ],
       "size": [
         170,
-        60
-      ],
-      "description": "<p><code>BigQueryDeduplicationService</code> (Redis) — <code>shouldPublish()</code>/<code>markPublished()</code> por <code>namespace+external_id</code> com hash do payload; <strong>evita reenvio redundante</strong> ao Zendesk (economiza requests).</p>"
+        64
+      ]
     },
     {
-      "id": "zs",
+      "id": "mapper",
       "type": "backend",
-      "label": "ZendeskService",
-      "sublabel": "createMany · updateMany",
+      "label": "Mapping Layer",
+      "sublabel": "BigQueryRowMapper · ZendeskMapper",
+      "tag": "→ ZendeskOrganizationDTO",
+      "sources": [
+        {
+          "path": "app/Mapping/ZendeskMapper.php",
+          "label": "toOrganization()"
+        },
+        {
+          "path": "app/Mapping/BigQueryRowMapper.php",
+          "label": "mapOrganizationRow()"
+        }
+      ],
       "pos": [
-        780,
-        330
+        340,
+        40
       ],
       "size": [
-        170,
-        60
-      ],
-      "description": "<p><code>ZendeskService</code> — <code>createManyOrganizations</code> (POST) e <code>updateManyOrganizations</code> (PUT), até <code>100</code> por chamada; <code>pollJobStatus</code> com backoff.</p>\n<p>Aplica <code>throttleRequest()</code> antes de cada request; <code>429/5xx/network</code> viram <code>TransientZendeskException</code> com retry em backoff (<code>Coroutine::sleep</code> não-bloqueante).</p>"
-    },
-    {
-      "id": "zendesk",
-      "type": "external",
-      "label": "Zendesk API",
-      "sublabel": "bulk · job",
-      "pos": [
-        1020,
-        330
-      ],
-      "size": [
-        160,
-        60
-      ],
-      "description": "<p>API bulk do Zendesk (<code>organizations create/update many</code>) — até <code>100</code> registros por chamada; devolve <code>job_id</code>.</p>"
+        190,
+        64
+      ]
     },
     {
       "id": "mapping",
       "type": "database",
-      "label": "OrganizationMapping",
-      "sublabel": "synced_at · zendesk_id",
+      "label": "MySQL mapping",
+      "sublabel": "organizations_mapping",
+      "tag": "resume · persist",
+      "sources": [
+        {
+          "path": "app/Model/ZendeskOrganizationMapping.php",
+          "label": "company_id → zendesk_id"
+        }
+      ],
       "pos": [
-        540,
-        500
+        620,
+        340
       ],
       "size": [
         200,
-        60
+        64
+      ]
+    },
+    {
+      "id": "dedup",
+      "type": "backend",
+      "label": "BigQueryDeduplicationService",
+      "sublabel": "shouldPublish · markPublished",
+      "tag": "off p/ orgs",
+      "sources": [
+        {
+          "path": "app/Service/BigQuery/BigQueryDeduplicationService.php",
+          "label": "hash sha256"
+        }
       ],
-      "description": "<p><code>ZendeskOrganizationMapping</code> — <strong>resume</strong> (<code>synced_at</code> de hoje) e persistência do <code>zendesk_organization_id</code> retornado (<code>updateLocalMapping</code>).</p>"
+      "pos": [
+        300,
+        340
+      ],
+      "size": [
+        210,
+        64
+      ]
+    },
+    {
+      "id": "redis",
+      "type": "database",
+      "label": "Redis",
+      "sublabel": "bq-dedup · TTL 30d",
+      "pos": [
+        40,
+        340
+      ],
+      "size": [
+        170,
+        64
+      ]
     }
   ],
   "boundaries": [
     {
       "kind": "region",
-      "label": "sync-zendesk (Hyperf + Swoole)",
+      "label": "sync-zendesk (Hyperf 3.1 · Swoole 6.1)",
       "wraps": [
-        "console",
         "cmd",
-        "base",
-        "bqClient",
-        "dedup",
-        "zs",
-        "mapping"
+        "abstract",
+        "bqsrv",
+        "mapper",
+        "zsrv"
       ]
     }
   ],
   "connections": [
     {
       "id": "run",
-      "from": "console",
-      "to": "cmd"
+      "from": "cron",
+      "to": "cmd",
+      "variant": "emphasis"
     },
     {
-      "id": "ext",
+      "id": "main",
       "from": "cmd",
-      "to": "base"
+      "to": "abstract",
+      "label": "extends",
+      "labelDy": 16
     },
     {
       "id": "stream",
-      "from": "base",
-      "to": "bqClient",
-      "label": "streamQuery",
+      "from": "abstract",
+      "to": "bqsrv",
+      "label": "streamQuery · SQL",
       "fromSide": "top",
       "toSide": "bottom",
-      "labelDx": 48
+      "labelDy": -16
     },
     {
-      "id": "sql",
-      "from": "bqClient",
+      "id": "bqreq",
+      "from": "bqsrv",
       "to": "bq",
       "label": "SQL"
     },
     {
-      "id": "dedupe",
-      "from": "base",
-      "to": "dedup",
-      "label": "shouldPublish",
-      "fromSide": "top",
-      "toSide": "bottom",
-      "labelDx": -48
+      "id": "map",
+      "from": "abstract",
+      "to": "mapper",
+      "label": "mapRow + buildDto",
+      "fromSide": "left",
+      "toSide": "right"
     },
     {
       "id": "send",
-      "from": "base",
-      "to": "zs",
-      "label": "sendBatch"
+      "from": "abstract",
+      "to": "zsrv",
+      "label": "Parallel"
     },
     {
       "id": "bulk",
-      "from": "zs",
-      "to": "zendesk",
-      "label": "bulk job"
+      "from": "zsrv",
+      "to": "zapi",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "state",
+      "from": "zsrv",
+      "to": "mapping",
+      "label": "updateLocalMapping",
+      "fromSide": "bottom",
+      "toSide": "right"
     },
     {
       "id": "resume",
-      "from": "base",
+      "from": "cmd",
       "to": "mapping",
-      "label": "resume",
+      "label": "resume: synced_at hoje",
       "fromSide": "bottom",
-      "toSide": "top",
-      "labelDy": 30
+      "toSide": "left"
     },
     {
-      "id": "persist",
-      "from": "zs",
-      "to": "mapping",
-      "label": "persist id",
+      "id": "dedup-edge",
+      "from": "cmd",
+      "to": "dedup",
+      "label": "shouldPublish · off",
       "fromSide": "bottom",
       "toSide": "top",
-      "labelDy": 30
+      "variant": "dashed"
+    },
+    {
+      "id": "redis-edge",
+      "from": "dedup",
+      "to": "redis",
+      "label": "sha256 · TTL 30d",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Pipeline",
+      "items": [
+        "streamQuery(): SQL delta em temp_to_zenddesk_companies (COALESCE(updated_at, created_at), tz BRT; ORDER BY company_id)",
+        "mapRow() (BigQueryRowMapper) → ZendeskMapper::toOrganization() → ZendeskOrganizationDTO (plan só p/ novas)",
+        "splitBatch(): updated_at > created_at → update; senão → create (updateMany vs createMany)",
+        "Batches ≤100 → Parallel (concurrency_orgs) → job_id → pollJobStatus → updateLocalMapping"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Rate limit (Zendesk)",
+      "items": [
+        "throttleRequest(): mínimo 600ms entre requisições (~100 req/min)",
+        "requestWithRetry(): MAX_ATTEMPTS=3; Connect/Server → backoff 2^n (1/2/4s)",
+        "429 → Retry-After; esgotado → TransientZendeskException; outros 4xx → PermanentValidationException",
+        "pollJobStatus(): backoff 2/5/10/30s, timeout 300s (ZENDESK_JOB_POLL_TIMEOUT_S); failed/killed → TransientZendeskException",
+        "esperas via Coroutine::sleep() — não bloqueiam worker Swoole"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Resume e estado (MySQL)",
+      "items": [
+        "useDeduplication() = false: dedup Redis (sha256, TTL 30d) off para organizations",
+        "Resume: organizations_mapping com synced_at = hoje em loadAlreadySyncedIds() → skipped_resume",
+        "Reconcílio grava zendesk_organization_id em organizations_mapping (updateLocalMapping)",
+        "Falhas por stage: missing_id, batch_failure, per_record, unmatched_result"
+      ]
     }
   ]
 }

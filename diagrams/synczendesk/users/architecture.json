@@ -3,191 +3,425 @@
   "diagram_type": "architecture",
   "meta": {
     "title": "sync-zendesk — Sync de Usuários",
+    "output": "architecture.html",
     "quality_profile": "showcase",
-    "locale": "pt-BR",
-    "output": "architecture.html"
+    "repository": {
+      "url": "git@gitlab.com:onflylabs/general/microservicos/travel-ms/sync-zendesk.git",
+      "link_mode": "local-only",
+      "revision": "2df526033d6b4d1b75b941cdd159daab570652f6"
+    },
+    "views": [
+      {
+        "id": "main-path",
+        "label": "Fluxo principal",
+        "focus": [
+          "cron",
+          "cmd",
+          "abstract",
+          "zsrv",
+          "zapi"
+        ],
+        "note": "Cron dispara o comando, que consulta o delta no BigQuery, mapeia, agrupa em lotes e envia ao Zendesk."
+      },
+      {
+        "id": "rate-limit",
+        "label": "Rate limit e retry",
+        "focus": [
+          "zsrv",
+          "zapi"
+        ],
+        "note": "ZendeskService aplica throttle de 600ms, retry com backoff exponencial e respeito ao Retry-After do 429."
+      },
+      {
+        "id": "dedup-resume",
+        "label": "Dedup e resume",
+        "focus": [
+          "cmd",
+          "dedup",
+          "redis",
+          "mysql"
+        ],
+        "note": "Dedup Redis desativado para users; resume vem do ZendeskUserSyncLog e o org lookup tem cache em memória."
+      },
+      {
+        "id": "org-resolution",
+        "label": "Resolução de organização",
+        "focus": [
+          "cmd",
+          "orgres",
+          "zsrv",
+          "mysql",
+          "bq"
+        ],
+        "note": "buildDto() consulta organizations_mapping; sem mapping, faz fallback upsertando a organização via BigQuery."
+      }
+    ],
+    "locale": "pt-BR"
   },
   "components": [
     {
-      "id": "console",
-      "type": "backend",
-      "label": "Hyperf Console",
+      "id": "cron",
+      "type": "external",
+      "label": "Operador / Cron",
       "sublabel": "bigquery:sync-users",
       "pos": [
         40,
-        330
+        190
       ],
       "size": [
-        150,
-        60
-      ],
-      "description": "<p>Entrada do command <code>bigquery:sync-users</code> (<code>bin/hyperf.php</code>). Expõe as opções da base:</p>\n<ul>\n<li><code>--batch-size</code>, <code>--concurrency</code>, <code>--hours</code>, <code>--resume</code>, <code>--dry-run</code></li>\n</ul>"
+        120,
+        64
+      ]
     },
     {
       "id": "cmd",
       "type": "backend",
-      "label": "SyncUsersCmd",
-      "sublabel": "lotes 100 · resolve org",
+      "label": "BigQuerySyncUsersCommand",
+      "sublabel": "delta 24h · resolvedOrgsCache",
+      "tag": "resume diário",
+      "sources": [
+        {
+          "path": "app/Command/Sync/BigQuerySyncUsersCommand.php",
+          "label": "buildDto · resume"
+        }
+      ],
       "pos": [
-        270,
-        330
-      ],
-      "size": [
-        180,
-        60
-      ],
-      "description": "<p><strong>Orquestrador do fluxo</strong>: pagina o BigQuery em lotes de <code>100</code>, resolve a organização de cada usuário e coordena o envio ao Zendesk.</p>"
-    },
-    {
-      "id": "base",
-      "type": "backend",
-      "label": "AbstractLoad",
-      "sublabel": "stream · Parallel · resume",
-      "pos": [
-        530,
-        330
-      ],
-      "size": [
-        170,
-        60
-      ],
-      "description": "<p><code>AbstractBigQueryLoadCommand</code> — <strong>template da carga</strong>: <code>streamQuery</code> (Generator), buffer por lote, <code>Parallel(concurrency)</code>, <code>pollJobStatus</code> do job e <code>reconcileBatchLocal</code>.</p>\n<p><strong>Limites de request</strong>:</p>\n<ul>\n<li>lotes de até <code>100</code> registros por chamada bulk (<code>BIGQUERY_BATCH_SIZE</code>, default <code>100</code>, clamp <code>min(100, max(1, x))</code> — teto da API <code>create_many</code> do Zendesk)</li>\n<li>concorrência <code>BQ_USERS_CONCURRENCY</code> (default <code>1</code>, override <code>--concurrency</code>)</li>\n<li><code>flushBatchesInParallel</code> mantém até N coroutine(s) de envio em paralelo</li>\n</ul>\n<p><code>ZendeskService</code> aplica <code>throttleRequest()</code> antes de cada request; <code>429/5xx/network</code> viram <code>TransientZendeskException</code> com retry em backoff (<code>Coroutine::sleep</code> não-bloqueante).</p>"
-    },
-    {
-      "id": "bqClient",
-      "type": "backend",
-      "label": "BigQueryClient",
-      "sublabel": "streamQuery",
-      "pos": [
-        530,
-        170
-      ],
-      "size": [
-        160,
-        60
-      ],
-      "description": "<p><code>BigQueryClientService::streamQuery(sql, maxResults)</code> — <strong>Generator coroutine-safe</strong> que normaliza cada linha.</p>"
-    },
-    {
-      "id": "bq",
-      "type": "external",
-      "label": "BigQuery",
-      "sublabel": "Google Cloud",
-      "pos": [
-        760,
-        170
-      ],
-      "size": [
-        140,
-        60
-      ],
-      "description": "<p>BigQuery (Google Cloud) — <strong>origem</strong> dos usuários alterados no período.</p>"
-    },
-    {
-      "id": "zs",
-      "type": "backend",
-      "label": "ZendeskService",
-      "sublabel": "createOrUpdateManyUsers",
-      "pos": [
-        770,
-        330
-      ],
-      "size": [
-        170,
-        60
-      ],
-      "description": "<p><code>ZendeskService</code> — <code>createOrUpdateManyUsers</code> (bulk, até <code>100</code> por chamada) e <code>pollJobStatus</code> com backoff.</p>\n<p>Aplica <code>throttleRequest()</code> antes de cada request; <code>429/5xx/network</code> viram <code>TransientZendeskException</code> com retry em backoff (<code>Coroutine::sleep</code> não-bloqueante).</p>"
-    },
-    {
-      "id": "zendesk",
-      "type": "external",
-      "label": "Zendesk API",
-      "sublabel": "bulk · job",
-      "pos": [
-        1010,
-        330
-      ],
-      "size": [
-        160,
-        60
-      ],
-      "description": "<p>API bulk do Zendesk (<code>create_or_update_many_users</code>) — aceita até <code>100</code> registros por chamada e devolve <code>job_id</code> consultado por <code>pollJobStatus</code>.</p>"
-    },
-    {
-      "id": "syncLog",
-      "type": "database",
-      "label": "UserSyncLog",
-      "sublabel": "status · resume",
-      "pos": [
-        530,
-        500
+        310,
+        190
       ],
       "size": [
         190,
-        60
+        64
+      ]
+    },
+    {
+      "id": "abstract",
+      "type": "backend",
+      "label": "AbstractBigQueryLoadCommand",
+      "sublabel": "stream · Parallel · reconcílio",
+      "sources": [
+        {
+          "path": "app/Command/Load/AbstractBigQueryLoadCommand.php",
+          "label": "handle · processBatch"
+        },
+        {
+          "path": "app/Command/Load/AbstractUserBigQueryCommand.php",
+          "label": "mapRow · buildDto base"
+        }
       ],
-      "description": "<p><code>ZendeskUserSyncLog</code> — grava <code>status</code>/<code>last_error</code> por usuário; alimenta o <strong>resume</strong> (<code>alwaysResume</code>) e o command de conflito de e-mails (registros <code>status=Failure</code>).</p>"
+      "pos": [
+        555,
+        190
+      ],
+      "size": [
+        180,
+        64
+      ]
+    },
+    {
+      "id": "zsrv",
+      "type": "backend",
+      "label": "ZendeskService",
+      "sublabel": "throttle 600ms · retry ×3",
+      "tag": "100 req/min",
+      "sources": [
+        {
+          "path": "app/Service/Zendesk/ZendeskService.php",
+          "label": "throttle · retry · poll"
+        }
+      ],
+      "pos": [
+        790,
+        190
+      ],
+      "size": [
+        180,
+        64
+      ]
+    },
+    {
+      "id": "zapi",
+      "type": "external",
+      "label": "Zendesk REST API",
+      "sublabel": "create_or_update_many · job poll",
+      "pos": [
+        1025,
+        190
+      ],
+      "size": [
+        180,
+        64
+      ]
+    },
+    {
+      "id": "bqsrv",
+      "type": "backend",
+      "label": "BigQueryClientService",
+      "sublabel": "streamQuery() · page 1000",
+      "pos": [
+        670,
+        30
+      ],
+      "size": [
+        180,
+        64
+      ]
+    },
+    {
+      "id": "bq",
+      "type": "cloud",
+      "label": "BigQuery",
+      "sublabel": "temp_to_zenddesk_users",
+      "tag": "delta 24h",
+      "pos": [
+        900,
+        30
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "mapper",
+      "type": "backend",
+      "label": "Mapping Layer",
+      "sublabel": "BigQueryRowMapper · ZendeskMapper",
+      "tag": "→ ZendeskUserDTO",
+      "sources": [
+        {
+          "path": "app/Mapping/ZendeskMapper.php",
+          "label": "toUser()"
+        },
+        {
+          "path": "app/Mapping/BigQueryRowMapper.php",
+          "label": "mapUserRow()"
+        }
+      ],
+      "pos": [
+        1100,
+        30
+      ],
+      "size": [
+        190,
+        64
+      ]
+    },
+    {
+      "id": "mysql",
+      "type": "database",
+      "label": "MySQL local",
+      "sublabel": "mapping · sync log",
+      "tag": "resume · persist",
+      "sources": [
+        {
+          "path": "app/Model/ZendeskUserSyncLog.php",
+          "label": "resume diário"
+        },
+        {
+          "path": "app/Model/ZendeskOrganizationMapping.php",
+          "label": "org → Zendesk ID"
+        }
+      ],
+      "pos": [
+        1025,
+        350
+      ],
+      "size": [
+        180,
+        64
+      ]
+    },
+    {
+      "id": "orgres",
+      "type": "backend",
+      "label": "Org Resolver",
+      "sublabel": "buildDto() · resolvedOrgsCache",
+      "pos": [
+        555,
+        350
+      ],
+      "size": [
+        180,
+        64
+      ]
+    },
+    {
+      "id": "dedup",
+      "type": "backend",
+      "label": "BigQueryDeduplicationService",
+      "sublabel": "shouldPublish · markPublished",
+      "tag": "off p/ users",
+      "sources": [
+        {
+          "path": "app/Service/BigQuery/BigQueryDeduplicationService.php",
+          "label": "hash sha256"
+        }
+      ],
+      "pos": [
+        310,
+        350
+      ],
+      "size": [
+        200,
+        64
+      ]
+    },
+    {
+      "id": "redis",
+      "type": "database",
+      "label": "Redis",
+      "sublabel": "bq-dedup · TTL 30d",
+      "pos": [
+        40,
+        350
+      ],
+      "size": [
+        170,
+        64
+      ]
     }
   ],
   "boundaries": [
     {
       "kind": "region",
-      "label": "sync-zendesk (Hyperf + Swoole)",
+      "label": "sync-zendesk (Hyperf 3.1 · Swoole 6.1)",
       "wraps": [
-        "console",
         "cmd",
-        "base",
-        "bqClient",
-        "zs",
-        "syncLog"
+        "abstract",
+        "bqsrv",
+        "mapper",
+        "orgres",
+        "zsrv",
+        "dedup"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "auth basic e-mail/token",
+      "wraps": [
+        "zsrv",
+        "zapi"
       ]
     }
   ],
   "connections": [
     {
       "id": "run",
-      "from": "console",
-      "to": "cmd"
+      "from": "cron",
+      "to": "cmd",
+      "variant": "emphasis"
     },
     {
-      "id": "ext",
+      "id": "main",
       "from": "cmd",
-      "to": "base"
+      "to": "abstract",
+      "label": "extends"
     },
     {
       "id": "stream",
-      "from": "base",
-      "to": "bqClient",
-      "label": "streamQuery",
+      "from": "abstract",
+      "to": "bqsrv",
+      "label": "streamQuery() — SQL delta",
+      "labelDx": -140,
       "fromSide": "top",
       "toSide": "bottom"
     },
     {
-      "id": "sql",
-      "from": "bqClient",
+      "id": "bqreq",
+      "from": "bqsrv",
       "to": "bq",
       "label": "SQL"
     },
     {
+      "id": "map",
+      "from": "abstract",
+      "to": "mapper",
+      "label": "mapRow() + buildDto()",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
       "id": "send",
-      "from": "base",
-      "to": "zs",
-      "label": "sendBatch"
+      "from": "abstract",
+      "to": "zsrv",
+      "label": "Parallel"
     },
     {
       "id": "bulk",
-      "from": "zs",
-      "to": "zendesk",
-      "label": "bulk job"
+      "from": "zsrv",
+      "to": "zapi",
+      "label": "bulk"
     },
     {
-      "id": "log",
-      "from": "base",
-      "to": "syncLog",
-      "label": "resume · log",
+      "id": "state",
+      "from": "zsrv",
+      "to": "mysql",
+      "label": "resolve org · sync log",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "org",
+      "from": "cmd",
+      "to": "orgres",
+      "label": "buildDto() — cache"
+    },
+    {
+      "id": "resolve",
+      "from": "orgres",
+      "to": "zsrv",
+      "label": "resolveZendeskOrganizationId()"
+    },
+    {
+      "id": "dedup-edge",
+      "from": "cmd",
+      "to": "dedup",
+      "label": "shouldPublish() — off",
+      "labelDy": 24,
       "fromSide": "bottom",
       "toSide": "top",
-      "labelDy": 30
+      "variant": "dashed"
+    },
+    {
+      "id": "redis-edge",
+      "from": "dedup",
+      "to": "redis",
+      "label": "sha256 · TTL 30d",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Pipeline",
+      "items": [
+        "streamQuery(): SQL delta (janela horária, America/Sao_Paulo) na view dw-onfly-prd.service.temp_to_zenddesk_users",
+        "mapRow() → ZendeskMapper::toUser() → ZendeskUserDTO (role end-user salvo @onfly.com.br, tags VIP, loyalty fields)",
+        "buildDto(): org via resolvedOrgsCache → organizations_mapping; sem mapping → fallback upsertOrganization via BigQuery",
+        "Batches ≤100 → Parallel (concurrency_users) → createOrUpdateManyUsers → pollJobStatus → reconcílio registro a registro"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Rate limit (Zendesk)",
+      "items": [
+        "throttleRequest(): mínimo 600ms entre requisições (~100 req/min)",
+        "requestWithRetry(): MAX_ATTEMPTS=3; Connect/Server → backoff 2^n (1/2/4s)",
+        "429 → Retry-After; esgotado → TransientZendeskException; outros 4xx → PermanentValidationException",
+        "pollJobStatus(): backoff 2/5/10/30s, timeout 300s (ZENDESK_JOB_POLL_TIMEOUT_S); failed/killed → TransientZendeskException",
+        "esperas via Coroutine::sleep() — não bloqueiam worker Swoole"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Dedup, resume e estado (MySQL)",
+      "items": [
+        "useDeduplication() = false: dedup Redis (sha256, TTL 30d) off para users",
+        "Resume: ZendeskUserSyncLog (status=Success, synced_at = hoje) → skipped_resume",
+        "organizations_mapping: company_id → zendesk_organization_id",
+        "Falhas por stage: missing_id, batch_failure, per_record, unmatched_result"
+      ]
     }
   ]
 }

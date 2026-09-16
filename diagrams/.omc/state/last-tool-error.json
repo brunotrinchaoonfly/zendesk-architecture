@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"/home/brunotrinchao/.claude/squeez/bin/squeez wrap 'node -e \\\"\\nconst fs=require('\\\"'\\\"'fs'\\\"'\\\"');const p='\\\"'\\\"'/home/brunotrinchao/Documentos/Bruno/architecture-onfly/diagrams/synczende...",
+  "error": "Exit code 1\n[eval]:7\nconst set=(k,o)=>{for(const[key,v]of Object.entries(o))E[k][key]=v};\n                                                                ^\n\nTypeError: Cannot set properties of undefined (setting 'fromSide')\n    at set ([eval]:7:65)\n    at [eval]:8:1\n    at runScriptInThisContext (node:internal/vm:209:10)\n    at node:internal/process/execution:446:12\n    at [eval]-wrapper:6:24\n    at runScriptInContext (node:internal/process/execution:444:60)\n    at evalFunction (node:internal/pr...",
+  "timestamp": "2026-09-16T19:30:20.892Z",
+  "retry_count": 1
+}

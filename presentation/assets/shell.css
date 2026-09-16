@@ -205,11 +205,11 @@ body {
   min-height: 0;
   position: relative;
   transition: width 0.25s ease, opacity 0.2s ease, transform 0.25s ease;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 /* menu fechado: sidebar fica "à mostra" só com o botão de borda */
 .sidebar.collapsed {
-  width: 18px;
+  width: 0px;
   opacity: 1;
   pointer-events: auto;
 }
@@ -223,7 +223,7 @@ body {
 .sidebar-edge {
   position: absolute;
   top: 50%;
-  right: -1px;
+  right: -20px;
   transform: translateY(-50%);
   width: 20px;
   height: 64px;
@@ -232,8 +232,8 @@ body {
   justify-content: center;
   padding: 0;
   border: 1px solid var(--border);
-  border-right: none;
-  border-radius: 10px 0 0 10px;
+  border-left: none;
+  border-radius: 0 10px 10px 0;
   background: var(--surface-2);
   color: var(--dim);
   cursor: pointer;
@@ -249,7 +249,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 10px 8px 16px;
+  padding: 10px 10px 9px 16px;
   border-bottom: 1px solid var(--border);
   flex: 0 0 auto;
 }
