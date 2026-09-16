@@ -2,82 +2,151 @@
   "schema_version": 1,
   "diagram_type": "architecture",
   "meta": {
-    "title": "Sunco — Primeiro Contato",
+    "title": "SunCo — Primeiro Contato",
     "output": "architecture.html",
     "locale": "pt-BR",
     "quality_profile": "showcase",
-    "viewBox": [940, 430]
+    "viewBox": [
+      950,
+      270
+    ]
   },
   "components": [
     {
-      "id": "whatsapp",
+      "id": "cliente",
       "type": "external",
-      "label": "Usuário WhatsApp",
-      "sublabel": "WhatsApp Business",
-      "description": "Pessoa iniciando a conversa pelo canal oficial do WhatsApp Business — ponto de entrada das mensagens inbound.",
-      "pos": [40, 270],
-      "size": [128, 64]
+      "label": "Usuário (WhatsApp)",
+      "sublabel": "Cliente Onfly",
+      "pos": [
+        40,
+        120
+      ],
+      "size": [
+        130,
+        64
+      ],
+      "description": "Pessoa iniciando a conversa pelo canal oficial do WhatsApp — ponto de entrada das mensagens."
+    },
+    {
+      "id": "waba",
+      "type": "external",
+      "label": "WhatsApp Business API",
+      "sublabel": "Meta",
+      "pos": [
+        260,
+        120
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "description": "WhatsApp Business API (Meta): transporta mensagens, mídias e respostas e dispara os webhooks com o número de telefone."
     },
     {
       "id": "sunco",
       "type": "cloud",
       "label": "Sunshine Conversations",
-      "sublabel": "Sunco",
-      "description": "Plataforma de conversas da Zendesk: recebe a mensagem, dispara o webhook e mantém o perfil do appUser.",
-      "pos": [310, 270],
-      "size": [150, 64]
-    },
-    {
-      "id": "middleware",
-      "type": "backend",
-      "label": "Middleware",
-      "sublabel": "Webhook Service",
-      "description": "Serviço Hyperf/Swoole que assina os webhooks do Sunco, orquestra a busca no Zendesk e grava o perfil de volta.",
-      "pos": [610, 270],
-      "size": [126, 64]
+      "sublabel": "Switchboard Protocol",
+      "pos": [
+        500,
+        120
+      ],
+      "size": [
+        160,
+        64
+      ],
+      "description": "Plataforma de conversas (Switchboard Protocol): recebe os webhooks, faz o lookup de identidade e mantém o perfil do appUser."
     },
     {
       "id": "zendesk",
       "type": "cloud",
-      "label": "Zendesk Search API",
-      "sublabel": "users/search",
-      "description": "API de busca de usuários do Zendesk: localiza o cadastro pelo telefone com Basic Auth/OAuth.",
-      "pos": [740, 90],
-      "size": [134, 64]
+      "label": "Zendesk",
+      "sublabel": "Users API · perfil",
+      "pos": [
+        760,
+        120
+      ],
+      "size": [
+        160,
+        64
+      ],
+      "description": "Armazena o cadastro do usuário: busca por telefone (ENCONTRADO) ou cria o perfil dinamicamente (NÃO ACHOU)."
     }
   ],
   "connections": [
-    { "from": "whatsapp", "to": "sunco", "label": "mensagem inbound", "variant": "default", "labelDy": -12 },
-    { "from": "sunco", "to": "middleware", "label": "webhook", "variant": "emphasis", "labelDy": -14 },
-    { "from": "middleware", "to": "zendesk", "label": "busca phone", "variant": "security", "fromSide": "top", "toSide": "left", "via": [[673, 122]], "labelAt": [630, 150] },
-    { "from": "zendesk", "to": "middleware", "label": "perfil + external_id", "variant": "default", "fromSide": "bottom", "toSide": "right", "via": [[807, 240], [786, 240], [786, 302]], "labelAt": [860, 220] },
-    { "from": "middleware", "to": "sunco", "label": "PATCH profile · externalId", "variant": "emphasis", "labelDy": 12 },
-    { "from": "sunco", "to": "whatsapp", "label": "atendimento prossegue", "variant": "default", "labelDy": 12 }
+    {
+      "id": "cliente-waba",
+      "from": "cliente",
+      "to": "waba",
+      "label": "mensagens",
+      "variant": "emphasis",
+      "labelDy": -10
+    },
+    {
+      "id": "waba-cliente",
+      "from": "waba",
+      "to": "cliente",
+      "label": "respostas",
+      "variant": "dashed",
+      "labelDy": 10
+    },
+    {
+      "id": "waba-sunco",
+      "from": "waba",
+      "to": "sunco",
+      "label": "webhook · phone",
+      "variant": "emphasis",
+      "labelDy": -12
+    },
+    {
+      "id": "sunco-waba",
+      "from": "sunco",
+      "to": "waba",
+      "label": "envio",
+      "variant": "dashed",
+      "labelDy": 12
+    },
+    {
+      "id": "sunco-zendesk",
+      "from": "sunco",
+      "to": "zendesk",
+      "label": "lookup",
+      "variant": "emphasis",
+      "labelDy": -12
+    },
+    {
+      "id": "zendesk-sunco",
+      "from": "zendesk",
+      "to": "sunco",
+      "label": "ID + perfil",
+      "variant": "default",
+      "labelDy": 12
+    },
+    {
+      "id": "sunco-zendesk-create",
+      "from": "sunco",
+      "to": "zendesk",
+      "label": "cria perfil",
+      "variant": "dashed",
+      "labelDy": 12
+    }
   ],
   "cards": [
     {
-      "dot": "emerald",
-      "title": "Quando executa",
-      "items": [
-        "Executado uma única vez por novo usuário sem cadastro prévio no Sunco.",
-        "Da 2ª conversa em diante o perfil já está gravado e a Search API não é invocada."
-      ]
-    },
-    {
       "dot": "cyan",
-      "title": "Fluxo em três fases",
+      "title": "Canal WhatsApp",
       "items": [
-        "Contato: webhook conversation:create / message:appUser aciona o Middleware.",
-        "Enriquecimento: extrai phone do appUser e consulta a Search API por telefone.",
-        "Gravação: PATCH grava profile + metadata e externalId no Sunco."
+        "Mensagens, mídias e respostas via WhatsApp Business API (Meta)",
+        "Webhooks entregues ao Sunco com o nº de telefone do payload"
       ]
     },
     {
-      "dot": "orange",
-      "title": "Credenciais",
+      "dot": "emerald",
+      "title": "Lookup dinâmico de identidade",
       "items": [
-        "Search API: HTTPS com Basic Auth / OAuth.",
-        "PATCH no Sunco: HTTPS com Bearer Token."
+        "ENCONTRADO: recupera ID do usuário e perfil do Zendesk",
+        "NÃO ACHOU: cria perfil dinamicamente no Zendesk",
+        "Perfil vinculado — controle inicial com Zendesk AI/Bot"
       ]
     }
   ]
