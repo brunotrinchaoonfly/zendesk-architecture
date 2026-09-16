@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <link rel="stylesheet" href="presentation/assets/shell.css">
 </head>
 <body>
@@ -40,7 +41,12 @@
 <div class="workspace">
   <!-- Sidebar -->
   <nav class="sidebar" aria-label="Arquiteturas disponíveis">
-    <!-- <p class="sidebar-heading">Arquiteturas</p> -->
+    <div class="sidebar-head">
+      <span class="sidebar-title">Arquiteturas</span>
+    </div>
+    <button id="sidebar-edge" class="sidebar-edge" type="button" aria-label="Abrir/fechar menu de arquiteturas" aria-expanded="true">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
     <ul id="diagram-list" class="diagram-list" role="listbox" aria-label="Lista de arquiteturas"></ul>
     <!-- <div class="sidebar-foot">
       <p class="sidebar-hint">Gerado por <span class="mono">archify</span> · specs em <span class="mono">diagrams/*.json</span></p>

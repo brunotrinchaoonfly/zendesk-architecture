@@ -92,6 +92,9 @@
   var btnPresent = $("btn-present");
   var presentExit = $("present-exit");
   var emptyState = $("empty-state");
+  var btnEdge = $("sidebar-edge");
+  var sidebarEl = document.querySelector(".sidebar");
+  var frameWrap = $("frame-wrap");
 
   /* ---------- URL viva ---------- */
   function syncUrl() {
@@ -207,14 +210,27 @@
     }
   }
 
-  /* ---------- iframe src ---------- */
+  /* ---------- iframe src (com transição animada) ---------- */
+  var swapTimer = null;
   function applySrc() {
     var d = currentDiagram();
     if (!d) return;
-    // ?shell=1 (modo adicionado ao template do viewer archify): esconde o
-    // chrome de página do viewer sem bloquear interações. Zoom, pan (drag),
-    // PATH e LENS são nativos do dock do viewer dentro do container.
-    frame.src = d.file + "?theme=" + state.theme + "&shell=1";
+    var next = d.file + "?theme=" + state.theme + "&shell=1";
+    if (frame.src === window.location.origin + window.location.pathname.replace(/[^/]*$/, "") + next.replace(/^\.\//, "")) return;
+    // transição de troca: fade out → carrega → fade in (Animate.css, com fallback CSS)
+    frameWrap.classList.add("swap-out");
+    clearTimeout(swapTimer);
+    swapTimer = setTimeout(function () {
+      // ?shell=1 (modo adicionado ao template do viewer archify): esconde o
+      // chrome de página do viewer sem bloquear interações. Zoom, pan (drag),
+      // PATH e LENS são nativos do dock do viewer dentro do container.
+      frame.src = next;
+      frame.onload = function () {
+        frameWrap.classList.remove("swap-out");
+        frameWrap.classList.add("swap-in");
+        setTimeout(function () { frameWrap.classList.remove("swap-in"); }, 450);
+      };
+    }, 180);
   }
 
   /* ---------- seleção ---------- */
@@ -251,6 +267,24 @@
       if (on && !document.fullscreenElement) document.documentElement.requestFullscreen().catch(function () {});
       if (!on && document.fullscreenElement) document.exitFullscreen().catch(function () {});
     } catch (_) {}
+    // no fullscreen, sidebar inicia recolhida (só o botão de borda à mostra)
+    if (on) {
+      sidebarEl.classList.add("collapsed");
+      btnEdge.setAttribute("aria-expanded", "false");
+    } else {
+      sidebarEl.classList.remove("collapsed");
+      btnEdge.setAttribute("aria-expanded", "true");
+    }
+  }
+
+  /* ---------- menu (collapse por borda) ---------- */
+  function toggleSidebar() {
+    var collapsed = sidebarEl.classList.toggle("collapsed");
+    btnEdge.setAttribute("aria-expanded", String(!collapsed));
+    if (!collapsed) {
+      sidebarEl.classList.add("animate__animated", "animate__slideInLeft", "animate__faster");
+      setTimeout(function () { sidebarEl.classList.remove("animate__animated", "animate__slideInLeft", "animate__faster"); }, 400);
+    }
   }
 
   /* ---------- eventos ---------- */
@@ -261,6 +295,7 @@
 
   btnPresent.addEventListener("click", function () { setPresent(!state.present); });
   presentExit.addEventListener("click", function () { setPresent(false); });
+  btnEdge.addEventListener("click", toggleSidebar);
 
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && state.present) setPresent(false);

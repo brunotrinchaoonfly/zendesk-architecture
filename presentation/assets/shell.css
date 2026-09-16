@@ -181,6 +181,11 @@ body {
 }
 .icon { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; }
 .icon-only { padding: 7px 9px; }
+/* estado do botão Menu (aria-expanded) */
+.topbar-actions .btn[aria-expanded="false"] {
+  background: var(--surface-2);
+  color: var(--dim);
+}
 
 /* ---------- workspace ---------- */
 .workspace {
@@ -198,6 +203,71 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 0;
+  position: relative;
+  transition: width 0.25s ease, opacity 0.2s ease, transform 0.25s ease;
+  overflow: hidden;
+}
+/* menu fechado: sidebar fica "à mostra" só com o botão de borda */
+.sidebar.collapsed {
+  width: 18px;
+  opacity: 1;
+  pointer-events: auto;
+}
+.sidebar.collapsed .sidebar-head,
+.sidebar.collapsed .diagram-list,
+.sidebar.collapsed .sidebar-foot {
+  opacity: 0;
+  pointer-events: none;
+}
+/* botão de borda (seta) — dentro do sidebar, na borda direita, meio vertical */
+.sidebar-edge {
+  position: absolute;
+  top: 50%;
+  right: -1px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-right: none;
+  border-radius: 10px 0 0 10px;
+  background: var(--surface-2);
+  color: var(--dim);
+  cursor: pointer;
+  z-index: 6;
+  transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+.sidebar-edge:hover { color: var(--text); background: var(--accent-soft); }
+.sidebar-edge .icon { width: 14px; height: 14px; transition: transform 0.25s ease; }
+.sidebar.collapsed .sidebar-edge .icon { transform: rotate(180deg); }
+.sidebar-edge:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+/* botão fechar (X) — visível apenas na sidebar flutuante */
+.sidebar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 10px 8px 16px;
+  border-bottom: 1px solid var(--border);
+  flex: 0 0 auto;
+}
+.sidebar-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--dim);
+}
+/* transição de troca de diagrama (fallback CSS; Animate.css realça quando disponível) */
+.frame-wrap.swap-out { animation: shell-fade-out 0.18s ease forwards; }
+.frame-wrap.swap-in { animation: shell-fade-in 0.4s ease both; }
+@keyframes shell-fade-out { to { opacity: 0; transform: translateY(6px); } }
+@keyframes shell-fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .frame-wrap.swap-out, .frame-wrap.swap-in { animation: none; }
+  .sidebar, .sidebar.collapsed { transition: none; }
 }
 .sidebar-heading {
   font-size: 11px;
@@ -216,7 +286,11 @@ body {
   overflow-y: auto;
   flex: 1;
   min-width: 0;
+  scrollbar-width: thin;
 }
+.diagram-list::-webkit-scrollbar { width: 6px; }
+.diagram-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.diagram-list::-webkit-scrollbar-track { background: transparent; }
 .diagram-group {
   font-family: var(--mono);
   font-size: 10.5px;
@@ -270,6 +344,7 @@ body {
 }
 .type-row {
   display: flex;
+  flex-direction: column;
   gap: 4px;
   padding: 0 4px 8px 22px;
   min-width: 0;
@@ -445,7 +520,6 @@ html[data-theme="dark"] .frame { background: #0b1220; }
 .details-links { display: flex; gap: 8px; flex-wrap: wrap; }
 
 /* ---------- apresentação ---------- */
-body.presenting .sidebar,
 body.presenting .details,
 body.presenting .topbar-actions .btn:not(#btn-present) {
   display: none;
@@ -490,6 +564,8 @@ body.presenting #btn-present span::after { content: " (ativo)"; }
   .type-chip { padding: 10px 12px; font-size: 12.5px; }
   .sidebar-foot { display: none; }
   .select { max-width: 150px; }
+}
+
 @media (max-width: 600px) {
   .brand { min-width: 0; }
   .brand-name { display: none; }
@@ -497,6 +573,7 @@ body.presenting #btn-present span::after { content: " (ativo)"; }
   .btn span:not(#zoom-value) { display: none; }
   .btn { padding: 7px 9px; }
   .btn span { display: none; }
+}
 
 /* ---------- movimento ---------- */
 @media (prefers-reduced-motion: reduce) {
