@@ -27,6 +27,9 @@
   --dot-rose: #f43f5e;
   --dot-orange: #f97316;
   --dot-slate: #64748b;
+
+  /* scroll */
+  --scroll-thumb: rgba(100, 116, 139, 0.45);
 }
 
 [data-theme="dark"] {
@@ -40,6 +43,7 @@
   --accent: #22d3ee;
   --accent-soft: rgba(34, 211, 238, 0.1);
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --scroll-thumb: rgba(148, 163, 184, 0.35);
 }
 
 * { box-sizing: border-box; }
@@ -287,10 +291,32 @@ body {
   flex: 1;
   min-width: 0;
   scrollbar-width: thin;
+  scrollbar-color: var(--scroll-thumb) transparent;
 }
-.diagram-list::-webkit-scrollbar { width: 6px; }
-.diagram-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-.diagram-list::-webkit-scrollbar-track { background: transparent; }
+/* scroll personalizado, integrado ao tema (light/dark) */
+.diagram-list::-webkit-scrollbar { width: 8px; }
+.diagram-list::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 4px 0;
+}
+.diagram-list::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.diagram-list::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+  background-clip: padding-box;
+}
+.diagram-list::-webkit-scrollbar-thumb:active {
+  background: var(--accent);
+  background-clip: padding-box;
+}
+/* Firefox */
+@supports (-moz-appearance: none) {
+  .diagram-list { scrollbar-color: var(--scroll-thumb) transparent; }
+}
 .diagram-group {
   font-family: var(--mono);
   font-size: 10.5px;
@@ -521,6 +547,7 @@ html[data-theme="dark"] .frame { background: #0b1220; }
 
 /* ---------- apresentação ---------- */
 body.presenting .details,
+body.presenting .arch-description,
 body.presenting .topbar-actions .btn:not(#btn-present) {
   display: none;
 }

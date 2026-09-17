@@ -229,7 +229,7 @@ window.ARCHIFY_GROUPS = [
   },
   {
     id: "gambet",
-    label: "Gambet",
+    label: "Gambit",
     items: [
       {
         id: "gambit",
@@ -271,12 +271,12 @@ window.ARCHIFY_GROUPS = [
   },
   {
     id: "fluxo",
-    label: "Fluxo",
+    label: "Fluxos",
     items: [
       {
         id: "passcontrol",
-        title: "PassControl",
-        short: "PassControl",
+        title: "PassControl <-> Gambit",
+        short: "PassControl <-> Gambit",
         sequence: {
           file: "diagrams/fluxo/passcontrol/sequence.html",
           spec: "diagrams/fluxo/passcontrol/sequence.json",
