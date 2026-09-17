@@ -9,7 +9,7 @@
 
   /* ---------- registry hierárquico (window.ARCHIFY_GROUPS, registry.js) ---------- */
   var groups = window.ARCHIFY_GROUPS || [];
-  var TYPE_LABELS = { sequence: "Diagrama", architecture: "Arquitetura" };
+  var TYPE_LABELS = { sequence: "Workflow", architecture: "Arquitetura" };
 
   function normalizeType(t) {
     if (!t) return null;
@@ -298,7 +298,29 @@
   btnEdge.addEventListener("click", toggleSidebar);
 
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && state.present) setPresent(false);
+    if (e.key === "Escape" && state.present) { setPresent(false); return; }
+    // navegação por teclado entre itens (Workflow/Arquitetura corrente mantido)
+    var tag = (e.target && e.target.tagName || "").toLowerCase();
+    if (tag === "input" || tag === "textarea" || tag === "select") return;
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp" && e.key !== "j" && e.key !== "k") return;
+    e.preventDefault();
+    var flat = [];
+    groups.forEach(function (g) {
+      g.items.forEach(function (it) {
+        var d = it[state.type];
+        if (d && d.file) flat.push({ group: g.id, item: it.id });
+      });
+    });
+    if (!flat.length) return;
+    var idx = flat.findIndex(function (f) { return f.group === state.group && f.item === state.item; });
+    if (idx === -1) idx = 0;
+    idx += (e.key === "ArrowDown" || e.key === "j") ? 1 : -1;
+    if (idx < 0) idx = flat.length - 1;
+    if (idx >= flat.length) idx = 0;
+    var next = flat[idx];
+    select(next.group, next.item, state.type);
+    var chip = listEl.querySelector('.type-chip.selected');
+    if (chip) chip.scrollIntoView({ block: "nearest" });
   });
 
   // fullscreen nativo encerrado (F11/Esc do browser) sai do modo apresentação

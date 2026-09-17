@@ -121,3 +121,5 @@
 {"t":0,"agent":"a2da06f","agent_type":"unknown","event":"agent_stop","success":true}
 {"t":0,"agent":"a0cc357","agent_type":"unknown","event":"agent_stop","success":true}
 {"t":0,"agent":"ae08ce0","agent_type":"unknown","event":"agent_stop","success":true}
+{"t":0,"agent":"system","event":"skill_invoked","skill_name":"copywriting"}
+{"t":0,"agent":"system","event":"skill_invoked","skill_name":"superpowers:brainstorming"}
