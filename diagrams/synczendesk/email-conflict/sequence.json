@@ -4,66 +4,244 @@
   "meta": {
     "title": "sync-zendesk — Sequência de Conflito de E-mails",
     "output": "sequence.html",
-    "viewBox": [1080, 640],
+    "viewBox": [
+      1080,
+      640
+    ],
     "locale": "pt-BR",
     "quality_profile": "showcase",
     "column_fit": "spread"
   },
   "participants": [
-    { "id": "console", "type": "external", "label": "Console Hyperf", "sublabel": "conflicting-emails" },
-    { "id": "cmd", "type": "backend", "label": "ConflictingEmail", "sublabel": "Cmd · casos A·B·C·D" },
-    { "id": "syncLog", "type": "database", "label": "UserSyncLog", "sublabel": "Failure → success" },
-    { "id": "bq", "type": "database", "label": "BigQuery", "sublabel": "external_id · email" },
-    { "id": "zs", "type": "backend", "label": "ZendeskService", "sublabel": "find · update · merge" },
-    { "id": "zendesk", "type": "cloud", "label": "Zendesk API", "sublabel": "users" },
-    { "id": "mapping", "type": "database", "label": "Local mapping", "sublabel": "zendesk_user_id" }
+    {
+      "id": "cron",
+      "type": "external",
+      "label": "Operador / Cron",
+      "sublabel": "conflicting-emails"
+    },
+    {
+      "id": "cmd",
+      "type": "backend",
+      "label": "ConflictingEmail",
+      "sublabel": "Cmd · casos A·B·C·D"
+    },
+    {
+      "id": "synclog",
+      "type": "database",
+      "label": "UserSyncLog",
+      "sublabel": "Failure → success"
+    },
+    {
+      "id": "bq",
+      "type": "database",
+      "label": "BigQuery",
+      "sublabel": "external_id · email"
+    },
+    {
+      "id": "zsrv",
+      "type": "backend",
+      "label": "ZendeskService",
+      "sublabel": "find · update · merge"
+    },
+    {
+      "id": "zapi",
+      "type": "cloud",
+      "label": "Zendesk API",
+      "sublabel": "users · merge"
+    }
   ],
   "segments": [
-    { "from": 150, "to": 205, "label": "Disparo" },
-    { "from": 205, "to": 295, "label": "Coleta de falhas" },
-    { "from": 295, "to": 385, "label": "Resolução do caso" },
-    { "from": 385, "to": 445, "label": "Correção" },
-    { "from": 445, "to": 505, "label": "Persistência" }
+    {
+      "from": 150,
+      "to": 205,
+      "label": "Disparo"
+    },
+    {
+      "from": 205,
+      "to": 295,
+      "label": "Coleta de falhas"
+    },
+    {
+      "from": 295,
+      "to": 385,
+      "label": "Resolução do caso"
+    },
+    {
+      "from": 385,
+      "to": 445,
+      "label": "Correção"
+    },
+    {
+      "from": 445,
+      "to": 505,
+      "label": "Persistência"
+    }
   ],
   "messages": [
-    { "from": "console", "to": "cmd", "y": 160, "label": "zendesk:sync-conflicting-user-emails", "variant": "emphasis", "note": "ZendeskSyncConflictingUserEmailCommand — opções: --id, --case A|B|C|D, --report (.md), --dry-run" },
-    { "from": "cmd", "to": "syncLog", "y": 190, "label": "selecionar failures", "variant": "dashed", "note": "status=Failure · last_error=UserUpdateError" },
-    { "from": "syncLog", "to": "cmd", "y": 220, "label": "registros de conflito", "variant": "return" },
-    { "from": "cmd", "to": "bq", "y": 250, "label": "fetch payload", "variant": "default", "note": "consulta cruzada por external_id e email" },
-    { "from": "bq", "to": "cmd", "y": 280, "label": "cadastros em conflito", "variant": "return" },
-    { "from": "cmd", "to": "zs", "y": 310, "label": "buscar cadastros", "variant": "default", "note": "getUserByExternalId · getUserByEmail · findUserIdByEmail" },
-    { "from": "zs", "to": "zendesk", "y": 340, "label": "buscar user", "variant": "default", "note": "throttleRequest antes de cada request" },
-    { "from": "zendesk", "to": "zs", "y": 370, "label": "cadastro encontrado ou ausente", "variant": "return" },
-    { "from": "cmd", "to": "zs", "y": 400, "label": "resolver caso A·B·C·D", "variant": "emphasis", "note": "A merge · B external_id existente (update) · C linka external_id · D falha manual" },
-    { "from": "zs", "to": "zendesk", "y": 430, "label": "update · merge", "variant": "emphasis", "note": "updateUser · updateUserEmail · updateUserAfterMergeWithRetry — retryOnTransientEmailConflict" },
-    { "from": "zs", "to": "mapping", "y": 460, "label": "persistir zendesk_user_id", "variant": "emphasis" },
-    { "from": "cmd", "to": "syncLog", "y": 490, "label": "Failure → success", "variant": "emphasis", "note": "reclassificação; --report gera .md em runtime/reports · --dry-run não persiste" }
+    {
+      "from": "cron",
+      "to": "cmd",
+      "y": 160,
+      "label": "zendesk:sync-conflicting-user-emails",
+      "variant": "emphasis",
+      "note": "ZendeskSyncConflictingUserEmailCommand — opções: --id, --case A|B|C|D, --report (.md), --dry-run"
+    },
+    {
+      "from": "cmd",
+      "to": "synclog",
+      "y": 190,
+      "label": "selecionar failures",
+      "variant": "dashed",
+      "note": "status=Failure · last_error=UserUpdateError"
+    },
+    {
+      "from": "synclog",
+      "to": "cmd",
+      "y": 220,
+      "label": "registros de conflito",
+      "variant": "return"
+    },
+    {
+      "from": "cmd",
+      "to": "bq",
+      "y": 250,
+      "label": "fetch payload",
+      "variant": "default",
+      "note": "consulta cruzada por external_id e email"
+    },
+    {
+      "from": "bq",
+      "to": "cmd",
+      "y": 280,
+      "label": "cadastros em conflito",
+      "variant": "return"
+    },
+    {
+      "from": "cmd",
+      "to": "zsrv",
+      "y": 310,
+      "label": "buscar cadastros",
+      "variant": "default",
+      "note": "getUserByExternalId · getUserByEmail · findUserIdByEmail"
+    },
+    {
+      "from": "zsrv",
+      "to": "zapi",
+      "y": 340,
+      "label": "buscar user",
+      "variant": "default",
+      "note": "throttleRequest antes de cada request"
+    },
+    {
+      "from": "zapi",
+      "to": "zsrv",
+      "y": 370,
+      "label": "cadastro encontrado ou ausente",
+      "variant": "return"
+    },
+    {
+      "from": "cmd",
+      "to": "zsrv",
+      "y": 400,
+      "label": "resolver caso A·B·C·D",
+      "variant": "emphasis",
+      "note": "A merge · B external_id existente (update) · C linka external_id · D falha manual"
+    },
+    {
+      "from": "zsrv",
+      "to": "zapi",
+      "y": 430,
+      "label": "update · merge",
+      "variant": "emphasis",
+      "note": "updateUser · updateUserEmail · updateUserAfterMergeWithRetry — retryOnTransientEmailConflict"
+    },
+    {
+      "from": "zsrv",
+      "to": "synclog",
+      "y": 460,
+      "label": "updateUserLocalMapping",
+      "variant": "emphasis"
+    },
+    {
+      "from": "cmd",
+      "to": "synclog",
+      "y": 490,
+      "label": "Failure → success",
+      "variant": "emphasis",
+      "note": "reclassificação; --report gera .md em runtime/reports · --dry-run não persiste"
+    }
   ],
   "activations": [
-    { "participant": "cmd", "from": 152, "to": 498, "type": "backend" },
-    { "participant": "syncLog", "from": 182, "to": 228, "type": "database" },
-    { "participant": "bq", "from": 242, "to": 288, "type": "database" },
-    { "participant": "zs", "from": 302, "to": 468, "type": "backend" },
-    { "participant": "zendesk", "from": 332, "to": 378, "type": "cloud" },
-    { "participant": "zendesk", "from": 422, "to": 438, "type": "cloud" },
-    { "participant": "mapping", "from": 452, "to": 470, "type": "database" },
-    { "participant": "syncLog", "from": 482, "to": 498, "type": "database" }
+    {
+      "participant": "cmd",
+      "from": 152,
+      "to": 498,
+      "type": "backend"
+    },
+    {
+      "participant": "synclog",
+      "from": 182,
+      "to": 228,
+      "type": "database"
+    },
+    {
+      "participant": "bq",
+      "from": 242,
+      "to": 288,
+      "type": "database"
+    },
+    {
+      "participant": "zsrv",
+      "from": 302,
+      "to": 468,
+      "type": "backend"
+    },
+    {
+      "participant": "zapi",
+      "from": 332,
+      "to": 378,
+      "type": "cloud"
+    },
+    {
+      "participant": "zapi",
+      "from": 422,
+      "to": 438,
+      "type": "cloud"
+    },
+    {
+      "participant": "synclog",
+      "from": 482,
+      "to": 498,
+      "type": "database"
+    }
   ],
   "cards": [
-    { "dot": "cyan", "title": "Fonte da verdade", "items": [
-      "ZendeskUserSyncLog alimenta a seleção",
-      "apenas status=Failure com UserUpdateError",
-      "operação user a user — sem bulk"
-    ] },
-    { "dot": "orange", "title": "Quatro casos de conflito", "items": [
-      "A — merge dos dois cadastros (com guarda de segurança)",
-      "B — external_id existente: update · C — linka external_id",
-      "D — nada encontrado: falha manual"
-    ] },
-    { "dot": "emerald", "title": "Rastreabilidade e segurança", "items": [
-      "retryOnTransientEmailConflict para conflito transitório",
-      "mapping local garante o vínculo do merge",
-      "--report opcional (.md) · --dry-run não persiste"
-    ] }
+    {
+      "dot": "cyan",
+      "title": "Fonte da verdade",
+      "items": [
+        "ZendeskUserSyncLog alimenta a seleção",
+        "apenas status=Failure com UserUpdateError",
+        "operação user a user — sem bulk"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "Quatro casos de conflito",
+      "items": [
+        "A — merge dos dois cadastros (com guarda de segurança)",
+        "B — external_id existente: update · C — linka external_id",
+        "D — nada encontrado: falha manual"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Rastreabilidade e segurança",
+      "items": [
+        "retryOnTransientEmailConflict para conflito transitório",
+        "mapping local garante o vínculo do merge",
+        "--report opcional (.md) · --dry-run não persiste"
+      ]
+    }
   ]
 }

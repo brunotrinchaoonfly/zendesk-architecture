@@ -57,7 +57,7 @@
     "locale": "pt-BR",
     "viewBox": [
       1170,
-      540
+      460
     ]
   },
   "components": [
@@ -68,7 +68,7 @@
       "sublabel": "sync-conflicting-user-emails",
       "pos": [
         40,
-        220
+        190
       ],
       "size": [
         150,
@@ -89,7 +89,7 @@
       ],
       "pos": [
         315,
-        220
+        190
       ],
       "size": [
         210,
@@ -110,7 +110,7 @@
       ],
       "pos": [
         665,
-        220
+        190
       ],
       "size": [
         190,
@@ -123,8 +123,8 @@
       "label": "Zendesk REST API",
       "sublabel": "search · merge · identities",
       "pos": [
-        920,
-        220
+        940,
+        190
       ],
       "size": [
         175,
@@ -137,8 +137,8 @@
       "label": "BigQueryClientService",
       "sublabel": "streamQuery() · payload",
       "pos": [
-        600,
-        60
+        440,
+        40
       ],
       "size": [
         180,
@@ -152,8 +152,8 @@
       "sublabel": "temp_to_zenddesk_users",
       "tag": "dono do e-mail",
       "pos": [
-        830,
-        60
+        700,
+        40
       ],
       "size": [
         150,
@@ -177,8 +177,8 @@
         }
       ],
       "pos": [
-        340,
-        60
+        600,
+        360
       ],
       "size": [
         170,
@@ -199,7 +199,7 @@
       ],
       "pos": [
         315,
-        400
+        360
       ],
       "size": [
         210,
@@ -213,8 +213,8 @@
       "sublabel": "runtime/reports/",
       "tag": "--report",
       "pos": [
-        720,
-        470
+        40,
+        360
       ],
       "size": [
         180,
@@ -248,7 +248,21 @@
       "label": "falhas por e-mail",
       "fromSide": "top",
       "toSide": "bottom",
-      "labelDx": -160
+      "labelDx": -160,
+      "via": [
+        [
+          420,
+          360
+        ],
+        [
+          420,
+          254
+        ]
+      ],
+      "labelAt": [
+        390,
+        335
+      ]
     },
     {
       "id": "lookup",
@@ -260,9 +274,7 @@
     {
       "id": "api",
       "from": "zsrv",
-      "to": "zapi",
-      "label": "merge · update · identities",
-      "labelDy": -40
+      "to": "zapi"
     },
     {
       "id": "bqfetch",
@@ -272,8 +284,22 @@
       "fromSide": "top",
       "toSide": "bottom",
       "labelAt": [
-        570,
-        182
+        500,
+        178
+      ],
+      "via": [
+        [
+          420,
+          160
+        ],
+        [
+          530,
+          160
+        ],
+        [
+          530,
+          104
+        ]
       ]
     },
     {
@@ -287,75 +313,63 @@
       "from": "zsrv",
       "to": "mapper",
       "label": "resolveUser",
-      "fromSide": "top",
-      "toSide": "right",
-      "labelAt": [
-        620,
-        142
-      ]
-    },
-    {
-      "id": "report-edge",
-      "from": "cmd",
-      "to": "report",
-      "label": "agrupa por caso",
-      "fromSide": "right",
+      "fromSide": "bottom",
       "toSide": "top",
+      "labelAt": [
+        770,
+        328
+      ],
       "via": [
         [
-          545,
-          252
+          760,
+          284
         ],
         [
-          545,
+          760,
           340
         ],
         [
-          810,
+          685,
           340
         ],
         [
-          810,
-          470
+          685,
+          360
         ]
-      ],
-      "labelAt": [
-        680,
-        356
       ]
     }
   ],
   "cards": [
     {
       "dot": "cyan",
-      "title": "Casos de conflito",
+      "title": "Casos",
       "items": [
-        "Fonte: zendesk_users_sync_log (status=failure, zendesk_user_id IS NULL, error_message \"Email: %\")",
-        "A: e-mail em outro cadastro → mergeUser(e-mail → external_id) com guarda de segurança",
-        "A.REALOCADO: fonte tem external_id real próprio → merge bloqueado; sync direto no alvo, sem merge",
-        "B: só external_id → b.1 e-mail correto (sync dos dados) / b.2 desatualizado (atualiza e-mail + dados); sem merge",
-        "C: só e-mail → linka external_id + sync; D: nada encontrado → revisão manual"
+        "A: merge · B: update mesmo cadastro · C: linka external_id",
+        "D: falha manual — sem alteração"
       ]
     },
     {
-      "dot": "violet",
-      "title": "Higienização de identidades",
+      "dot": "emerald",
+      "title": "Fluxo",
       "items": [
-        "Em todo sucesso (A, B, C): getUserIdentities() lista todas as identidades de e-mail do cadastro",
-        "Identidade ≠ e-mail Onfly pertencente a outro usuário ativo (BigQuery) → deleteUserIdentity()",
-        "Dono real re-sincronizado como cadastro novo via resolveZendeskUserId()",
-        "Falha no re-sync → sync log do OUTRO external_id com last_error = UserCreatedError (pendente)"
+        "Falhas do UserSyncLog → payload no BigQuery",
+        "Relatório .md opcional (--report/--dry-run)"
       ]
     },
     {
       "dot": "amber",
-      "title": "Rate limit (Zendesk)",
+      "title": "Gravação",
       "items": [
-        "throttleRequest(): mínimo 600ms entre requisições (~100 req/min)",
-        "requestWithRetry(): MAX_ATTEMPTS=3; Connect/Server → backoff 2^n (1/2/4s)",
-        "429 → Retry-After; esgotado → TransientZendeskException; outros 4xx → PermanentValidationException",
-        "pollJobStatus(): backoff 2/5/10/30s, timeout 300s; failed/killed → TransientZendeskException",
-        "esperas via Coroutine::sleep() — não bloqueiam worker Swoole"
+        "updateUserLocalMapping no ZendeskUserSyncLog",
+        "Sincroniza org/nome e agrupa por caso"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Relatório",
+      "items": [
+        "Cmd agrupa falhas por caso (A·B·C·D) e emite relatório .md opcional (--report/--dry-run)",
+        "ZendeskService grava updateUserLocalMapping no UserSyncLog"
       ]
     }
   ]
