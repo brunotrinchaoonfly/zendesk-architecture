@@ -1,0 +1,7 @@
+{
+  "tool_name": "mcp__plugin_context-mode_context-mode__ctx_execute",
+  "tool_input_preview": "{\"code\":\"const fs = require('fs');\\nconst base = '/home/brunotrinchao/Documentos/Bruno/architecture-onfly';\\nconst cur = fs.readFileSync(base + '/diagrams/gambet/gambit/sequence.html', 'utf8');\\nconst...",
+  "error": "Exit code: 1\n\nstdout:\n\n\nstderr:\n/bin/sh: 1: :diagrams/gambet/gambit/sequence.html: not found\nError: Command failed: :diagrams/gambet/gambit/sequence.html\n/bin/sh: 1: :diagrams/gambet/gambit/sequence.html: not found\n\n    at genericNodeError (node:internal/errors:983:15)\n    at wrappedFn (node:internal/errors:537:14)\n    at checkExecSyncError (node:child_process:916:11)\n    at Object.execSync (node:child_process:988:15)\n    at __cm_main (/tmp/.ctx-mode-s2O05V/script.js:59:39)\n    at /tmp/.ctx-mode...",
+  "timestamp": "2026-09-18T15:43:31.390Z",
+  "retry_count": 2
+}

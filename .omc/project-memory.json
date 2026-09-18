@@ -1,0 +1,87 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1789737627789,
+  "projectRoot": "/home/brunotrinchao/Documentos/Bruno/architecture-onfly",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "docs"
+    ],
+    "gitBranches": null
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "diagrams": {
+      "path": "diagrams",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1789737627768,
+      "keyFiles": []
+    },
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 1,
+      "lastAccessed": 1789737627770,
+      "keyFiles": [
+        "arquitetura3_fallback.json"
+      ]
+    },
+    "presentation": {
+      "path": "presentation",
+      "purpose": null,
+      "fileCount": 3,
+      "lastAccessed": 1789737627775,
+      "keyFiles": [
+        "README.md",
+        "registry.js",
+        "sync-diagrams.mjs"
+      ]
+    },
+    "presentation/assets": {
+      "path": "presentation/assets",
+      "purpose": "Static assets",
+      "fileCount": 2,
+      "lastAccessed": 1789737627783,
+      "keyFiles": [
+        "shell.css",
+        "shell.js"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "diagrams/gambet/gambit/sequence.json",
+      "accessCount": 8,
+      "lastAccessed": 1789746148597,
+      "type": "file"
+    },
+    {
+      "path": "diagrams/gambet/gambit/sequence.visual-check.1440x900.light.png",
+      "accessCount": 1,
+      "lastAccessed": 1789746369133,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}
