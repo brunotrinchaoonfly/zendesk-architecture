@@ -1,7 +1,0 @@
-{
-  "tool_name": "Agent",
-  "tool_input_preview": "{\"description\":\"Gerar architecture.md v2 passcontrol\",\"prompt\":\"Tarefa: criar documentação markdown do diagrama v2 do fluxo PassControl. Destino: `/home/brunotrinchao/Documentos/Bruno/architecture-onf...",
-  "error": "Fork is not available inside a forked worker. Complete your task directly using your tools.",
-  "timestamp": "2026-09-16T12:22:37.827Z",
-  "retry_count": 1
-}

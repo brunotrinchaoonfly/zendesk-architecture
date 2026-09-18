@@ -491,7 +491,7 @@ window.ARCHIFY_GROUPS = [
         "sequence": {
           "file": "diagrams/gambet/gambit/sequence.html",
           "spec": "diagrams/gambet/gambit/sequence.json",
-          "description": "Passagem de controle dos Fluxos para o Gambit. Webhook com horário de início, histórico recuperado via Zendesk e desfecho por tag (deflexão ou transferência).",
+          "description": "Passagem de controle dos Fluxos para o Gambit. Webhook com horário de início e conversa em loop via Zendesk — repete até o desfecho por tag (deflexão ou transferência).",
           "dot": "cyan",
           "paths": [
             {
@@ -523,7 +523,7 @@ window.ARCHIFY_GROUPS = [
         "architecture": {
           "file": "diagrams/gambet/gambit/architecture.html",
           "spec": "diagrams/gambet/gambit/architecture.json",
-          "description": "Gambit (IA com contexto Onfly) atende pelo Zendesk: recupera histórico, intermedeia a conversa e devolve o controle com tag de deflexão ou transferência.",
+          "description": "Gambit (IA com contexto Onfly) atende pelo Zendesk: recupera histórico, intermedeia a conversa em loop e devolve o controle com tag de deflexão ou transferência.",
           "dot": "cyan",
           "paths": [
             {

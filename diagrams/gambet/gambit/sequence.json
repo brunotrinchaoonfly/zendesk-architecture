@@ -63,7 +63,7 @@
     {
       "from": 296,
       "to": 410,
-      "label": "Conversa intermediada pelo Zendesk"
+      "label": "Conversa em loop · repete até o desfecho"
     },
     {
       "from": 420,
@@ -111,32 +111,36 @@
       "from": "client",
       "to": "zendesk",
       "y": 300,
-      "label": "5. Mensagem do cliente",
-      "variant": "default"
+      "label": "5. ↻ Mensagem do cliente",
+      "variant": "default",
+      "note": "↻ Ciclo da conversa: cada mensagem do cliente entra no loop."
     },
     {
       "id": "m6-webhook",
       "from": "zendesk",
       "to": "gambit",
       "y": 332,
-      "label": "6. Webhook: mensagem recebida",
-      "variant": "emphasis"
+      "label": "6. ↻ Webhook: mensagem recebida",
+      "variant": "emphasis",
+      "note": "↻ Zendesk encaminha ao Gambit — loop repete enquanto a conversa continuar."
     },
     {
       "id": "m7-reply",
       "from": "gambit",
       "to": "zendesk",
       "y": 364,
-      "label": "7. Resposta via API do Zendesk",
-      "variant": "default"
+      "label": "7. ↻ Resposta via API do Zendesk",
+      "variant": "default",
+      "note": "↻ IA com contexto Onfly responde — o ciclo reinicia até o desfecho."
     },
     {
       "id": "m8-deliver",
       "from": "zendesk",
       "to": "client",
       "y": 396,
-      "label": "8. Resposta entregue",
-      "variant": "return"
+      "label": "8. ↻ Resposta entregue",
+      "variant": "return",
+      "note": "↻ Zendesk entrega ao cliente — loop pode repetir ou avançar ao desfecho."
     },
     {
       "id": "m9-deflection",
