@@ -54,16 +54,16 @@ window.ARCHIFY_GROUPS = [
         "architecture": {
           "file": "diagrams/sunco/primeiro-contato/architecture.html",
           "spec": "diagrams/sunco/primeiro-contato/architecture.json",
-          "description": "Canal WhatsApp conecta o usuário ao Sunshine Conversations. O Switchboard consulta o Zendesk pelo telefone e vincula o perfil — controle inicial com Zendesk AI/Bot.",
+          "description": "Usuário conversa com o Sunshine Conversations e a API Meta transporta o canal WhatsApp. O Switchboard consulta o Zendesk pelo telefone e vincula o perfil — controle inicial com Zendesk AI/Bot.",
           "dot": "rose",
           "paths": [
             {
-              "id": "cliente~waba",
-              "label": "Usuário → WABA (inbound)"
+              "id": "cliente~sunco",
+              "label": "Usuário → Sunco (mensagens)"
             },
             {
               "id": "waba~sunco",
-              "label": "WABA → Sunco (webhook · phone)"
+              "label": "API Meta → Sunco (webhook · phone)"
             },
             {
               "id": "sunco~zendesk",
@@ -571,20 +571,20 @@ window.ARCHIFY_GROUPS = [
         "sequence": {
           "file": "diagrams/fluxo/passcontrol/sequence.html",
           "spec": "diagrams/fluxo/passcontrol/sequence.json",
-          "description": "Fluxo fim-a-fim via Sunco Switchboard: identidade no Zendesk, rotas de controle e troca Sunco ↔ Gambit com tags de desfecho.",
+          "description": "Fluxo fim-a-fim orquestrado pelo AI Agente (Ultimate): identidade no Zendesk, decisão de rota (triagem/bot ou PassControl) e troca AI Agente ↔ Gambit com tags de desfecho.",
           "dot": "slate",
           "paths": [
             {
-              "id": "cliente~sunco",
-              "label": "Usuário → Sunco (inbound)"
+              "id": "cliente~aiagent",
+              "label": "Usuário → AI Agente (inbound WhatsApp)"
             },
             {
-              "id": "sunco~bot",
-              "label": "Sunco → Bot (lookup identidade)"
+              "id": "aiagent~bot",
+              "label": "AI Agente → Bot (lookup identidade)"
             },
             {
-              "id": "bot~passcontrol",
-              "label": "Bot → PassControl (Rota B · release)"
+              "id": "aiagent~passcontrol",
+              "label": "AI Agente → PassControl (Rota B · release)"
             },
             {
               "id": "passcontrol~gambit",
@@ -620,32 +620,32 @@ window.ARCHIFY_GROUPS = [
         "architecture": {
           "file": "diagrams/fluxo/passcontrol/architecture.html",
           "spec": "diagrams/fluxo/passcontrol/architecture.json",
-          "description": "Componentes do atendimento com PassControl: Sunco Switchboard, Triagem & Bot, PassControl API e Gambit (IA) — com rotas A/B e desfechos por tag.",
+          "description": "Componentes do atendimento com PassControl: AI Agente (Ultimate), Triagem & Bot, PassControl API e Gambit (IA) — com rotas A/B e desfechos por tag.",
           "dot": "rose",
           "paths": [
             {
-              "id": "cliente~waba",
-              "label": "Usuário → WhatsApp Business API"
+              "id": "cliente~aiagent",
+              "label": "Usuário → AI Agente (mensagens · WhatsApp)"
             },
             {
-              "id": "waba~sunco",
-              "label": "WABA → Sunco (webhook · phone)"
+              "id": "waba~aiagent",
+              "label": "WABA → AI Agente (webhook · Meta)"
             },
             {
-              "id": "sunco~bot",
-              "label": "Sunco → Bot (lookup · controle)"
+              "id": "aiagent~bot",
+              "label": "AI Agente → Bot (Rota A · fluxo de triagem/bot)"
             },
             {
               "id": "bot~agentws",
-              "label": "Bot → Workspace (Rota A · transferência)"
+              "label": "Bot → Workspace (transferência)"
             },
             {
-              "id": "bot~passcontrol",
-              "label": "Bot → PassControl (Rota B · release)"
+              "id": "aiagent~passcontrol",
+              "label": "AI Agente → PassControl (Rota B · release)"
             },
             {
-              "id": "passcontrol~sunco",
-              "label": "PassControl → Sunco (switchboard)"
+              "id": "passcontrol~aiagent",
+              "label": "PassControl → AI Agente (switchboard · estados)"
             },
             {
               "id": "passcontrol~gambit",

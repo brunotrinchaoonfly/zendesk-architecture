@@ -2,45 +2,208 @@
   "schema_version": 1,
   "diagram_type": "architecture",
   "meta": {
-    "title": "PassControl — Sunco · Zendesk · Gambit",
+    "title": "PassControl — AI Agente · Zendesk · Gambit",
     "locale": "pt-BR",
     "quality_profile": "showcase",
     "output": "architecture.html",
     "viewBox": [1220, 680]
   },
   "components": [
-    { "id": "cliente", "type": "external", "label": "Usuário (WhatsApp)", "sublabel": "Cliente Onfly", "pos": [40, 300], "size": [130, 64] },
-    { "id": "waba", "type": "external", "label": "WhatsApp Business API", "sublabel": "Meta · webhooks phone", "pos": [240, 300], "size": [140, 64] },
-    { "id": "sunco", "type": "cloud", "label": "Sunshine Conversations", "sublabel": "Switchboard Protocol", "pos": [450, 300], "size": [150, 64] },
-    { "id": "bot", "type": "backend", "label": "Triagem & Bot", "sublabel": "decisão de fluxo", "pos": [720, 300], "size": [150, 64] },
-    { "id": "agentws", "type": "frontend", "label": "Agent Workspace", "sublabel": "atendimento humano", "pos": [720, 90], "size": [150, 64] },
-    { "id": "ticket", "type": "database", "label": "Ticket Encerrado", "sublabel": "deflexão · sem humano", "pos": [1020, 90], "size": [140, 64] },
-    { "id": "passcontrol", "type": "backend", "label": "PassControl API", "sublabel": "release · return", "pos": [720, 520], "size": [150, 64], "tag": "ID próprio" },
-    { "id": "gambit", "type": "backend", "label": "Gambit (IA)", "sublabel": "integração · troca · avaliação", "pos": [1020, 440], "size": [160, 64] }
+    {
+      "id": "cliente",
+      "type": "external",
+      "label": "Usuário (WhatsApp)",
+      "sublabel": "Cliente Onfly",
+      "pos": [40, 300],
+      "size": [130, 64]
+    },
+    {
+      "id": "aiagent",
+      "type": "cloud",
+      "label": "AI Agente (Ultimate)",
+      "sublabel": "orquestra as conversas",
+      "pos": [240, 300],
+      "size": [150, 64]
+    },
+    {
+      "id": "waba",
+      "type": "external",
+      "label": "WhatsApp Business API",
+      "sublabel": "Meta · webhooks phone",
+      "pos": [450, 90],
+      "size": [140, 64]
+    },
+    {
+      "id": "bot",
+      "type": "backend",
+      "label": "Triagem & Bot",
+      "sublabel": "Zendesk AI/Bot",
+      "pos": [720, 300],
+      "size": [150, 64]
+    },
+    {
+      "id": "agentws",
+      "type": "frontend",
+      "label": "Agent Workspace",
+      "sublabel": "atendimento humano",
+      "pos": [720, 90],
+      "size": [150, 64]
+    },
+    {
+      "id": "ticket",
+      "type": "database",
+      "label": "Ticket Encerrado",
+      "sublabel": "deflexão · sem humano",
+      "pos": [1020, 90],
+      "size": [140, 64]
+    },
+    {
+      "id": "passcontrol",
+      "type": "backend",
+      "label": "PassControl API",
+      "sublabel": "release · return",
+      "pos": [720, 520],
+      "size": [150, 64],
+      "tag": "ID próprio"
+    },
+    {
+      "id": "gambit",
+      "type": "backend",
+      "label": "Gambit (IA)",
+      "sublabel": "integração · troca · avaliação",
+      "pos": [1020, 440],
+      "size": [160, 64]
+    }
   ],
   "boundaries": [
-    { "kind": "region", "label": "Zendesk Platform", "wraps": ["bot", "agentws", "passcontrol"] }
+    {
+      "kind": "region",
+      "label": "Zendesk Platform",
+      "wraps": ["bot", "agentws", "passcontrol"]
+    }
   ],
   "connections": [
-    { "id": "cliente-waba", "from": "cliente", "to": "waba", "label": "mensagens", "variant": "emphasis", "labelDy": -10 },
-    { "id": "waba-cliente", "from": "waba", "to": "cliente", "label": "respostas", "variant": "dashed", "labelDy": 10 },
-    { "id": "waba-sunco", "from": "waba", "to": "sunco", "label": "webhook", "variant": "emphasis", "labelDy": -14 },
-    { "id": "sunco-waba", "from": "sunco", "to": "waba", "label": "envio", "variant": "dashed", "labelDy": 14 },
-    { "id": "sunco-bot", "from": "sunco", "to": "bot", "label": "lookup · Zendesk AI", "variant": "emphasis", "labelDy": -12 },
-    { "id": "sunco-bot-ctrl", "from": "sunco", "to": "bot", "label": "controle Zendesk", "variant": "dashed", "labelDy": 12 },
-    { "id": "bot-agentws", "from": "bot", "to": "agentws", "label": "Rota A", "fromSide": "top", "toSide": "bottom", "labelAt": [820, 220] },
-    { "id": "bot-agentws-tag", "from": "bot", "to": "agentws", "label": "transferência → roteia", "fromSide": "top", "toSide": "bottom", "labelAt": [695, 250] },
-    { "id": "bot-passcontrol", "from": "bot", "to": "passcontrol", "label": "Rota B · release", "fromSide": "bottom", "toSide": "top", "labelAt": [815, 440] },
-    { "id": "passcontrol-sunco", "from": "passcontrol", "to": "sunco", "label": "switchboard · estados", "fromSide": "left", "toSide": "bottom", "via": [[560, 552], [525, 552], [525, 364]], "labelAt": [575, 470] },
-    { "id": "passcontrol-gambit", "from": "passcontrol", "to": "gambit", "label": "webhook · passagem", "variant": "emphasis", "fromSide": "right", "toSide": "left", "via": [[915, 552], [915, 472]], "labelAt": [935, 505] },
-    { "id": "gambit-bot", "from": "gambit", "to": "bot", "label": "histórico · troca via API", "fromSide": "top", "toSide": "bottom", "via": [[1100, 400], [795, 400]], "labelAt": [950, 388] },
-    { "id": "gambit-passcontrol", "from": "gambit", "to": "passcontrol", "label": "return + tag", "variant": "emphasis", "fromSide": "bottom", "toSide": "bottom", "via": [[1100, 620], [795, 620]], "labelAt": [950, 634] },
-    { "id": "bot-ticket", "from": "bot", "to": "ticket", "label": "deflexão → encerra", "variant": "dashed", "fromSide": "right", "toSide": "left", "via": [[930, 332], [930, 122], [1020, 122]], "labelAt": [945, 230] }
+    {
+      "id": "cliente-aiagent",
+      "from": "cliente",
+      "to": "aiagent",
+      "label": "mensagens",
+      "variant": "emphasis",
+      "labelDy": -16
+    },
+    {
+      "id": "aiagent-cliente",
+      "from": "aiagent",
+      "to": "cliente",
+      "label": "respostas",
+      "variant": "dashed",
+      "labelDy": 16
+    },
+    {
+      "id": "waba-aiagent",
+      "from": "waba",
+      "to": "aiagent",
+      "label": "webhook · Meta",
+      "variant": "emphasis",
+      "labelAt": [465, 168]
+    },
+    {
+      "id": "aiagent-waba",
+      "from": "aiagent",
+      "to": "waba",
+      "label": "envio · Meta",
+      "variant": "dashed",
+      "labelAt": [465, 270]
+    },
+    {
+      "id": "aiagent-bot",
+      "from": "aiagent",
+      "to": "bot",
+      "label": "Rota A · Fluxo de triagem/bot",
+      "variant": "emphasis",
+      "labelAt": [500, 296]
+    },
+    {
+      "id": "aiagent-bot-ctrl",
+      "from": "aiagent",
+      "to": "bot",
+      "label": "controle Zendesk",
+      "variant": "dashed",
+      "labelAt": [414, 378]
+    },
+    {
+      "id": "bot-agentws-tag",
+      "from": "bot",
+      "to": "agentws",
+      "label": "transferência → roteia",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelAt": [695, 250]
+    },
+    {
+      "id": "aiagent-passcontrol",
+      "from": "aiagent",
+      "to": "passcontrol",
+      "label": "Rota B · release",
+      "variant": "emphasis",
+      "labelAt": [610, 430]
+    },
+    {
+      "id": "passcontrol-aiagent",
+      "from": "passcontrol",
+      "to": "aiagent",
+      "label": "switchboard · estados",
+      "variant": "dashed",
+      "labelAt": [640, 470]
+    },
+    {
+      "id": "passcontrol-gambit",
+      "from": "passcontrol",
+      "to": "gambit",
+      "label": "webhook · passagem",
+      "variant": "emphasis",
+      "fromSide": "right",
+      "toSide": "left",
+      "via": [[915, 552], [915, 472]],
+      "labelAt": [935, 505]
+    },
+    {
+      "id": "gambit-bot",
+      "from": "gambit",
+      "to": "bot",
+      "label": "histórico · troca via API",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "via": [[1100, 400], [795, 400]],
+      "labelAt": [950, 388]
+    },
+    {
+      "id": "gambit-passcontrol",
+      "from": "gambit",
+      "to": "passcontrol",
+      "label": "return + tag",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "bottom",
+      "via": [[1100, 620], [795, 620]],
+      "labelAt": [950, 634]
+    },
+    {
+      "id": "bot-ticket",
+      "from": "bot",
+      "to": "ticket",
+      "label": "deflexão → encerra",
+      "variant": "dashed",
+      "fromSide": "right",
+      "toSide": "left",
+      "via": [[930, 332], [930, 122], [1020, 122]],
+      "labelAt": [945, 230]
+    }
   ],
   "cards": [
     {
       "dot": "cyan",
-      "title": "Identidade (Sunco)",
+      "title": "Identidade (AI Agente)",
       "items": [
         "Lookup dinâmico no Zendesk via telefone (Users API)",
         "ENCONTRADO: recupera ID e perfil do usuário",
@@ -49,11 +212,11 @@
     },
     {
       "dot": "emerald",
-      "title": "Controle (Switchboard)",
+      "title": "Orquestração e controle",
       "items": [
-        "Controle inicial com Zendesk AI/Bot",
+        "AI Agente (Ultimate) decide destino: triagem/bot ou PassControl",
         "Release: Zendesk PASSIVO (standby/audit) · Gambit ATIVO",
-        "Return: Zendesk volta a ATIVO no Sunco"
+        "Return: Zendesk volta a ATIVO no AI Agente"
       ]
     },
     {

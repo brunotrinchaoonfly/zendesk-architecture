@@ -2,7 +2,7 @@
   "schema_version": 1,
   "diagram_type": "sequence",
   "meta": {
-    "title": "PassControl — Sunco · Zendesk · Gambit",
+    "title": "PassControl — AI Agente · Zendesk · Gambit",
     "locale": "pt-BR",
     "output": "sequence.html",
     "quality_profile": "showcase",
@@ -20,10 +20,10 @@
       "sublabel": "Cliente"
     },
     {
-      "id": "sunco",
+      "id": "aiagent",
       "type": "cloud",
-      "label": "Sunco",
-      "sublabel": "Sunshine · Switchboard"
+      "label": "AI Agente (Ultimate)",
+      "sublabel": "orquestra as conversas"
     },
     {
       "id": "bot",
@@ -54,7 +54,7 @@
     {
       "from": 192,
       "to": 264,
-      "label": "Identidade (Sunco)"
+      "label": "Identidade (AI Agente)"
     },
     {
       "from": 272,
@@ -76,14 +76,14 @@
     {
       "id": "m01",
       "from": "cliente",
-      "to": "sunco",
+      "to": "aiagent",
       "y": 168,
       "label": "1. Inbound · WhatsApp Business API",
       "variant": "emphasis"
     },
     {
       "id": "m02",
-      "from": "sunco",
+      "from": "aiagent",
       "to": "bot",
       "y": 198,
       "label": "2. Lookup: ENCONTRADO recupera ID + perfil",
@@ -91,7 +91,7 @@
     },
     {
       "id": "m03",
-      "from": "sunco",
+      "from": "aiagent",
       "to": "bot",
       "y": 228,
       "label": "3. NÃO ACHOU: cria perfil dinamicamente",
@@ -99,7 +99,7 @@
     },
     {
       "id": "m04state",
-      "from": "sunco",
+      "from": "aiagent",
       "to": "bot",
       "y": 258,
       "label": "4. Estado do controle: Zendesk AI/Bot assume",
@@ -107,16 +107,16 @@
     },
     {
       "id": "m04",
-      "from": "bot",
+      "from": "aiagent",
       "to": "passcontrol",
       "y": 288,
-      "label": "5. Rota B · release",
+      "label": "5. Rota B · release (decisão do AI Agente)",
       "variant": "emphasis"
     },
     {
       "id": "m05",
       "from": "passcontrol",
-      "to": "sunco",
+      "to": "aiagent",
       "y": 318,
       "label": "6. Switchboard: Zendesk PASSIVO · Gambit ATIVO",
       "variant": "security"
@@ -180,7 +180,7 @@
   ],
   "activations": [
     {
-      "participant": "sunco",
+      "participant": "aiagent",
       "from": 192,
       "to": 326,
       "type": "cloud"
@@ -188,7 +188,7 @@
     {
       "participant": "bot",
       "from": 192,
-      "to": 390,
+      "to": 264,
       "type": "backend"
     },
     {
@@ -213,7 +213,7 @@
   "cards": [
     {
       "dot": "cyan",
-      "title": "Identidade (Sunco)",
+      "title": "Identidade (AI Agente)",
       "items": [
         "Phone do payload WhatsApp identifica o usuário",
         "Lookup no Zendesk: ENCONTRADO recupera ID + perfil",
@@ -222,11 +222,11 @@
     },
     {
       "dot": "emerald",
-      "title": "Controle (Switchboard)",
+      "title": "Controle (AI Agente decide)",
       "items": [
+        "AI Agente decide destino: triagem/bot ou PassControl",
         "Release: Zendesk PASSIVO · Gambit ATIVO",
-        "Webhook carrega o horário de início",
-        "Return: Zendesk volta a ATIVO no Sunco"
+        "Return: Zendesk volta a ATIVO no AI Agente"
       ]
     },
     {

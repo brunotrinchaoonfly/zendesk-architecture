@@ -71,15 +71,57 @@
   },
   "hotPaths": [
     {
+      "path": "diagrams/fluxo/passcontrol/architecture.json",
+      "accessCount": 13,
+      "lastAccessed": 1789756522808,
+      "type": "file"
+    },
+    {
+      "path": "diagrams/fluxo/passcontrol/sequence.json",
+      "accessCount": 13,
+      "lastAccessed": 1789756694692,
+      "type": "file"
+    },
+    {
+      "path": "presentation/registry.js",
+      "accessCount": 10,
+      "lastAccessed": 1789756968101,
+      "type": "file"
+    },
+    {
       "path": "diagrams/gambet/gambit/sequence.json",
       "accessCount": 8,
       "lastAccessed": 1789746148597,
       "type": "file"
     },
     {
+      "path": "diagrams/sunco/primeiro-contato/architecture.json",
+      "accessCount": 7,
+      "lastAccessed": 1789756941673,
+      "type": "file"
+    },
+    {
+      "path": "diagrams/fluxo/passcontrol/sequence.visual-check.1440x900.light.png",
+      "accessCount": 2,
+      "lastAccessed": 1789756708157,
+      "type": "file"
+    },
+    {
       "path": "diagrams/gambet/gambit/sequence.visual-check.1440x900.light.png",
       "accessCount": 1,
       "lastAccessed": 1789746369133,
+      "type": "file"
+    },
+    {
+      "path": "diagrams/fluxo/passcontrol/architecture.visual-check.1440x900.light.png",
+      "accessCount": 1,
+      "lastAccessed": 1789756670166,
+      "type": "file"
+    },
+    {
+      "path": "diagrams/sunco/primeiro-contato/architecture.visual-check.1440x900.light.png",
+      "accessCount": 1,
+      "lastAccessed": 1789756981404,
       "type": "file"
     }
   ],

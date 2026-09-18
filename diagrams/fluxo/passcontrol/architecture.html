@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="generator" content="archify 2.17.0-dev.1">
-  <title>PassControl — Sunco · Zendesk · Gambit</title>
+  <title>PassControl — AI Agente · Zendesk · Gambit</title>
   <script>
     // Resolve the theme before first paint so light-preference users don't
     // see a dark flash. The toolbar script below re-applies with UI state.
@@ -5215,7 +5215,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
            data-preset-badge-blueprint="BLUEPRINT / REV 01"
            data-preset-badge-editorial="EDITORIAL / NOTA DE CAMPO">
         <div class="pulse-dot"></div>
-        <h1>PassControl — Sunco · Zendesk · Gambit</h1>
+        <h1>PassControl — AI Agente · Zendesk · Gambit</h1>
       </div>
     </div>
 
@@ -5265,7 +5265,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     <div class="diagram-container" data-detail-level="read"
          data-preset-badge-editorial-plate="ARCHIFY / PRANCHA 04">
       <svg viewBox="0 0 1220 680" role="img" lang="pt-BR" aria-labelledby="archify-diagram-title archify-diagram-description" data-preset="classic" data-quality-profile="showcase">
-        <title id="archify-diagram-title">PassControl — Sunco · Zendesk · Gambit</title>
+        <title id="archify-diagram-title">PassControl — AI Agente · Zendesk · Gambit</title>
         <desc id="archify-diagram-description">Um diagrama de arquitetura gerado pelo Archify.</desc>
         <!-- Definitions -->
         <defs>
@@ -5293,20 +5293,19 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="0" data-composition-frame-label="Zendesk Platform" x="690" y="60" width="210" height="544" rx="12" class="c-region" stroke-width="1"/>
 
         <!-- Connection paths (before components for correct z-order) -->
-        <path data-edge-from="cliente" data-edge-to="waba" data-edge-label="mensagens" data-edge-key="0" data-edge-id="cliente-waba" data-composition-points="170,325;240,325" d="M 170 325 L 240 325" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="waba" data-edge-to="cliente" data-edge-label="respostas" data-edge-key="1" data-edge-id="waba-cliente" data-composition-points="240,339;170,339" d="M 240 339 L 170 339" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="waba" data-edge-to="sunco" data-edge-label="webhook" data-edge-key="2" data-edge-id="waba-sunco" data-composition-points="380,339;450,339" d="M 380 339 L 450 339" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="sunco" data-edge-to="waba" data-edge-label="envio" data-edge-key="3" data-edge-id="sunco-waba" data-composition-points="450,325;380,325" d="M 450 325 L 380 325" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="sunco" data-edge-to="bot" data-edge-label="lookup · Zendesk AI" data-edge-key="4" data-edge-id="sunco-bot" data-composition-points="600,325;720,325" d="M 600 325 L 720 325" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="sunco" data-edge-to="bot" data-edge-label="controle Zendesk" data-edge-key="5" data-edge-id="sunco-bot-ctrl" data-composition-points="600,339;720,339" d="M 600 339 L 720 339" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="bot" data-edge-to="agentws" data-edge-label="Rota A" data-edge-key="6" data-edge-id="bot-agentws" data-composition-points="795,300;795,154" d="M 795 300 L 795 154" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="bot" data-edge-to="agentws" data-edge-label="transferência → roteia" data-edge-key="7" data-edge-id="bot-agentws-tag" data-composition-points="795,300;795,154" d="M 795 300 L 795 154" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="bot" data-edge-to="passcontrol" data-edge-label="Rota B · release" data-edge-key="8" data-edge-id="bot-passcontrol" data-composition-points="795,364;795,520" d="M 795 364 L 795 520" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="passcontrol" data-edge-to="sunco" data-edge-label="switchboard · estados" data-edge-key="9" data-edge-id="passcontrol-sunco" data-composition-points="720,552;560,552;525,552;525,364;525,364" d="M 720 552 L 568 552 Q 560 552 552 552 L 533 552 Q 525 552 525 544 L 525 364 L 525 364" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="passcontrol" data-edge-to="gambit" data-edge-label="webhook · passagem" data-edge-key="10" data-edge-id="passcontrol-gambit" data-composition-points="870,552;915,552;915,472;1020,472" d="M 870 552 L 907 552 Q 915 552 915 544 L 915 480 Q 915 472 923 472 L 1020 472" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="gambit" data-edge-to="bot" data-edge-label="histórico · troca via API" data-edge-key="11" data-edge-id="gambit-bot" data-composition-points="1100,440;1100,400;795,400;795,364" d="M 1100 440 L 1100 408 Q 1100 400 1092 400 L 803 400 Q 795 400 795 392 L 795 364" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="gambit" data-edge-to="passcontrol" data-edge-label="return + tag" data-edge-key="12" data-edge-id="gambit-passcontrol" data-composition-points="1100,504;1100,620;795,620;795,584" d="M 1100 504 L 1100 612 Q 1100 620 1092 620 L 803 620 Q 795 620 795 612 L 795 584" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="bot" data-edge-to="ticket" data-edge-label="deflexão → encerra" data-edge-key="13" data-edge-id="bot-ticket" data-composition-points="870,332;930,332;930,122;1020,122;1020,122" d="M 870 332 L 922 332 Q 930 332 930 324 L 930 130 Q 930 122 938 122 L 1020 122 L 1020 122" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="cliente" data-edge-to="aiagent" data-edge-label="mensagens" data-edge-key="0" data-edge-id="cliente-aiagent" data-composition-points="170,339;240,339" d="M 170 339 L 240 339" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="aiagent" data-edge-to="cliente" data-edge-label="respostas" data-edge-key="1" data-edge-id="aiagent-cliente" data-composition-points="240,325;170,325" d="M 240 325 L 170 325" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="waba" data-edge-to="aiagent" data-edge-label="webhook · Meta" data-edge-key="2" data-edge-id="waba-aiagent" data-composition-points="450,122;420,122;420,332;390,332" d="M 450 122 L 428 122 Q 420 122 420 130 L 420 324 Q 420 332 412 332 L 390 332" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="aiagent" data-edge-to="waba" data-edge-label="envio · Meta" data-edge-key="3" data-edge-id="aiagent-waba" data-composition-points="390,332;420,332;420,122;450,122" d="M 390 332 L 412 332 Q 420 332 420 324 L 420 130 Q 420 122 428 122 L 450 122" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="aiagent" data-edge-to="bot" data-edge-label="Rota A · Fluxo de triagem/bot" data-edge-key="4" data-edge-id="aiagent-bot" data-composition-points="390,332;720,332" d="M 390 332 L 720 332" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="aiagent" data-edge-to="bot" data-edge-label="controle Zendesk" data-edge-key="5" data-edge-id="aiagent-bot-ctrl" data-composition-points="390,332;720,332" d="M 390 332 L 720 332" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="bot" data-edge-to="agentws" data-edge-label="transferência → roteia" data-edge-key="6" data-edge-id="bot-agentws-tag" data-composition-points="795,300;795,154" d="M 795 300 L 795 154" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="aiagent" data-edge-to="passcontrol" data-edge-label="Rota B · release" data-edge-key="7" data-edge-id="aiagent-passcontrol" data-composition-points="390,332;555,332;555,552;720,552" d="M 390 332 L 547 332 Q 555 332 555 340 L 555 544 Q 555 552 563 552 L 720 552" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="passcontrol" data-edge-to="aiagent" data-edge-label="switchboard · estados" data-edge-key="8" data-edge-id="passcontrol-aiagent" data-composition-points="720,552;555,552;555,332;390,332" d="M 720 552 L 563 552 Q 555 552 555 544 L 555 340 Q 555 332 547 332 L 390 332" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="passcontrol" data-edge-to="gambit" data-edge-label="webhook · passagem" data-edge-key="9" data-edge-id="passcontrol-gambit" data-composition-points="870,552;915,552;915,472;1020,472" d="M 870 552 L 907 552 Q 915 552 915 544 L 915 480 Q 915 472 923 472 L 1020 472" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="gambit" data-edge-to="bot" data-edge-label="histórico · troca via API" data-edge-key="10" data-edge-id="gambit-bot" data-composition-points="1100,440;1100,400;795,400;795,364" d="M 1100 440 L 1100 408 Q 1100 400 1092 400 L 803 400 Q 795 400 795 392 L 795 364" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="gambit" data-edge-to="passcontrol" data-edge-label="return + tag" data-edge-key="11" data-edge-id="gambit-passcontrol" data-composition-points="1100,504;1100,620;795,620;795,584" d="M 1100 504 L 1100 612 Q 1100 620 1092 620 L 803 620 Q 795 620 795 612 L 795 584" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="bot" data-edge-to="ticket" data-edge-label="deflexão → encerra" data-edge-key="12" data-edge-id="bot-ticket" data-composition-points="870,332;930,332;930,122;1020,122;1020,122" d="M 870 332 L 922 332 Q 930 332 930 324 L 930 130 Q 930 122 938 122 L 1020 122 L 1020 122" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
 
         <!-- Components -->
         <g id="node-cliente" data-node-id="cliente" data-node-label="Usuário (WhatsApp)" tabindex="0" role="button" aria-label="Focar Usuário (WhatsApp), Cliente Onfly, Componente de arquitetura" aria-pressed="false" data-node-kind="external" data-node-sublabel="Cliente Onfly" data-node-context="Componente de arquitetura">
@@ -5321,38 +5320,38 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <text data-detail="context" x="105" y="346" class="t-muted" font-size="9" text-anchor="middle">Cliente Onfly</text>
         </g>
 
+        <g id="node-aiagent" data-node-id="aiagent" data-node-label="AI Agente (Ultimate)" tabindex="0" role="button" aria-label="Focar AI Agente (Ultimate), orquestra as conversas, Componente de arquitetura" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="orquestra as conversas" data-node-context="Componente de arquitetura">
+          <title>AI Agente (Ultimate) · orquestra as conversas · Componente de arquitetura</title>
+          <rect x="240" y="300" width="150" height="64" rx="6" class="c-mask"/>
+          <rect x="240" y="300" width="150" height="64" rx="6" class="c-cloud" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="cloud" class="semantic-sigil s-cloud" transform="translate(246 306) scale(0.6875)">
+            <path d="M4.3 12.5h7.3a2.4 2.4 0 0 0 .2-4.8 4 4 0 0 0-7.5-1.3A3.1 3.1 0 0 0 4.3 12.5Z"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="315" y="330" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">AI Agente (Ultimate)</text>
+        <text data-detail="context" x="315" y="346" class="t-muted" font-size="9" text-anchor="middle">orquestra as conversas</text>
+        </g>
+
         <g id="node-waba" data-node-id="waba" data-node-label="WhatsApp Business API" tabindex="0" role="button" aria-label="Focar WhatsApp Business API, Meta · webhooks phone, Componente de arquitetura" aria-pressed="false" data-node-kind="external" data-node-sublabel="Meta · webhooks phone" data-node-context="Componente de arquitetura">
           <title>WhatsApp Business API · Meta · webhooks phone · Componente de arquitetura</title>
-          <rect x="240" y="300" width="140" height="64" rx="6" class="c-mask"/>
-          <rect x="240" y="300" width="140" height="64" rx="6" class="c-external" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(246 306) scale(0.6875)">
+          <rect x="450" y="90" width="140" height="64" rx="6" class="c-mask"/>
+          <rect x="450" y="90" width="140" height="64" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(456 96) scale(0.6875)">
             <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
             <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="310" y="330" class="t-primary" font-size="10.4" font-weight="600" text-anchor="middle">WhatsApp Business API</text>
-        <text data-detail="context" x="310" y="346" class="t-muted" font-size="9" text-anchor="middle">Meta · webhooks phone</text>
+          <text data-node-label="" data-detail-anchor="" x="520" y="120" class="t-primary" font-size="10.4" font-weight="600" text-anchor="middle">WhatsApp Business API</text>
+        <text data-detail="context" x="520" y="136" class="t-muted" font-size="9" text-anchor="middle">Meta · webhooks phone</text>
         </g>
 
-        <g id="node-sunco" data-node-id="sunco" data-node-label="Sunshine Conversations" tabindex="0" role="button" aria-label="Focar Sunshine Conversations, Switchboard Protocol, Componente de arquitetura" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="Switchboard Protocol" data-node-context="Componente de arquitetura">
-          <title>Sunshine Conversations · Switchboard Protocol · Componente de arquitetura</title>
-          <rect x="450" y="300" width="150" height="64" rx="6" class="c-mask"/>
-          <rect x="450" y="300" width="150" height="64" rx="6" class="c-cloud" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="cloud" class="semantic-sigil s-cloud" transform="translate(456 306) scale(0.6875)">
-            <path d="M4.3 12.5h7.3a2.4 2.4 0 0 0 .2-4.8 4 4 0 0 0-7.5-1.3A3.1 3.1 0 0 0 4.3 12.5Z"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="525" y="330" class="t-primary" font-size="10.7" font-weight="600" text-anchor="middle">Sunshine Conversations</text>
-        <text data-detail="context" x="525" y="346" class="t-muted" font-size="9" text-anchor="middle">Switchboard Protocol</text>
-        </g>
-
-        <g id="node-bot" data-node-id="bot" data-node-label="Triagem &amp; Bot" tabindex="0" role="button" aria-label="Focar Triagem &amp; Bot, decisão de fluxo, Zendesk Platform" aria-pressed="false" data-node-kind="backend" data-node-sublabel="decisão de fluxo" data-node-context="Zendesk Platform">
-          <title>Triagem &amp; Bot · decisão de fluxo · Zendesk Platform</title>
+        <g id="node-bot" data-node-id="bot" data-node-label="Triagem &amp; Bot" tabindex="0" role="button" aria-label="Focar Triagem &amp; Bot, Zendesk AI/Bot, Zendesk Platform" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Zendesk AI/Bot" data-node-context="Zendesk Platform">
+          <title>Triagem &amp; Bot · Zendesk AI/Bot · Zendesk Platform</title>
           <rect x="720" y="300" width="150" height="64" rx="6" class="c-mask"/>
           <rect x="720" y="300" width="150" height="64" rx="6" class="c-backend" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(726 306) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
           <text data-node-label="" data-detail-anchor="" x="795" y="330" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Triagem &amp; Bot</text>
-        <text data-detail="context" x="795" y="346" class="t-muted" font-size="9" text-anchor="middle">decisão de fluxo</text>
+        <text data-detail="context" x="795" y="346" class="t-muted" font-size="9" text-anchor="middle">Zendesk AI/Bot</text>
         </g>
 
         <g id="node-agentws" data-node-id="agentws" data-node-label="Agent Workspace" tabindex="0" role="button" aria-label="Focar Agent Workspace, atendimento humano, Zendesk Platform" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="atendimento humano" data-node-context="Zendesk Platform">
@@ -5405,59 +5404,55 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         </g>
 
         <!-- Connection labels -->
-        <g data-detail="context" data-edge-from="cliente" data-edge-to="waba" data-edge-label="mensagens" data-edge-key="0" data-edge-id="cliente-waba">
-          <rect x="178.4" y="295" width="53.199999999999996" height="14" rx="3" class="c-mask"/>
-          <text x="205" y="305" class="t-backend" font-size="8" text-anchor="middle">mensagens</text>
+        <g data-detail="context" data-edge-from="cliente" data-edge-to="aiagent" data-edge-label="mensagens" data-edge-key="0" data-edge-id="cliente-aiagent">
+          <rect x="178.4" y="303" width="53.199999999999996" height="14" rx="3" class="c-mask"/>
+          <text x="205" y="313" class="t-backend" font-size="8" text-anchor="middle">mensagens</text>
         </g>
-        <g data-detail="context" data-edge-from="waba" data-edge-to="cliente" data-edge-label="respostas" data-edge-key="1" data-edge-id="waba-cliente">
-          <rect x="178.4" y="329" width="53.199999999999996" height="14" rx="3" class="c-mask"/>
-          <text x="205" y="339" class="t-messagebus" font-size="8" text-anchor="middle">respostas</text>
+        <g data-detail="context" data-edge-from="aiagent" data-edge-to="cliente" data-edge-label="respostas" data-edge-key="1" data-edge-id="aiagent-cliente">
+          <rect x="178.4" y="321" width="53.199999999999996" height="14" rx="3" class="c-mask"/>
+          <text x="205" y="331" class="t-messagebus" font-size="8" text-anchor="middle">respostas</text>
         </g>
-        <g data-detail="context" data-edge-from="waba" data-edge-to="sunco" data-edge-label="webhook" data-edge-key="2" data-edge-id="waba-sunco">
-          <rect x="393.2" y="305" width="43.6" height="14" rx="3" class="c-mask"/>
-          <text x="415" y="315" class="t-backend" font-size="8" text-anchor="middle">webhook</text>
+        <g data-detail="context" data-edge-from="waba" data-edge-to="aiagent" data-edge-label="webhook · Meta" data-edge-key="2" data-edge-id="waba-aiagent">
+          <rect x="426.4" y="158" width="77.2" height="14" rx="3" class="c-mask"/>
+          <text x="465" y="168" class="t-backend" font-size="8" text-anchor="middle">webhook · Meta</text>
         </g>
-        <g data-detail="context" data-edge-from="sunco" data-edge-to="waba" data-edge-label="envio" data-edge-key="3" data-edge-id="sunco-waba">
-          <rect x="398" y="319" width="34" height="14" rx="3" class="c-mask"/>
-          <text x="415" y="329" class="t-messagebus" font-size="8" text-anchor="middle">envio</text>
+        <g data-detail="context" data-edge-from="aiagent" data-edge-to="waba" data-edge-label="envio · Meta" data-edge-key="3" data-edge-id="aiagent-waba">
+          <rect x="431.2" y="260" width="67.6" height="14" rx="3" class="c-mask"/>
+          <text x="465" y="270" class="t-messagebus" font-size="8" text-anchor="middle">envio · Meta</text>
         </g>
-        <g data-detail="context" data-edge-from="sunco" data-edge-to="bot" data-edge-label="lookup · Zendesk AI" data-edge-key="4" data-edge-id="sunco-bot">
-          <rect x="609.4" y="293" width="101.2" height="14" rx="3" class="c-mask"/>
-          <text x="660" y="303" class="t-backend" font-size="8" text-anchor="middle">lookup · Zendesk AI</text>
+        <g data-detail="context" data-edge-from="aiagent" data-edge-to="bot" data-edge-label="Rota A · Fluxo de triagem/bot" data-edge-key="4" data-edge-id="aiagent-bot">
+          <rect x="425.4" y="286" width="149.2" height="14" rx="3" class="c-mask"/>
+          <text x="500" y="296" class="t-backend" font-size="8" text-anchor="middle">Rota A · Fluxo de triagem/bot</text>
         </g>
-        <g data-detail="context" data-edge-from="sunco" data-edge-to="bot" data-edge-label="controle Zendesk" data-edge-key="5" data-edge-id="sunco-bot-ctrl">
-          <rect x="616.6" y="331" width="86.8" height="14" rx="3" class="c-mask"/>
-          <text x="660" y="341" class="t-messagebus" font-size="8" text-anchor="middle">controle Zendesk</text>
+        <g data-detail="context" data-edge-from="aiagent" data-edge-to="bot" data-edge-label="controle Zendesk" data-edge-key="5" data-edge-id="aiagent-bot-ctrl">
+          <rect x="370.6" y="368" width="86.8" height="14" rx="3" class="c-mask"/>
+          <text x="414" y="378" class="t-messagebus" font-size="8" text-anchor="middle">controle Zendesk</text>
         </g>
-        <g data-detail="context" data-edge-from="bot" data-edge-to="agentws" data-edge-label="Rota A" data-edge-key="6" data-edge-id="bot-agentws">
-          <rect x="800.6" y="210" width="38.8" height="14" rx="3" class="c-mask"/>
-          <text x="820" y="220" class="t-muted" font-size="8" text-anchor="middle">Rota A</text>
-        </g>
-        <g data-detail="context" data-edge-from="bot" data-edge-to="agentws" data-edge-label="transferência → roteia" data-edge-key="7" data-edge-id="bot-agentws-tag">
+        <g data-detail="context" data-edge-from="bot" data-edge-to="agentws" data-edge-label="transferência → roteia" data-edge-key="6" data-edge-id="bot-agentws-tag">
           <rect x="637.2" y="240" width="115.6" height="14" rx="3" class="c-mask"/>
           <text x="695" y="250" class="t-muted" font-size="8" text-anchor="middle">transferência → roteia</text>
         </g>
-        <g data-detail="context" data-edge-from="bot" data-edge-to="passcontrol" data-edge-label="Rota B · release" data-edge-key="8" data-edge-id="bot-passcontrol">
-          <rect x="771.6" y="430" width="86.8" height="14" rx="3" class="c-mask"/>
-          <text x="815" y="440" class="t-muted" font-size="8" text-anchor="middle">Rota B · release</text>
+        <g data-detail="context" data-edge-from="aiagent" data-edge-to="passcontrol" data-edge-label="Rota B · release" data-edge-key="7" data-edge-id="aiagent-passcontrol">
+          <rect x="566.6" y="420" width="86.8" height="14" rx="3" class="c-mask"/>
+          <text x="610" y="430" class="t-backend" font-size="8" text-anchor="middle">Rota B · release</text>
         </g>
-        <g data-detail="context" data-edge-from="passcontrol" data-edge-to="sunco" data-edge-label="switchboard · estados" data-edge-key="9" data-edge-id="passcontrol-sunco">
-          <rect x="519.6" y="460" width="110.8" height="14" rx="3" class="c-mask"/>
-          <text x="575" y="470" class="t-muted" font-size="8" text-anchor="middle">switchboard · estados</text>
+        <g data-detail="context" data-edge-from="passcontrol" data-edge-to="aiagent" data-edge-label="switchboard · estados" data-edge-key="8" data-edge-id="passcontrol-aiagent">
+          <rect x="584.6" y="460" width="110.8" height="14" rx="3" class="c-mask"/>
+          <text x="640" y="470" class="t-messagebus" font-size="8" text-anchor="middle">switchboard · estados</text>
         </g>
-        <g data-detail="context" data-edge-from="passcontrol" data-edge-to="gambit" data-edge-label="webhook · passagem" data-edge-key="10" data-edge-id="passcontrol-gambit">
+        <g data-detail="context" data-edge-from="passcontrol" data-edge-to="gambit" data-edge-label="webhook · passagem" data-edge-key="9" data-edge-id="passcontrol-gambit">
           <rect x="886.8" y="495" width="96.39999999999999" height="14" rx="3" class="c-mask"/>
           <text x="935" y="505" class="t-backend" font-size="8" text-anchor="middle">webhook · passagem</text>
         </g>
-        <g data-detail="context" data-edge-from="gambit" data-edge-to="bot" data-edge-label="histórico · troca via API" data-edge-key="11" data-edge-id="gambit-bot">
+        <g data-detail="context" data-edge-from="gambit" data-edge-to="bot" data-edge-label="histórico · troca via API" data-edge-key="10" data-edge-id="gambit-bot">
           <rect x="885" y="378" width="130" height="14" rx="3" class="c-mask"/>
           <text x="950" y="388" class="t-muted" font-size="8" text-anchor="middle">histórico · troca via API</text>
         </g>
-        <g data-detail="context" data-edge-from="gambit" data-edge-to="passcontrol" data-edge-label="return + tag" data-edge-key="12" data-edge-id="gambit-passcontrol">
+        <g data-detail="context" data-edge-from="gambit" data-edge-to="passcontrol" data-edge-label="return + tag" data-edge-key="11" data-edge-id="gambit-passcontrol">
           <rect x="916.2" y="624" width="67.6" height="14" rx="3" class="c-mask"/>
           <text x="950" y="634" class="t-backend" font-size="8" text-anchor="middle">return + tag</text>
         </g>
-        <g data-detail="context" data-edge-from="bot" data-edge-to="ticket" data-edge-label="deflexão → encerra" data-edge-key="13" data-edge-id="bot-ticket">
+        <g data-detail="context" data-edge-from="bot" data-edge-to="ticket" data-edge-label="deflexão → encerra" data-edge-key="12" data-edge-id="bot-ticket">
           <rect x="896.8" y="220" width="96.39999999999999" height="14" rx="3" class="c-mask"/>
           <text x="945" y="230" class="t-messagebus" font-size="8" text-anchor="middle">deflexão → encerra</text>
         </g>
@@ -5682,7 +5677,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       <div class="card">
         <div class="card-header">
           <div class="card-dot cyan"></div>
-          <h3>Identidade (Sunco)</h3>
+          <h3>Identidade (AI Agente)</h3>
         </div>
         <ul>
           <li>&bull; Lookup dinâmico no Zendesk via telefone (Users API)</li>
@@ -5694,12 +5689,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       <div class="card">
         <div class="card-header">
           <div class="card-dot emerald"></div>
-          <h3>Controle (Switchboard)</h3>
+          <h3>Orquestração e controle</h3>
         </div>
         <ul>
-          <li>&bull; Controle inicial com Zendesk AI/Bot</li>
+          <li>&bull; AI Agente (Ultimate) decide destino: triagem/bot ou PassControl</li>
           <li>&bull; Release: Zendesk PASSIVO (standby/audit) · Gambit ATIVO</li>
-          <li>&bull; Return: Zendesk volta a ATIVO no Sunco</li>
+          <li>&bull; Return: Zendesk volta a ATIVO no AI Agente</li>
         </ul>
       </div>
 

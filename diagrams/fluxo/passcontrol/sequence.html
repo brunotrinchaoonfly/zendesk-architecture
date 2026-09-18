@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="generator" content="archify 2.17.0-dev.1">
-  <title>PassControl — Sunco · Zendesk · Gambit</title>
+  <title>PassControl — AI Agente · Zendesk · Gambit</title>
   <script>
     // Resolve the theme before first paint so light-preference users don't
     // see a dark flash. The toolbar script below re-applies with UI state.
@@ -5215,7 +5215,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
            data-preset-badge-blueprint="BLUEPRINT / REV 01"
            data-preset-badge-editorial="EDITORIAL / NOTA DE CAMPO">
         <div class="pulse-dot"></div>
-        <h1>PassControl — Sunco · Zendesk · Gambit</h1>
+        <h1>PassControl — AI Agente · Zendesk · Gambit</h1>
       </div>
     </div>
 
@@ -5265,7 +5265,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     <div class="diagram-container" data-detail-level="read"
          data-preset-badge-editorial-plate="ARCHIFY / PRANCHA 04">
       <svg viewBox="0 0 1080 640" role="img" lang="pt-BR" aria-labelledby="archify-diagram-title archify-diagram-description" data-preset="classic" data-quality-profile="showcase">
-        <title id="archify-diagram-title">PassControl — Sunco · Zendesk · Gambit</title>
+        <title id="archify-diagram-title">PassControl — AI Agente · Zendesk · Gambit</title>
         <desc id="archify-diagram-description">Um diagrama de sequência gerado pelo Archify.</desc>
         <!-- Definitions -->
         <defs>
@@ -5309,8 +5309,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <!-- Activations -->
         <rect x="293.1" y="192" width="10" height="134" rx="3" class="c-mask"/>
         <rect x="293.1" y="192" width="10" height="134" rx="3" class="c-cloud" stroke-width="1"/>
-        <rect x="461.7" y="192" width="10" height="198" rx="3" class="c-mask"/>
-        <rect x="461.7" y="192" width="10" height="198" rx="3" class="c-backend" stroke-width="1"/>
+        <rect x="461.7" y="192" width="10" height="72" rx="3" class="c-mask"/>
+        <rect x="461.7" y="192" width="10" height="72" rx="3" class="c-backend" stroke-width="1"/>
         <rect x="630.3" y="282" width="10" height="224" rx="3" class="c-mask"/>
         <rect x="630.3" y="282" width="10" height="224" rx="3" class="c-backend" stroke-width="1"/>
         <rect x="798.9" y="372" width="10" height="104" rx="3" class="c-mask"/>
@@ -5319,48 +5319,48 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <rect x="967.5" y="522" width="10" height="14" rx="3" class="c-frontend" stroke-width="1"/>
 
         <!-- Messages -->
-        <g data-edge-from="cliente" data-edge-to="sunco" data-edge-label="1. Inbound · WhatsApp Business API" data-edge-key="0" data-edge-id="m01">
-          <path data-composition-edge-from="cliente" data-composition-edge-to="sunco" data-composition-edge-id="m01" data-composition-points="136.5,168;291.1,168" d="M 136.5 168 L 291.1 168" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <g data-edge-from="cliente" data-edge-to="aiagent" data-edge-label="1. Inbound · WhatsApp Business API" data-edge-key="0" data-edge-id="m01">
+          <path data-composition-edge-from="cliente" data-composition-edge-to="aiagent" data-composition-edge-id="m01" data-composition-points="136.5,168;291.1,168" d="M 136.5 168 L 291.1 168" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
         <g data-detail="context">
           <rect x="119.4" y="148" width="188.8" height="16" rx="3" class="c-mask"/>
           <text x="213.8" y="158" class="t-backend" font-size="9" text-anchor="middle">1. Inbound · WhatsApp Business API</text>
         </g>
         </g>
 
-        <g data-edge-from="sunco" data-edge-to="bot" data-edge-label="2. Lookup: ENCONTRADO recupera ID + perfil" data-edge-key="1" data-edge-id="m02">
-          <path data-composition-edge-from="sunco" data-composition-edge-to="bot" data-composition-edge-id="m02" data-composition-points="305.1,198;459.7,198" d="M 305.1 198 L 459.7 198" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <g data-edge-from="aiagent" data-edge-to="bot" data-edge-label="2. Lookup: ENCONTRADO recupera ID + perfil" data-edge-key="1" data-edge-id="m02">
+          <path data-composition-edge-from="aiagent" data-composition-edge-to="bot" data-composition-edge-id="m02" data-composition-points="305.1,198;459.7,198" d="M 305.1 198 L 459.7 198" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
         <g data-detail="context">
           <rect x="267.2" y="178" width="230.4" height="16" rx="3" class="c-mask"/>
           <text x="382.4" y="188" class="t-backend" font-size="9" text-anchor="middle">2. Lookup: ENCONTRADO recupera ID + perfil</text>
         </g>
         </g>
 
-        <g data-edge-from="sunco" data-edge-to="bot" data-edge-label="3. NÃO ACHOU: cria perfil dinamicamente" data-edge-key="2" data-edge-id="m03">
-          <path data-composition-edge-from="sunco" data-composition-edge-to="bot" data-composition-edge-id="m03" data-composition-points="305.1,228;459.7,228" d="M 305.1 228 L 459.7 228" class="a-dashed" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <g data-edge-from="aiagent" data-edge-to="bot" data-edge-label="3. NÃO ACHOU: cria perfil dinamicamente" data-edge-key="2" data-edge-id="m03">
+          <path data-composition-edge-from="aiagent" data-composition-edge-to="bot" data-composition-edge-id="m03" data-composition-points="305.1,228;459.7,228" d="M 305.1 228 L 459.7 228" class="a-dashed" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
         <g data-detail="context">
           <rect x="275" y="208" width="214.8" height="16" rx="3" class="c-mask"/>
           <text x="382.4" y="218" class="t-messagebus" font-size="9" text-anchor="middle">3. NÃO ACHOU: cria perfil dinamicamente</text>
         </g>
         </g>
 
-        <g data-edge-from="sunco" data-edge-to="bot" data-edge-label="4. Estado do controle: Zendesk AI/Bot assume" data-edge-key="3" data-edge-id="m04state">
-          <path data-composition-edge-from="sunco" data-composition-edge-to="bot" data-composition-edge-id="m04state" data-composition-points="305.1,258;459.7,258" d="M 305.1 258 L 459.7 258" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <g data-edge-from="aiagent" data-edge-to="bot" data-edge-label="4. Estado do controle: Zendesk AI/Bot assume" data-edge-key="3" data-edge-id="m04state">
+          <path data-composition-edge-from="aiagent" data-composition-edge-to="bot" data-composition-edge-id="m04state" data-composition-points="305.1,258;459.7,258" d="M 305.1 258 L 459.7 258" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <g data-detail="context">
           <rect x="262" y="238" width="240.8" height="16" rx="3" class="c-mask"/>
           <text x="382.4" y="248" class="t-backend" font-size="9" text-anchor="middle">4. Estado do controle: Zendesk AI/Bot assume</text>
         </g>
         </g>
 
-        <g data-edge-from="bot" data-edge-to="passcontrol" data-edge-label="5. Rota B · release" data-edge-key="4" data-edge-id="m04">
-          <path data-composition-edge-from="bot" data-composition-edge-to="passcontrol" data-composition-edge-id="m04" data-composition-points="473.7,288;628.3,288" d="M 473.7 288 L 628.3 288" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <g data-edge-from="aiagent" data-edge-to="passcontrol" data-edge-label="5. Rota B · release (decisão do AI Agente)" data-edge-key="4" data-edge-id="m04">
+          <path data-composition-edge-from="aiagent" data-composition-edge-to="passcontrol" data-composition-edge-id="m04" data-composition-points="305.1,288;628.3,288" d="M 305.1 288 L 628.3 288" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
         <g data-detail="context">
-          <rect x="495.6" y="268" width="110.8" height="16" rx="3" class="c-mask"/>
-          <text x="551" y="278" class="t-backend" font-size="9" text-anchor="middle">5. Rota B · release</text>
+          <rect x="351.5" y="268" width="230.4" height="16" rx="3" class="c-mask"/>
+          <text x="466.7" y="278" class="t-backend" font-size="9" text-anchor="middle">5. Rota B · release (decisão do AI Agente)</text>
         </g>
         </g>
 
-        <g data-edge-from="passcontrol" data-edge-to="sunco" data-edge-label="6. Switchboard: Zendesk PASSIVO · Gambit ATIVO" data-edge-key="5" data-edge-id="m05">
-          <path data-composition-edge-from="passcontrol" data-composition-edge-to="sunco" data-composition-edge-id="m05" data-composition-points="628.3,318;305.1,318" d="M 628.3 318 L 305.1 318" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <g data-edge-from="passcontrol" data-edge-to="aiagent" data-edge-label="6. Switchboard: Zendesk PASSIVO · Gambit ATIVO" data-edge-key="5" data-edge-id="m05">
+          <path data-composition-edge-from="passcontrol" data-composition-edge-to="aiagent" data-composition-edge-id="m05" data-composition-points="628.3,318;305.1,318" d="M 628.3 318 L 305.1 318" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
         <g data-detail="context">
           <rect x="341.09999999999997" y="298" width="251.20000000000002" height="16" rx="3" class="c-mask"/>
           <text x="466.7" y="308" class="t-security" font-size="9" text-anchor="middle">6. Switchboard: Zendesk PASSIVO · Gambit ATIVO</text>
@@ -5425,8 +5425,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
         <!-- Segment Labels -->
         <g data-graph-role="segment-label" data-segment-id="0">
-          <rect x="56" y="126" width="107.60000000000001" height="18" rx="3" class="c-mask"/>
-          <text x="62" y="139" class="t-dim" font-size="9" font-weight="600">Identidade (Sunco)</text>
+          <rect x="56" y="126" width="128.4" height="18" rx="3" class="c-mask"/>
+          <text x="62" y="139" class="t-dim" font-size="9" font-weight="600">Identidade (AI Agente)</text>
         </g>
         <g data-graph-role="segment-label" data-segment-id="1">
           <rect x="56" y="250" width="102.4" height="18" rx="3" class="c-mask"/>
@@ -5454,15 +5454,15 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <text data-detail="context" x="129.5" y="111" class="t-muted" font-size="7" text-anchor="middle">Cliente</text>
         </g>
 
-        <g id="node-sunco" data-node-id="sunco" data-node-label="Sunco" tabindex="0" role="button" aria-label="Focar Sunco, Sunshine · Switchboard, Participante da sequência" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="Sunshine · Switchboard" data-node-context="Participante da sequência">
-          <title>Sunco · Sunshine · Switchboard · Participante da sequência</title>
+        <g id="node-aiagent" data-node-id="aiagent" data-node-label="AI Agente (Ultimate)" tabindex="0" role="button" aria-label="Focar AI Agente (Ultimate), orquestra as conversas, Participante da sequência" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="orquestra as conversas" data-node-context="Participante da sequência">
+          <title>AI Agente (Ultimate) · orquestra as conversas · Participante da sequência</title>
           <rect x="230.60000000000002" y="72" width="135" height="54" rx="6" class="c-mask"/>
           <rect x="230.60000000000002" y="72" width="135" height="54" rx="6" class="c-cloud" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="cloud" class="semantic-sigil s-cloud" transform="translate(236.60000000000002 78) scale(0.6875)">
             <path d="M4.3 12.5h7.3a2.4 2.4 0 0 0 .2-4.8 4 4 0 0 0-7.5-1.3A3.1 3.1 0 0 0 4.3 12.5Z"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="298.1" y="94" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Sunco</text>
-          <text data-detail="context" x="298.1" y="111" class="t-muted" font-size="7" text-anchor="middle">Sunshine · Switchboard</text>
+          <text data-node-label="" data-detail-anchor="" x="298.1" y="94" class="t-primary" font-size="10.5" font-weight="600" text-anchor="middle">AI Agente (Ultimate)</text>
+          <text data-detail="context" x="298.1" y="111" class="t-muted" font-size="7" text-anchor="middle">orquestra as conversas</text>
         </g>
 
         <g id="node-bot" data-node-id="bot" data-node-label="Triagem &amp; Bot" tabindex="0" role="button" aria-label="Focar Triagem &amp; Bot, Zendesk, Participante da sequência" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Zendesk" data-node-context="Participante da sequência">
@@ -5726,7 +5726,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       <div class="card">
         <div class="card-header">
           <div class="card-dot cyan"></div>
-          <h3>Identidade (Sunco)</h3>
+          <h3>Identidade (AI Agente)</h3>
         </div>
         <ul>
           <li>&bull; Phone do payload WhatsApp identifica o usuário</li>
@@ -5738,12 +5738,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       <div class="card">
         <div class="card-header">
           <div class="card-dot emerald"></div>
-          <h3>Controle (Switchboard)</h3>
+          <h3>Controle (AI Agente decide)</h3>
         </div>
         <ul>
+          <li>&bull; AI Agente decide destino: triagem/bot ou PassControl</li>
           <li>&bull; Release: Zendesk PASSIVO · Gambit ATIVO</li>
-          <li>&bull; Webhook carrega o horário de início</li>
-          <li>&bull; Return: Zendesk volta a ATIVO no Sunco</li>
+          <li>&bull; Return: Zendesk volta a ATIVO no AI Agente</li>
         </ul>
       </div>
 

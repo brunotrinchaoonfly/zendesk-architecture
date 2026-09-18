@@ -6,10 +6,7 @@
     "output": "architecture.html",
     "locale": "pt-BR",
     "quality_profile": "showcase",
-    "viewBox": [
-      950,
-      270
-    ]
+    "viewBox": [950, 290]
   },
   "components": [
     {
@@ -17,74 +14,50 @@
       "type": "external",
       "label": "Usuário (WhatsApp)",
       "sublabel": "Cliente Onfly",
-      "pos": [
-        40,
-        120
-      ],
-      "size": [
-        130,
-        64
-      ],
+      "pos": [40, 170],
+      "size": [130, 64],
       "description": "Pessoa iniciando a conversa pelo canal oficial do WhatsApp — ponto de entrada das mensagens."
     },
     {
       "id": "waba",
       "type": "external",
-      "label": "WhatsApp Business API",
-      "sublabel": "Meta",
-      "pos": [
-        260,
-        120
-      ],
-      "size": [
-        150,
-        64
-      ],
-      "description": "WhatsApp Business API (Meta): transporta mensagens, mídias e respostas e dispara os webhooks com o número de telefone."
+      "label": "API Meta",
+      "sublabel": "WhatsApp Business",
+      "pos": [280, 40],
+      "size": [150, 64],
+      "description": "API Meta (WhatsApp Business): transporta mensagens, mídias e respostas e dispara os webhooks com o número de telefone."
     },
     {
       "id": "sunco",
       "type": "cloud",
       "label": "Sunshine Conversations",
       "sublabel": "Switchboard Protocol",
-      "pos": [
-        500,
-        120
-      ],
-      "size": [
-        160,
-        64
-      ],
-      "description": "Plataforma de conversas (Switchboard Protocol): recebe os webhooks, faz o lookup de identidade e mantém o perfil do appUser."
+      "pos": [260, 170],
+      "size": [160, 64],
+      "description": "Plataforma de conversas (Switchboard Protocol): recebe as mensagens do usuário, os webhooks da API Meta, faz o lookup de identidade e mantém o perfil do appUser."
     },
     {
       "id": "zendesk",
       "type": "cloud",
       "label": "Zendesk",
       "sublabel": "Users API · perfil",
-      "pos": [
-        760,
-        120
-      ],
-      "size": [
-        160,
-        64
-      ],
+      "pos": [520, 170],
+      "size": [160, 64],
       "description": "Armazena o cadastro do usuário: busca por telefone (ENCONTRADO) ou cria o perfil dinamicamente (NÃO ACHOU)."
     }
   ],
   "connections": [
     {
-      "id": "cliente-waba",
+      "id": "cliente-sunco",
       "from": "cliente",
-      "to": "waba",
+      "to": "sunco",
       "label": "mensagens",
       "variant": "emphasis",
       "labelDy": -10
     },
     {
-      "id": "waba-cliente",
-      "from": "waba",
+      "id": "sunco-cliente",
+      "from": "sunco",
       "to": "cliente",
       "label": "respostas",
       "variant": "dashed",
@@ -96,7 +69,9 @@
       "to": "sunco",
       "label": "webhook · phone",
       "variant": "emphasis",
-      "labelDy": -12
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [430, 120]
     },
     {
       "id": "sunco-waba",
@@ -104,7 +79,9 @@
       "to": "waba",
       "label": "envio",
       "variant": "dashed",
-      "labelDy": 12
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelAt": [270, 120]
     },
     {
       "id": "sunco-zendesk",
@@ -120,7 +97,7 @@
       "to": "sunco",
       "label": "ID + perfil",
       "variant": "default",
-      "labelDy": 12
+      "labelAt": [496, 248]
     },
     {
       "id": "sunco-zendesk-create",
@@ -128,16 +105,16 @@
       "to": "zendesk",
       "label": "cria perfil",
       "variant": "dashed",
-      "labelDy": 12
+      "labelAt": [400, 248]
     }
   ],
   "cards": [
     {
       "dot": "cyan",
-      "title": "Canal WhatsApp",
+      "title": "Canal WhatsApp (API Meta)",
       "items": [
-        "Mensagens, mídias e respostas via WhatsApp Business API (Meta)",
-        "Webhooks entregues ao Sunco com o nº de telefone do payload"
+        "Usuário conversa com o Sunco; a API Meta transporta o canal WhatsApp",
+        "Webhooks da API Meta entregues ao Sunco com o nº de telefone do payload"
       ]
     },
     {
